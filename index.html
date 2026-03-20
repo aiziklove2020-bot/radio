@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>רדיו מדברים בדסמ</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#1c1c1c;
+  color:#e8e8e8;
+  font-family:'Heebo',sans-serif;
+  min-height:100vh;
+  direction:rtl;
+}
+
+/* ── NAV ── */
+.nav{
+  background:rgba(40,40,40,0.96);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  height:68px;
+  position:sticky;top:0;z-index:100;
+}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-brand-icon{font-size:32px;line-height:1;}
+.nav-brand-text{text-align:right;line-height:1.2;}
+.nav-brand-text .b1{font-size:18px;font-weight:800;color:#fff;}
+.nav-brand-text .b2{font-size:11px;color:#888;font-weight:300;}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{color:#aaa;text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;}
+.nav-links a:hover,.nav-links a.act{color:#fff;}
+.nav-links a.act{border-bottom:2px solid #c0392b;padding-bottom:2px;}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  height:360px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1478737270197-99920127b5c2?w=1600&q=85') center/cover no-repeat;
+  filter:brightness(0.28) saturate(0.6);
+}
+.hero-fade{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,
+    rgba(28,28,28,0.05) 0%,
+    rgba(28,28,28,0.6) 50%,
+    rgba(28,28,28,0.96) 100%
+  );
+}
+.hero-body{
+  position:relative;z-index:2;
+  margin-right:48px;
+  margin-left:auto;
+  text-align:right;
+  max-width:500px;
+}
+.hero-body h1{
+  font-size:54px;font-weight:900;color:#fff;
+  line-height:1.05;margin-bottom:12px;
+  text-shadow:0 2px 24px rgba(0,0,0,0.6);
+}
+.hero-body p{
+  font-size:15px;color:#bbb;font-weight:300;
+  margin-bottom:30px;line-height:1.6;
+}
+.btn-play{
+  display:inline-flex;align-items:center;gap:14px;
+  border:2px solid #fff;color:#fff;
+  background:transparent;
+  font-family:'Heebo',sans-serif;font-size:18px;font-weight:700;
+  padding:13px 42px;border-radius:30px;
+  letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;
+  transition:all .25s;
+}
+.btn-play:hover{background:#fff;color:#111;}
+.btn-play .dot{
+  width:12px;height:12px;border-radius:50%;
+  background:#e74c3c;flex-shrink:0;
+  animation:pulse 1.3s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
+.hero-sub{margin-top:10px;font-size:13px;color:#777;text-align:center;}
+
+/* ── NOW ON AIR CARD ── */
+.now-card{
+  background:#2a2a2a;
+  border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.now-inner{
+  max-width:1060px;margin:0 auto;
+  display:flex;align-items:stretch;
+}
+/* right side — "מי בשידור?" */
+.now-right{
+  min-width:220px;
+  background:rgba(0,0,0,0.2);
+  border-left:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:20px 28px;gap:8px;
+}
+.now-right-label{
+  font-size:20px;font-weight:800;color:#fff;
+  margin-bottom:4px;
+}
+.now-air-line{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:700;
+  color:#e74c3c;letter-spacing:1px;
+}
+.now-air-line::before{
+  content:'';display:inline-block;
+  width:9px;height:9px;border-radius:50%;
+  background:#e74c3c;
+  animation:pulse 1.3s infinite;
+}
+.waves{display:flex;align-items:center;gap:3px;}
+.waves span{
+  display:block;width:4px;border-radius:2px;
+  background:#e74c3c;
+  animation:wv .85s ease-in-out infinite;
+}
+.waves span:nth-child(1){height:8px;animation-delay:0s}
+.waves span:nth-child(2){height:18px;animation-delay:.1s}
+.waves span:nth-child(3){height:12px;animation-delay:.18s}
+.waves span:nth-child(4){height:24px;animation-delay:.28s}
+.waves span:nth-child(5){height:14px;animation-delay:.14s}
+.waves span:nth-child(6){height:7px;animation-delay:.06s}
+@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+
+/* left side — DJ info */
+.now-left{
+  flex:1;
+  display:flex;align-items:center;
+  gap:18px;padding:18px 32px;
+  justify-content:flex-end;
+}
+.now-photo{
+  width:80px;height:80px;border-radius:6px;
+  background:#383838;
+  border:1px solid rgba(255,255,255,0.08);
+  overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;
+}
+.now-photo img{width:100%;height:100%;object-fit:cover;}
+.now-meta{text-align:right;}
+.now-meta .row{
+  font-size:14px;color:#ccc;
+  margin-bottom:5px;line-height:1.4;
+}
+.now-meta .row span{color:#fff;font-weight:600;}
+
+/* ── PLAYER ── */
+.player-wrap{
+  background:#202020;
+  border-bottom:2px solid rgba(192,57,43,0.25);
+}
+.player-inner{max-width:1060px;margin:0 auto;padding:18px 24px;}
+.player-lbl{
+  font-size:11px;color:#666;
+  text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:10px;display:flex;align-items:center;gap:7px;
+}
+.player-lbl::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:#e74c3c;animation:pulse 1.3s infinite;display:inline-block;
+}
+.embed-wrap{border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+
+/* ── MAIN SECTION ── */
+.main{
+  max-width:1060px;margin:0 auto;
+  padding:32px 24px 56px;
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:36px;
+  align-items:start;
+}
+
+/* Schedule */
+.sec-title{
+  font-size:18px;font-weight:800;color:#fff;
+  margin-bottom:14px;text-align:right;
+}
+.tbl{width:100%;border-collapse:collapse;text-align:right;}
+.tbl thead th{
+  font-size:12px;color:#666;
+  text-transform:uppercase;letter-spacing:.5px;
+  padding:6px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  font-weight:600;
+}
+.tbl tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);}
+.tbl tbody tr:hover{background:rgba(255,255,255,0.025);}
+.tbl tbody td{padding:11px 14px;font-size:14px;color:#bbb;}
+.tbl tbody td.tc{color:#e74c3c;font-weight:700;font-size:13px;width:68px;}
+.badge{
+  display:inline-block;padding:2px 10px;border-radius:3px;
+  font-size:11px;font-weight:600;
+  background:rgba(255,255,255,0.06);color:#999;
+}
+
+/* Side box */
+.side{
+  background:#252525;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;padding:22px 20px;
+}
+.side .sec-title{font-size:16px;margin-bottom:4px;}
+.side-sub{font-size:13px;color:#666;margin-bottom:16px;text-align:right;}
+.fld{margin-bottom:11px;}
+.fld input,.fld textarea{
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:5px;padding:10px 12px;
+  font-family:'Heebo',sans-serif;font-size:14px;
+  color:#e8e8e8;text-align:right;direction:rtl;
+  outline:none;transition:border-color .2s;
+}
+.fld input::placeholder,.fld textarea::placeholder{color:#555;}
+.fld input:focus,.fld textarea:focus{border-color:rgba(231,76,60,.5);}
+.fld textarea{resize:vertical;min-height:68px;}
+.btn-send{
+  background:#c0392b;color:#fff;border:none;border-radius:5px;
+  padding:11px;font-family:'Heebo',sans-serif;
+  font-size:15px;font-weight:700;cursor:pointer;
+  width:100%;transition:background .2s;
+}
+.btn-send:hover{background:#e74c3c;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:18px 40px;
+  display:flex;justify-content:center;gap:32px;
+  font-size:13px;color:#555;
+}
+footer a{color:#555;text-decoration:underline;transition:color .2s;}
+footer a:hover{color:#aaa;}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:22px;left:50%;
+  transform:translateX(-50%) translateY(70px);
+  background:#2a2a2a;border:1px solid rgba(255,255,255,0.1);
+  color:#fff;padding:10px 24px;border-radius:30px;
+  font-size:14px;font-weight:600;z-index:9999;
+  transition:transform .3s;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:760px){
+  .main{grid-template-columns:1fr;}
+  .hero-body{margin-right:20px;margin-left:20px;}
+  .hero-body h1{font-size:36px;}
+  .nav{padding:0 16px;}
+  .nav-links{gap:16px;}
+  .now-inner{flex-direction:column;}
+  .now-right{border-left:none;border-bottom:1px solid rgba(255,255,255,0.06);}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">🎙️</div>
+    <div class="nav-brand-text">
+      <div class="b1" id="nav-name">רדיו מדברים בדסמ</div>
+      <div class="b2">הרדיו הרשמי של מדברים בדסמ</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" class="act">בית</a></li>
+    <li><a href="#sec-sch">לוח שידורים</a></li>
+    <li><a href="#sec-team">הצוות</a></li>
+    <li><a href="#sec-news">דשים</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-fade"></div>
+  <div class="hero-body">
+    <h1 id="hero-t">רדיו מדברים בדסמ</h1>
+    <p id="hero-d">הרדיו הרשמי של מדברים בדסמ — האזינו לנו חי!</p>
+    <a class="btn-play" href="#player">
+      PLAY LIVE
+      <span class="dot"></span>
+    </a>
+    <div class="hero-sub">האזינו עכשיו</div>
+  </div>
+</section>
+
+<!-- NOW ON AIR -->
+<div class="now-card">
+  <div class="now-inner">
+    <div class="now-left">
+      <div class="now-meta">
+        <div class="row">שדרן: <span id="now-dj">טוען...</span></div>
+        <div class="row">תוכנית: <span id="now-show">—</span></div>
+        <div class="row">סגנון: <span id="now-genre">—</span></div>
+      </div>
+      <div class="now-photo" id="now-photo">🎧</div>
+    </div>
+    <div class="now-right">
+      <div class="now-right-label">מי בשידור?</div>
+      <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="now-air-line">NOW ON AIR</div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER -->
+<div class="player-wrap" id="player">
+  <div class="player-inner">
+    <div class="player-lbl">שידור חי</div>
+    <div class="embed-wrap">
+      <div data-type="newStreamPlayer"
+           data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482"
+           data-theme="dark" data-color="e81e4d"
+           data-channelId="" data-rendered="false" class="cstrEmbed">
+        <a href="https://www.caster.fm">Shoutcast Hosting</a>
+        <a href="https://www.caster.fm">Stream Hosting</a>
+        <a href="https://www.caster.fm">Radio Server Hosting</a>
+      </div>
+      <script src="//cdn.cloud.caster.fm//widgets/embed.js"></script>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN: Schedule + Side -->
+<div class="main">
+
+  <!-- Schedule -->
+  <div id="sec-sch">
+    <div class="sec-title">לוח שידורים</div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Time</th><th>Program</th><th>DJ</th><th>Genre</th>
+        </tr>
+      </thead>
+      <tbody id="pub-sch"></tbody>
+    </table>
+  </div>
+
+  <!-- Side: form + news -->
+  <div>
+    <div class="side" id="sec-news">
+      <div class="sec-title">פינת הדשים והקדשות</div>
+      <div class="side-sub">שלחו לנו מסר</div>
+      <div class="fld"><input type="text" id="m-nick" placeholder="כינוי (דיסקרטי)"/></div>
+      <div class="fld"><input type="text" id="m-txt"  placeholder="המסר שלך"/></div>
+      <div class="fld"><textarea id="m-song" placeholder="הקדשת שיר"></textarea></div>
+      <button class="btn-send" onclick="sendMsg()">שלח</button>
+    </div>
+
+    <!-- News items below form -->
+    <div style="margin-top:24px;" id="sec-news-list">
+      <div class="sec-title" style="font-size:16px;">דשים וחדשות</div>
+      <div id="pub-news"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div style="max-width:1060px;margin:0 auto;padding:0 24px 52px;" id="sec-team">
+  <div class="sec-title">הצוות שלנו</div>
+  <div id="pub-team" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#">הצהרת הדיסקרטיות</a>
+  <a href="#">מדיניות פרטיות</a>
+</footer>
+
+<script>
+function gd(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function sd(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function uid(){return Date.now();}
+function today(){return new Date().toLocaleDateString('he-IL');}
+
+let sch  = gd('rdx_sch',[
+  {id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},
+  {id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},
+  {id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},
+  {id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'},
+]);
+let team = gd('rdx_team',[
+  {id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},
+  {id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},
+  {id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'},
+]);
+let news = gd('rdx_news',[
+  {id:1,ti:'ברוכים הבאים!',bo:'אנחנו שמחים לפתוח את דלתות הרדיו. הישארו מעודכנים!',dt:today()},
+]);
+let cfg  = gd('rdx_cfg',{n:'רדיו מדברים בדסמ',d:'הרדיו הרשמי של מדברים בדסמ — האזינו לנו חי!'});
+
+function rSch(){
+  document.getElementById('pub-sch').innerHTML = sch.length
+    ? sch.map(s=>`<tr><td class="tc">${s.t}</td><td>${s.p}</td><td>${s.d}</td><td><span class="badge">${s.g}</span></td></tr>`).join('')
+    : '<tr><td colspan="4" style="text-align:center;color:#555;padding:20px">אין שידורים</td></tr>';
+}
+function rTeam(){
+  document.getElementById('pub-team').innerHTML = team.length
+    ? team.map(t=>`
+        <div style="background:#252525;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:18px 12px;text-align:center;">
+          <div style="width:58px;height:58px;border-radius:50%;background:#333;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid rgba(255,255,255,0.07);overflow:hidden;">
+            ${t.a.startsWith('http')?`<img src="${t.a}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='🎙️'">`:t.a}
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:3px">${t.n}</div>
+          <div style="font-size:11px;color:#c0392b;font-weight:600">${t.r}</div>
+        </div>`).join('')
+    : '<p style="color:#555">אין אנשי צוות</p>';
+}
+function rNews(){
+  document.getElementById('pub-news').innerHTML = [...news].reverse().map(n=>`
+    <div style="background:#252525;border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:11px;color:#555;margin-bottom:4px">${n.dt}</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">${n.ti}</div>
+      <div style="font-size:13px;color:#888;line-height:1.55">${n.bo}</div>
+    </div>`).join('') || '<p style="color:#555;font-size:13px">אין דשים עדיין</p>';
+}
+function applyCfg(){
+  document.getElementById('hero-t').textContent  = cfg.n;
+  document.getElementById('hero-d').textContent  = cfg.d;
+  document.getElementById('nav-name').textContent = cfg.n;
+  document.title = cfg.n;
+}
+
+function sendMsg(){
+  const nick = document.getElementById('m-nick').value.trim();
+  const txt  = document.getElementById('m-txt').value.trim();
+  const song = document.getElementById('m-song').value.trim();
+  if(!nick && !txt){ showToast('⚠️ מלא לפחות כינוי ומסר'); return; }
+  let inbox = gd('rdx_inbox',[]);
+  inbox.push({
+    id: uid(), nick: nick||'אנונימי', txt, song,
+    dt: today(),
+    time: new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})
+  });
+  sd('rdx_inbox', inbox);
+  ['m-nick','m-txt','m-song'].forEach(i=>document.getElementById(i).value='');
+  showToast('📨 המסר נשלח! תודה 💙');
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+function applyOnAir(dj, show, genre, photo){
+  document.getElementById('now-dj').textContent    = dj    || 'בשידור חי';
+  document.getElementById('now-show').textContent  = show  || '—';
+  document.getElementById('now-genre').textContent = genre || '—';
+  const photoEl = document.getElementById('now-photo');
+  if(photo){
+    const isUrl = photo.startsWith('http');
+    photoEl.innerHTML = isUrl
+      ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.textContent='🎧'">`
+      : photo;
+  } else {
+    photoEl.textContent = '🎧';
+  }
+}
+
+async function fetchNow(){
+  try{
+    const r = await fetch('/api/nowplaying', {cache:'no-cache'});
+    const d = await r.json();
+    if(d.online){
+      applyOnAir(
+        d.dj   || d.title || 'בשידור',
+        d.title || '—',
+        d.genre || '—',
+        ''
+      );
+      // listeners
+      const lEl = document.getElementById('now-listeners');
+      if(lEl) lEl.textContent = d.listeners > 0 ? d.listeners + ' מאזינים' : '';
+    } else {
+      document.getElementById('now-dj').textContent    = 'השרת לא פעיל';
+      document.getElementById('now-show').textContent  = '—';
+      document.getElementById('now-genre').textContent = '—';
+    }
+  } catch{
+    document.getElementById('now-dj').textContent = 'בשידור חי';
+  }
+}
+
+function reload(){
+  sch  = gd('rdx_sch', sch);
+  team = gd('rdx_team', team);
+  news = gd('rdx_news', news);
+  cfg  = gd('rdx_cfg', cfg);
+  rSch(); rTeam(); rNews(); applyCfg();
+}
+
+reload();
+fetchNow();
+setInterval(fetchNow, 30000);
+setInterval(reload, 10000);
+</script>
+</body>
+</html>

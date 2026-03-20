@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ניהול — רדיו מדברים בדסמ</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#c0392b;--red2:#e74c3c;--bg:#111;--bg2:#181818;--bg3:#222;--border:rgba(255,255,255,0.08);--muted:#888;}
+body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:360px;text-align:center;}
+.login-card .logo{font-size:48px;margin-bottom:16px;}
+.login-card h2{font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;}
+.login-card p{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.login-card input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:13px 16px;font-family:'Heebo',sans-serif;font-size:16px;color:#fff;text-align:center;outline:none;margin-bottom:14px;transition:border-color 0.2s;}
+.login-card input:focus{border-color:rgba(231,76,60,0.6);}
+.btn-login{width:100%;background:var(--red2);color:#fff;border:none;border-radius:8px;padding:14px;font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.btn-login:hover{background:#c0392b;}
+.login-err{font-size:13px;color:var(--red2);margin-top:10px;min-height:18px;}
+
+/* ADMIN APP */
+.admin-app{display:none;min-height:100vh;flex-direction:column;}
+.admin-app.show{display:flex;}
+
+.adm-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.adm-nav-title{font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;}
+.adm-nav-title span{font-size:12px;color:var(--muted);font-weight:400;}
+.adm-nav-right{display:flex;align-items:center;gap:12px;}
+.inbox-badge{background:var(--red2);color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700;display:none;}
+.btn-logout{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:'Heebo',sans-serif;transition:all 0.2s;}
+.btn-logout:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+.btn-back{background:rgba(231,76,60,0.1);color:var(--red2);border:1px solid rgba(231,76,60,0.3);border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:'Heebo',sans-serif;transition:all 0.2s;text-decoration:none;}
+.btn-back:hover{background:var(--red2);color:#fff;}
+
+.adm-body{display:flex;flex:1;}
+.adm-sidebar{width:200px;background:var(--bg2);border-left:1px solid var(--border);padding:24px 0;flex-shrink:0;}
+.adm-menu-item{display:flex;align-items:center;gap:10px;padding:12px 24px;color:var(--muted);cursor:pointer;font-size:14px;font-weight:600;transition:all 0.2s;border-right:3px solid transparent;}
+.adm-menu-item:hover{color:#fff;background:rgba(255,255,255,0.04);}
+.adm-menu-item.active{color:#fff;background:rgba(231,76,60,0.08);border-right-color:var(--red2);}
+.adm-menu-item .badge{background:var(--red2);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-right:auto;}
+
+.adm-main{flex:1;padding:32px;overflow-y:auto;}
+.page{display:none;} .page.active{display:block;}
+.page-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:24px;}
+
+/* Cards / forms */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+.card h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.af{margin-bottom:12px;}
+.af label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;}
+.af input,.af textarea,.af select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-family:'Heebo',sans-serif;font-size:14px;color:#fff;text-align:right;direction:rtl;outline:none;transition:border-color 0.2s;}
+.af input:focus,.af textarea:focus{border-color:rgba(231,76,60,0.5);}
+.af textarea{min-height:70px;resize:vertical;}
+
+.btn-add{background:var(--red2);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.btn-add:hover{background:#c0392b;}
+.btn-save{background:#1a5c2a;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-save:hover{background:#217a38;}
+.btn-del{background:rgba(231,76,60,0.1);color:var(--red2);border:1px solid rgba(231,76,60,0.25);border-radius:6px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:'Heebo',sans-serif;transition:all 0.2s;}
+.btn-del:hover{background:var(--red2);color:#fff;}
+
+/* List items */
+.list{list-style:none;}
+.li{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;}
+.li .info{text-align:right;}
+.li .title{font-size:14px;font-weight:700;color:#fff;}
+.li .sub{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* Inbox item */
+.inbox-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.inbox-item .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.inbox-item .nick{font-size:15px;font-weight:700;color:#fff;}
+.inbox-item .time{font-size:11px;color:var(--muted);}
+.inbox-item .msg{font-size:13px;color:#ccc;margin-bottom:4px;}
+.inbox-item .song{font-size:13px;color:var(--red2);}
+.inbox-item .actions{margin-top:12px;display:flex;justify-content:flex-end;}
+
+.empty{text-align:center;padding:32px;color:var(--muted);font-size:14px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#222;border:1px solid var(--border);color:#fff;padding:11px 26px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;transition:transform 0.3s;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:700px){
+  .adm-sidebar{display:none;}
+  .f2,.f3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="logo">🎙️</div>
+    <h2>פאנל ניהול</h2>
+    <p>רדיו מדברים בדסמ</p>
+    <input type="password" id="lpass" placeholder="סיסמה" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn-login" onclick="doLogin()">כניסה</button>
+    <div class="login-err" id="lerr"></div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div class="admin-app" id="adminApp">
+
+  <!-- Top nav -->
+  <div class="adm-nav">
+    <div class="adm-nav-title">
+      🎙️ פאנל ניהול <span>רדיו מדברים בדסמ</span>
+    </div>
+    <div class="adm-nav-right">
+      <a class="btn-back" href="index.html">← חזרה לאתר</a>
+      <button class="btn-logout" onclick="logout()">התנתק</button>
+    </div>
+  </div>
+
+  <div class="adm-body">
+    <!-- Sidebar -->
+    <div class="adm-sidebar">
+      <div class="adm-menu-item active" onclick="showPage('inbox',this)">
+        📥 הודעות נכנסות
+        <span class="badge" id="inbox-badge" style="display:none"></span>
+      </div>
+      <div class="adm-menu-item" onclick="showPage('schedule',this)">📅 לוח שידורים</div>
+      <div class="adm-menu-item" onclick="showPage('team',this)">👥 צוות</div>
+      <div class="adm-menu-item" onclick="showPage('news',this)">📰 דשים</div>
+      <div class="adm-menu-item" onclick="showPage('onair',this)">🎙️ מי בשידור</div>
+      <div class="adm-menu-item" onclick="showPage('settings',this)">⚙️ הגדרות</div>
+    </div>
+
+    <!-- Main content -->
+    <div class="adm-main">
+
+      <!-- INBOX PAGE -->
+      <div class="page active" id="page-inbox">
+        <div class="page-title">📥 הודעות נכנסות</div>
+        <div id="inbox-list"></div>
+      </div>
+
+      <!-- SCHEDULE PAGE -->
+      <div class="page" id="page-schedule">
+        <div class="page-title">📅 לוח שידורים</div>
+        <div class="card">
+          <h4>➕ הוסף שידור חדש</h4>
+          <div class="f2">
+            <div class="af"><label>שעה</label><input type="time" id="s-t"/></div>
+            <div class="af"><label>סגנון</label><input type="text" id="s-g" placeholder="מוזיקה, דשים..."/></div>
+          </div>
+          <div class="f2">
+            <div class="af"><label>תוכנית</label><input type="text" id="s-p" placeholder="שם התוכנית"/></div>
+            <div class="af"><label>שדרן</label><input type="text" id="s-d" placeholder="שם השדרן"/></div>
+          </div>
+          <button class="btn-add" onclick="addSch()">הוסף לשידורים</button>
+        </div>
+        <ul class="list" id="sch-list"></ul>
+      </div>
+
+      <!-- TEAM PAGE -->
+      <div class="page" id="page-team">
+        <div class="page-title">👥 הצוות</div>
+        <div class="card">
+          <h4>➕ הוסף איש צוות</h4>
+          <div class="f2">
+            <div class="af"><label>שם מלא</label><input type="text" id="t-n" placeholder="שם"/></div>
+            <div class="af"><label>תפקיד</label><input type="text" id="t-r" placeholder="שדרן, מנהל..."/></div>
+          </div>
+          <div class="af"><label>אמוג'י או לינק לתמונה</label><input type="text" id="t-a" placeholder="🎙️ או https://..."/></div>
+          <button class="btn-add" onclick="addTeam()">הוסף לצוות</button>
+        </div>
+        <ul class="list" id="team-list"></ul>
+      </div>
+
+      <!-- NEWS PAGE -->
+      <div class="page" id="page-news">
+        <div class="page-title">📰 דשים וחדשות</div>
+        <div class="card">
+          <h4>➕ פרסם דש חדש</h4>
+          <div class="af"><label>כותרת</label><input type="text" id="n-ti" placeholder="כותרת הדש"/></div>
+          <div class="af"><label>תוכן</label><textarea id="n-bo" placeholder="תוכן הדש..."></textarea></div>
+          <button class="btn-add" onclick="addNews()">פרסם</button>
+        </div>
+        <ul class="list" id="news-list"></ul>
+      </div>
+
+      <!-- ON AIR PAGE -->
+      <div class="page" id="page-onair">
+        <div class="page-title">🎙️ מי בשידור עכשיו</div>
+        <div class="card">
+          <h4>עדכון ידני — מה שתזין יופיע באתר</h4>
+          <div class="f2">
+            <div class="af"><label>שם השדרן</label><input type="text" id="oa-dj" placeholder="שם השדרן"/></div>
+            <div class="af"><label>שם התוכנית</label><input type="text" id="oa-show" placeholder="שם התוכנית"/></div>
+          </div>
+          <div class="f2">
+            <div class="af"><label>סגנון</label><input type="text" id="oa-genre" placeholder="מוזיקה, דשים..."/></div>
+            <div class="af"><label>תמונה (URL או אמוג'י)</label><input type="text" id="oa-photo" placeholder="🎧 או https://..."/></div>
+          </div>
+          <button class="btn-save" onclick="saveOnAir()" style="margin-left:10px">💾 עדכן עכשיו</button>
+          <button class="btn-del" onclick="clearOnAir()" style="margin-right:10px">🗑️ נקה</button>
+        </div>
+        <div class="card" id="oa-preview-card">
+          <h4>תצוגה מקדימה — כך יראה באתר</h4>
+          <div id="oa-preview" style="display:flex;align-items:center;gap:18px;padding:12px 0;justify-content:flex-end;"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div class="page" id="page-settings">
+        <div class="page-title">⚙️ הגדרות</div>
+        <div class="card">
+          <h4>פרטי הרדיו</h4>
+          <div class="af"><label>שם הרדיו</label><input type="text" id="cfg-n"/></div>
+          <div class="af"><label>תיאור</label><input type="text" id="cfg-d"/></div>
+          <button class="btn-save" onclick="saveCfg()">💾 שמור שינויים</button>
+        </div>
+        <div class="card">
+          <h4>אבטחה</h4>
+          <div class="af"><label>סיסמת מנהל חדשה</label><input type="password" id="cfg-p" placeholder="השאר ריק לשמור הנוכחית"/></div>
+          <button class="btn-save" onclick="savePass()">🔐 עדכן סיסמה</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PK='rdx_pass', DP='admin123';
+function gd(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function sd(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function uid(){return Date.now();}
+function today(){return new Date().toLocaleDateString('he-IL');}
+
+let sch   = gd('rdx_sch',[{id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},{id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},{id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},{id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'}]);
+let team  = gd('rdx_team',[{id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},{id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},{id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'}]);
+let news  = gd('rdx_news',[{id:1,ti:'ברוכים הבאים!',bo:'אנחנו שמחים לפתוח את דלתות הרדיו. הישארו מעודכנים!',dt:today()}]);
+let cfg   = gd('rdx_cfg',{n:'רדיו מדברים בדסמ',d:'הרדיו הרשמי של מדברים בדסמ — האזינו לנו חי!'});
+let inbox = gd('rdx_inbox',[]);
+
+// ---- AUTH ----
+function doLogin(){
+  const p=document.getElementById('lpass').value;
+  const stored=localStorage.getItem(PK)||DP;
+  if(p===stored){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminApp').classList.add('show');
+    renderAll();
+  } else {
+    document.getElementById('lerr').textContent='❌ סיסמה שגויה';
+  }
+}
+function logout(){
+  document.getElementById('adminApp').classList.remove('show');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lpass').value='';
+}
+
+// ---- NAVIGATION ----
+function showPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.adm-menu-item').forEach(m=>m.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='settings'){
+    document.getElementById('cfg-n').value=cfg.n;
+    document.getElementById('cfg-d').value=cfg.d;
+  }
+  if(name==='inbox'){inbox=gd('rdx_inbox',[]);rInbox();}
+}
+
+// ---- RENDER ----
+function renderAll(){inbox=gd('rdx_inbox',[]);rInbox();rSch();rTeam();rNews();}
+
+function rInbox(){
+  inbox=gd('rdx_inbox',[]);
+  const el=document.getElementById('inbox-list');
+  const badge=document.getElementById('inbox-badge');
+  if(inbox.length>0){badge.style.display='inline';badge.textContent=inbox.length;}
+  else{badge.style.display='none';}
+  el.innerHTML=inbox.length
+    ?[...inbox].reverse().map(m=>`
+      <div class="inbox-item">
+        <div class="meta">
+          <div class="nick">👤 ${m.nick}</div>
+          <div class="time">${m.time} · ${m.dt}</div>
+        </div>
+        ${m.txt?`<div class="msg">💬 ${m.txt}</div>`:''}
+        ${m.song?`<div class="song">🎵 ${m.song}</div>`:''}
+        <div class="actions">
+          <button class="btn-del" onclick="delInbox(${m.id})">🗑️ מחק</button>
+        </div>
+      </div>`).join('')
+    :'<div class="empty">📭 אין הודעות עדיין</div>';
+}
+
+function rSch(){
+  document.getElementById('sch-list').innerHTML=sch.length
+    ?sch.map(s=>`<li class="li"><div class="info"><div class="title">${s.t} — ${s.p}</div><div class="sub">${s.d} · ${s.g}</div></div><button class="btn-del" onclick="delSch(${s.id})">מחק</button></li>`).join('')
+    :'<div class="empty">אין שידורים</div>';
+}
+function rTeam(){
+  document.getElementById('team-list').innerHTML=team.length
+    ?team.map(t=>`<li class="li"><div class="info"><div class="title">${t.a.length<=2?t.a+' ':''}${t.n}</div><div class="sub">${t.r}</div></div><button class="btn-del" onclick="delTeam(${t.id})">מחק</button></li>`).join('')
+    :'<div class="empty">אין אנשי צוות</div>';
+}
+function rNews(){
+  document.getElementById('news-list').innerHTML=news.length
+    ?[...news].reverse().map(n=>`<li class="li"><div class="info"><div class="title">${n.ti}</div><div class="sub">${n.dt}</div></div><button class="btn-del" onclick="delNews(${n.id})">מחק</button></li>`).join('')
+    :'<div class="empty">אין דשים</div>';
+}
+
+// ---- CRUD ----
+function delInbox(id){inbox=inbox.filter(x=>x.id!==id);sd('rdx_inbox',inbox);rInbox();toast('🗑️ נמחק');}
+
+function addSch(){
+  const t=document.getElementById('s-t').value,p=document.getElementById('s-p').value.trim(),d=document.getElementById('s-d').value.trim(),g=document.getElementById('s-g').value.trim();
+  if(!t||!p||!d){toast('⚠️ מלא שעה, תוכנית ושדרן');return;}
+  sch.push({id:uid(),t,p,d,g:g||'כללי'});
+  sch.sort((a,b)=>a.t.localeCompare(b.t));
+  sd('rdx_sch',sch);rSch();
+  ['s-t','s-p','s-d','s-g'].forEach(i=>document.getElementById(i).value='');
+  toast('✅ שידור נוסף!');
+}
+function delSch(id){sch=sch.filter(s=>s.id!==id);sd('rdx_sch',sch);rSch();toast('🗑️ נמחק');}
+
+function addTeam(){
+  const n=document.getElementById('t-n').value.trim(),r=document.getElementById('t-r').value.trim(),a=document.getElementById('t-a').value.trim()||'🎙️';
+  if(!n||!r){toast('⚠️ מלא שם ותפקיד');return;}
+  team.push({id:uid(),n,r,a});sd('rdx_team',team);rTeam();
+  ['t-n','t-r','t-a'].forEach(i=>document.getElementById(i).value='');
+  toast('✅ נוסף לצוות!');
+}
+function delTeam(id){team=team.filter(t=>t.id!==id);sd('rdx_team',team);rTeam();toast('🗑️ נמחק');}
+
+function addNews(){
+  const ti=document.getElementById('n-ti').value.trim(),bo=document.getElementById('n-bo').value.trim();
+  if(!ti||!bo){toast('⚠️ מלא כותרת ותוכן');return;}
+  news.push({id:uid(),ti,bo,dt:today()});sd('rdx_news',news);rNews();
+  ['n-ti','n-bo'].forEach(i=>document.getElementById(i).value='');
+  toast('✅ דש פורסם!');
+}
+function delNews(id){news=news.filter(n=>n.id!==id);sd('rdx_news',news);rNews();toast('🗑️ נמחק');}
+
+function saveCfg(){
+  const n=document.getElementById('cfg-n').value.trim(),d=document.getElementById('cfg-d').value.trim();
+  if(n)cfg.n=n; if(d)cfg.d=d;
+  sd('rdx_cfg',cfg);toast('✅ הגדרות נשמרו!');
+}
+function savePass(){
+  const p=document.getElementById('cfg-p').value;
+  if(!p){toast('⚠️ הזן סיסמה חדשה');return;}
+  localStorage.setItem(PK,p);
+  document.getElementById('cfg-p').value='';
+  toast('🔐 סיסמה עודכנה!');
+}
+
+// ---- TOAST ----
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ---- ON AIR ----
+let onair = gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
+
+function loadOnAirForm(){
+  onair = gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
+  document.getElementById('oa-dj').value    = onair.dj    || '';
+  document.getElementById('oa-show').value  = onair.show  || '';
+  document.getElementById('oa-genre').value = onair.genre || '';
+  document.getElementById('oa-photo').value = onair.photo || '';
+  renderOnAirPreview();
+}
+function saveOnAir(){
+  onair.dj    = document.getElementById('oa-dj').value.trim();
+  onair.show  = document.getElementById('oa-show').value.trim();
+  onair.genre = document.getElementById('oa-genre').value.trim();
+  onair.photo = document.getElementById('oa-photo').value.trim();
+  sd('rdx_onair', onair);
+  renderOnAirPreview();
+  toast('✅ מי בשידור עודכן!');
+}
+function clearOnAir(){
+  onair={dj:'',show:'',genre:'',photo:''};
+  sd('rdx_onair', onair);
+  loadOnAirForm();
+  toast('🗑️ נוקה — יציג אוטומטי מהשרת');
+}
+function renderOnAirPreview(){
+  const p = document.getElementById('oa-preview');
+  if(!p) return;
+  const photo = onair.photo || '🎧';
+  const isUrl = photo.startsWith('http');
+  p.innerHTML = \`
+    <div style="text-align:right;">
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px">שדרן: \${onair.dj||'—'}</div>
+      <div style="font-size:13px;color:#ccc;margin-bottom:2px">תוכנית: \${onair.show||'—'}</div>
+      <div style="font-size:13px;color:#888">סגנון: \${onair.genre||'—'}</div>
+    </div>
+    <div style="width:60px;height:60px;border-radius:6px;background:#333;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)">
+      \${isUrl ? \`<img src="\${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='🎧'">\` : photo}
+    </div>\`;
+}
+
+// override showPage to load onair form
+const _origShowPage = showPage;
+function showPage(name, el){
+  _origShowPage(name, el);
+  if(name==='onair') loadOnAirForm();
+}
+
+// auto refresh inbox every 15s
+setInterval(()=>{inbox=gd('rdx_inbox',[]);rInbox();},15000);
+</script>
+</body>
+</html>
