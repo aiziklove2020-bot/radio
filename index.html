@@ -4,273 +4,367 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>רדיו מדברים בדסמ</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{
-  background:#1c1c1c;
-  color:#e8e8e8;
   font-family:'Heebo',sans-serif;
-  min-height:100vh;
+  background:#0a0a0a;
+  color:#fff;
+  overflow-x:hidden;
   direction:rtl;
 }
 
 /* ── NAV ── */
-.nav{
-  background:rgba(40,40,40,0.96);
-  border-bottom:1px solid rgba(255,255,255,0.07);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
-  height:68px;
-  position:sticky;top:0;z-index:100;
+.nav-wrap{
+  position:fixed;top:24px;left:0;right:0;
+  z-index:50;display:flex;justify-content:center;
+  padding:0 16px;
 }
-.nav-brand{display:flex;align-items:center;gap:12px;}
-.nav-brand-icon{font-size:32px;line-height:1;}
-.nav-brand-text{text-align:right;line-height:1.2;}
-.nav-brand-text .b1{font-size:18px;font-weight:800;color:#fff;}
-.nav-brand-text .b2{font-size:11px;color:#888;font-weight:300;}
-.nav-links{display:flex;gap:28px;list-style:none;}
-.nav-links a{color:#aaa;text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;}
-.nav-links a:hover,.nav-links a.act{color:#fff;}
-.nav-links a.act{border-bottom:2px solid #c0392b;padding-bottom:2px;}
+.nav{
+  max-width:1100px;width:100%;
+  background:rgba(20,20,20,0.96);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:12px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.nav-brand{display:flex;align-items:center;gap:14px;}
+.nav-brand-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:#ff0000;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(255,0,0,0.35);
+  font-size:18px;color:#fff;flex-shrink:0;
+}
+.nav-brand-text{text-align:right;}
+.nav-brand-text h1{font-size:20px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.5px;}
+.nav-brand-text p{font-size:9px;color:#ff0000;text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-top:1px;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:14px;font-weight:700;color:#888;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:#ff0000;}
+.nav-links a.act{color:#fff;border-bottom:2px solid #ff0000;padding-bottom:2px;}
 
 /* ── HERO ── */
-.hero{
+.hero-section{
   position:relative;
-  height:360px;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 16px 60px;
+  background:
+    linear-gradient(to bottom,rgba(10,10,10,0.85) 0%,rgba(10,10,10,1) 100%),
+    url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
 }
-.hero-bg{
-  position:absolute;inset:0;
-  background:url('https://images.unsplash.com/photo-1478737270197-99920127b5c2?w=1600&q=85') center/cover no-repeat;
-  filter:brightness(0.28) saturate(0.6);
+.hero-grid{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
 }
-.hero-fade{
-  position:absolute;inset:0;
-  background:linear-gradient(to right,
-    rgba(28,28,28,0.05) 0%,
-    rgba(28,28,28,0.6) 50%,
-    rgba(28,28,28,0.96) 100%
-  );
-}
-.hero-body{
-  position:relative;z-index:2;
-  margin-right:48px;
-  margin-left:auto;
-  text-align:right;
-  max-width:500px;
-}
-.hero-body h1{
-  font-size:54px;font-weight:900;color:#fff;
-  line-height:1.05;margin-bottom:12px;
-  text-shadow:0 2px 24px rgba(0,0,0,0.6);
-}
-.hero-body p{
-  font-size:15px;color:#bbb;font-weight:300;
-  margin-bottom:30px;line-height:1.6;
-}
-.btn-play{
-  display:inline-flex;align-items:center;gap:14px;
-  border:2px solid #fff;color:#fff;
-  background:transparent;
-  font-family:'Heebo',sans-serif;font-size:18px;font-weight:700;
-  padding:13px 42px;border-radius:30px;
-  letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;text-decoration:none;
-  transition:all .25s;
-}
-.btn-play:hover{background:#fff;color:#111;}
-.btn-play .dot{
-  width:12px;height:12px;border-radius:50%;
-  background:#e74c3c;flex-shrink:0;
-  animation:pulse 1.3s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
-.hero-sub{margin-top:10px;font-size:13px;color:#777;text-align:center;}
 
-/* ── NOW ON AIR CARD ── */
-.now-card{
-  background:#2a2a2a;
-  border-top:1px solid rgba(255,255,255,0.05);
+/* Content side */
+.hero-content{text-align:right;}
+.live-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 18px;border-radius:30px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  color:#ccc;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.status-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#ff0000;box-shadow:0 0 14px #ff0000;
+  animation:pulse 2s infinite;flex-shrink:0;
+}
+@keyframes pulse{0%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}100%{opacity:1;transform:scale(1)}}
+.hero-title{
+  font-size:clamp(46px,6.5vw,82px);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-2px;margin-bottom:20px;
+}
+.hero-title .accent{
+  color:#ff0000;
+  text-shadow:0 0 28px rgba(255,0,0,0.4);
+}
+.hero-desc{
+  font-size:18px;color:#777;font-weight:500;
+  max-width:440px;margin-left:auto;
+  line-height:1.65;margin-bottom:32px;
+}
+.btn-cta{
+  display:inline-block;
+  padding:16px 36px;background:#ff0000;color:#fff;
+  border-radius:14px;font-family:'Heebo',sans-serif;
+  font-size:16px;font-weight:700;text-decoration:none;
+  box-shadow:0 12px 40px rgba(255,0,0,0.25);
+  transition:all .25s;cursor:pointer;border:none;
+}
+.btn-cta:hover{background:#cc0000;box-shadow:0 16px 50px rgba(255,0,0,0.4);transform:translateY(-2px);}
+
+/* Player card side */
+.player-card{
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(30px);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:40px;
+  padding:36px;
+  box-shadow:0 40px 100px -20px rgba(0,0,0,0.9);
+}
+.player-card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;
+  padding-bottom:20px;
   border-bottom:1px solid rgba(255,255,255,0.05);
 }
-.now-inner{
-  max-width:1060px;margin:0 auto;
-  display:flex;align-items:stretch;
-}
-/* right side — "מי בשידור?" */
-.now-right{
-  min-width:220px;
-  background:rgba(0,0,0,0.2);
-  border-left:1px solid rgba(255,255,255,0.06);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:20px 28px;gap:8px;
-}
-.now-right-label{
-  font-size:20px;font-weight:800;color:#fff;
-  margin-bottom:4px;
-}
-.now-air-line{
+.player-card-header .lbl{
   display:flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:700;
-  color:#e74c3c;letter-spacing:1px;
+  font-size:10px;text-transform:uppercase;letter-spacing:3px;
+  font-weight:700;color:#555;
 }
-.now-air-line::before{
-  content:'';display:inline-block;
-  width:9px;height:9px;border-radius:50%;
-  background:#e74c3c;
-  animation:pulse 1.3s infinite;
+.player-card-header .lbl i{color:#ff0000;font-size:11px;}
+.connected-badge{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px;border-radius:8px;
+  background:rgba(34,197,94,0.1);
+  font-size:10px;color:#22c55e;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;
 }
-.waves{display:flex;align-items:center;gap:3px;}
-.waves span{
-  display:block;width:4px;border-radius:2px;
-  background:#e74c3c;
-  animation:wv .85s ease-in-out infinite;
+.connected-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:#22c55e;animation:pulse 2s infinite;
 }
-.waves span:nth-child(1){height:8px;animation-delay:0s}
-.waves span:nth-child(2){height:18px;animation-delay:.1s}
-.waves span:nth-child(3){height:12px;animation-delay:.18s}
-.waves span:nth-child(4){height:24px;animation-delay:.28s}
-.waves span:nth-child(5){height:14px;animation-delay:.14s}
-.waves span:nth-child(6){height:7px;animation-delay:.06s}
-@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.player-embed-box{
+  background:rgba(0,0,0,0.6);
+  padding:28px;border-radius:24px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:inset 0 2px 20px rgba(0,0,0,0.5);
+  display:flex;align-items:center;justify-content:center;
+  min-height:110px;
+  margin-bottom:24px;
+}
+.player-embed-box iframe{border-radius:12px;}
+.player-footer{
+  text-align:center;
+  font-size:9px;color:#333;
+  text-transform:uppercase;letter-spacing:5px;
+  font-weight:700;margin-top:20px;
+}
 
-/* left side — DJ info */
-.now-left{
-  flex:1;
-  display:flex;align-items:center;
-  gap:18px;padding:18px 32px;
-  justify-content:flex-end;
+/* NOW ON AIR */
+.now-wrap{
+  max-width:1100px;margin:0 auto;
+  padding:0 16px 0;
+  position:relative;z-index:1;
+}
+.now-card{
+  background:rgba(18,14,14,0.95);
+  border:1px solid rgba(255,0,0,0.15);
+  border-radius:16px;
+  display:grid;grid-template-columns:100px 1fr 200px;
+  overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
 }
 .now-photo{
-  width:80px;height:80px;border-radius:6px;
-  background:#383838;
-  border:1px solid rgba(255,255,255,0.08);
-  overflow:hidden;flex-shrink:0;
+  width:100px;height:106px;background:#1a0a0a;
   display:flex;align-items:center;justify-content:center;
-  font-size:30px;
+  font-size:36px;overflow:hidden;flex-shrink:0;
 }
-.now-photo img{width:100%;height:100%;object-fit:cover;}
-.now-meta{text-align:right;}
-.now-meta .row{
-  font-size:14px;color:#ccc;
-  margin-bottom:5px;line-height:1.4;
+.now-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4);}
+.now-meta{padding:16px 20px;text-align:right;}
+.now-row{font-size:14px;color:#bbb;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.now-row:last-child{border-bottom:none;}
+.now-row .lbl{color:#444;margin-left:6px;}
+.now-row .val{color:#fff;font-weight:600;}
+.now-right{
+  background:rgba(10,6,6,0.9);
+  border-right:1px solid rgba(255,0,0,0.12);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:16px;gap:10px;
 }
-.now-meta .row span{color:#fff;font-weight:600;}
+.now-right h3{font-size:17px;font-weight:300;color:#ddd;text-align:center;}
+.on-air-row{
+  display:flex;align-items:center;gap:8px;
+  color:#ff0000;font-weight:700;font-size:12px;letter-spacing:2px;
+}
+.on-air-row::before{
+  content:'';display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#ff0000;box-shadow:0 0 8px #ff0000;animation:pulse 1.2s infinite;
+}
+.waves{display:flex;align-items:flex-end;gap:2px;height:16px;}
+.waves span{display:block;width:3px;border-radius:2px;background:#ff0000;animation:wv .9s ease-in-out infinite;}
+.waves span:nth-child(1){height:5px;animation-delay:0s}
+.waves span:nth-child(2){height:13px;animation-delay:.1s}
+.waves span:nth-child(3){height:8px;animation-delay:.2s}
+.waves span:nth-child(4){height:16px;animation-delay:.3s}
+.waves span:nth-child(5){height:9px;animation-delay:.15s}
+.waves span:nth-child(6){height:5px;animation-delay:.05s}
+@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
 
-/* ── PLAYER ── */
-.player-wrap{
-  background:#202020;
-  border-bottom:2px solid rgba(192,57,43,0.25);
+/* ── SHOUTOUTS ── */
+.section{max-width:860px;margin:0 auto;padding:64px 16px;}
+.section-title{
+  font-size:28px;font-weight:900;color:#fff;
+  margin-bottom:28px;text-align:right;
+  padding-right:16px;
+  border-right:4px solid #ff0000;
+  line-height:1;
 }
-.player-inner{max-width:1060px;margin:0 auto;padding:18px 24px;}
-.player-lbl{
-  font-size:11px;color:#666;
-  text-transform:uppercase;letter-spacing:1.5px;
-  margin-bottom:10px;display:flex;align-items:center;gap:7px;
+.glass-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:24px;padding:28px;
 }
-.player-lbl::before{
-  content:'';width:7px;height:7px;border-radius:50%;
-  background:#e74c3c;animation:pulse 1.3s infinite;display:inline-block;
-}
-.embed-wrap{border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
-
-/* ── MAIN SECTION ── */
-.main{
-  max-width:1060px;margin:0 auto;
-  padding:32px 24px 56px;
-  display:grid;
-  grid-template-columns:1fr 320px;
-  gap:36px;
-  align-items:start;
-}
-
-/* Schedule */
-.sec-title{
-  font-size:18px;font-weight:800;color:#fff;
-  margin-bottom:14px;text-align:right;
-}
-.tbl{width:100%;border-collapse:collapse;text-align:right;}
-.tbl thead th{
-  font-size:12px;color:#666;
-  text-transform:uppercase;letter-spacing:.5px;
-  padding:6px 14px 10px;
-  border-bottom:1px solid rgba(255,255,255,0.07);
-  font-weight:600;
-}
-.tbl tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);}
-.tbl tbody tr:hover{background:rgba(255,255,255,0.025);}
-.tbl tbody td{padding:11px 14px;font-size:14px;color:#bbb;}
-.tbl tbody td.tc{color:#e74c3c;font-weight:700;font-size:13px;width:68px;}
-.badge{
-  display:inline-block;padding:2px 10px;border-radius:3px;
-  font-size:11px;font-weight:600;
-  background:rgba(255,255,255,0.06);color:#999;
-}
-
-/* Side box */
-.side{
-  background:#252525;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:8px;padding:22px 20px;
-}
-.side .sec-title{font-size:16px;margin-bottom:4px;}
-.side-sub{font-size:13px;color:#666;margin-bottom:16px;text-align:right;}
-.fld{margin-bottom:11px;}
+.fld{margin-bottom:14px;}
 .fld input,.fld textarea{
   width:100%;
-  background:rgba(255,255,255,0.05);
+  background:rgba(0,0,0,0.4);
   border:1px solid rgba(255,255,255,0.09);
-  border-radius:5px;padding:10px 12px;
-  font-family:'Heebo',sans-serif;font-size:14px;
-  color:#e8e8e8;text-align:right;direction:rtl;
+  border-radius:12px;padding:14px 16px;
+  font-family:'Heebo',sans-serif;font-size:15px;
+  color:#fff;text-align:right;direction:rtl;
   outline:none;transition:border-color .2s;
 }
-.fld input::placeholder,.fld textarea::placeholder{color:#555;}
-.fld input:focus,.fld textarea:focus{border-color:rgba(231,76,60,.5);}
-.fld textarea{resize:vertical;min-height:68px;}
+.fld input::placeholder,.fld textarea::placeholder{color:#333;}
+.fld input:focus,.fld textarea:focus{border-color:rgba(255,0,0,.5);}
+.fld textarea{resize:vertical;min-height:110px;}
 .btn-send{
-  background:#c0392b;color:#fff;border:none;border-radius:5px;
-  padding:11px;font-family:'Heebo',sans-serif;
-  font-size:15px;font-weight:700;cursor:pointer;
-  width:100%;transition:background .2s;
+  width:100%;background:#ff0000;color:#fff;border:none;
+  border-radius:12px;padding:15px;
+  font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 8px 30px rgba(255,0,0,0.25);
 }
-.btn-send:hover{background:#e74c3c;}
+.btn-send:hover{background:#cc0000;box-shadow:0 12px 40px rgba(255,0,0,0.4);}
 
-/* ── FOOTER ── */
-footer{
-  border-top:1px solid rgba(255,255,255,0.06);
-  padding:18px 40px;
-  display:flex;justify-content:center;gap:32px;
-  font-size:13px;color:#555;
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start;}
+
+/* Schedule */
+.sch-table{width:100%;border-collapse:collapse;text-align:right;}
+.sch-table thead th{
+  font-size:10px;color:#444;text-transform:uppercase;
+  letter-spacing:2px;padding:8px 10px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.05);font-weight:700;
 }
-footer a{color:#555;text-decoration:underline;transition:color .2s;}
-footer a:hover{color:#aaa;}
+.sch-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;}
+.sch-table tbody tr:hover{background:rgba(255,0,0,0.04);}
+.sch-table tbody td{padding:14px 10px;font-size:14px;color:#aaa;}
+.sch-table tbody td.tc{color:#ff0000;font-weight:700;font-size:13px;width:64px;}
+.sch-table tbody td.td{font-weight:700;color:#fff;}
+.tg{
+  display:inline-block;padding:3px 10px;
+  background:rgba(255,0,0,0.1);color:#ff4444;
+  border-radius:20px;font-size:11px;font-weight:700;
+}
+
+/* News */
+.news-item{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-right:3px solid #ff0000;
+  border-radius:10px;padding:14px;margin-bottom:10px;
+}
+.news-date{font-size:10px;color:#333;margin-bottom:4px;letter-spacing:1px;}
+.news-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.news-body{font-size:13px;color:#555;line-height:1.6;}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px;}
+.team-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;padding:22px 12px;
+  text-align:center;transition:all .3s;
+}
+.team-card:hover{border-color:rgba(255,0,0,.3);transform:translateY(-4px);box-shadow:0 8px 28px rgba(255,0,0,0.1);}
+.team-av{
+  width:62px;height:62px;border-radius:50%;
+  background:#1a0a0a;margin:0 auto 12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;border:1px solid rgba(255,0,0,0.2);overflow:hidden;
+}
+.team-av img{width:100%;height:100%;object-fit:cover;}
+.team-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
+.team-role{font-size:10px;color:#ff4444;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+
+/* Parties */
+.parties-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
+.party-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;padding:22px;text-align:right;transition:all .3s;
+}
+.party-card:hover{border-color:rgba(255,0,0,.3);transform:translateY(-4px);box-shadow:0 8px 28px rgba(255,0,0,0.1);}
+.party-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;}
+.party-desc{font-size:13px;color:#555;line-height:1.5;margin-bottom:16px;}
+.party-btn{
+  width:100%;padding:11px;background:transparent;
+  border:1px solid rgba(255,0,0,.3);color:#fff;
+  border-radius:10px;font-family:'Heebo',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.party-btn:hover{background:#ff0000;box-shadow:0 4px 20px rgba(255,0,0,.3);}
+
+/* Divider */
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(255,0,0,0.2),transparent);margin:0 16px;}
+
+/* Footer */
+footer{
+  background:#050505;border-top:1px solid rgba(255,255,255,0.04);
+  padding:40px 16px;text-align:center;
+}
+.footer-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:#ff0000;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 12px;font-size:20px;
+  box-shadow:0 4px 20px rgba(255,0,0,0.3);
+}
+.footer-name{font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;}
+.footer-sub{font-size:9px;color:#ff0000;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:20px;}
+.footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:16px;}
+.footer-links a{font-size:12px;color:#333;text-decoration:none;text-transform:uppercase;letter-spacing:1.5px;transition:color .2s;}
+.footer-links a:hover{color:#ff0000;}
+.footer-copy{font-size:10px;color:#1a1a1a;text-transform:uppercase;letter-spacing:2px;}
 
 /* Toast */
 .toast{
   position:fixed;bottom:22px;left:50%;
-  transform:translateX(-50%) translateY(70px);
-  background:#2a2a2a;border:1px solid rgba(255,255,255,0.1);
-  color:#fff;padding:10px 24px;border-radius:30px;
+  transform:translateX(-50%) translateY(80px);
+  background:#0e0a0a;border:1px solid rgba(255,0,0,0.3);
+  color:#fff;padding:11px 26px;border-radius:30px;
   font-size:14px;font-weight:600;z-index:9999;
   transition:transform .3s;pointer-events:none;
+  box-shadow:0 4px 24px rgba(255,0,0,0.15);
 }
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-@media(max-width:760px){
-  .main{grid-template-columns:1fr;}
-  .hero-body{margin-right:20px;margin-left:20px;}
-  .hero-body h1{font-size:36px;}
-  .nav{padding:0 16px;}
+/* ── MOBILE ── */
+@media(max-width:860px){
+  .nav{padding:10px 16px;}
+  .nav-brand-text h1{font-size:16px;}
   .nav-links{gap:16px;}
-  .now-inner{flex-direction:column;}
-  .now-right{border-left:none;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .nav-links a{font-size:12px;}
+  .hero-grid{grid-template-columns:1fr;gap:32px;}
+  .hero-content{order:2;}
+  .player-card{order:1;border-radius:24px;padding:22px;}
+  .hero-title{font-size:clamp(38px,10vw,64px);}
+  .hero-desc{font-size:16px;}
+  .now-card{grid-template-columns:80px 1fr;}
+  .now-photo{width:80px;height:86px;font-size:28px;}
+  .now-right{grid-column:1/-1;border-right:none;border-top:1px solid rgba(255,0,0,0.08);flex-direction:row;justify-content:center;padding:12px;gap:16px;}
+  .two-col{grid-template-columns:1fr;gap:32px;}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+  .parties-grid{grid-template-columns:1fr;}
+  .section{padding:44px 14px;}
+}
+@media(max-width:480px){
+  .nav-links{display:none;}
+  .hero-section{padding:90px 14px 40px;}
 }
 </style>
 </head>
@@ -278,257 +372,271 @@ footer a:hover{color:#aaa;}
 <div class="toast" id="toast"></div>
 
 <!-- NAV -->
-<nav class="nav">
-  <div class="nav-brand">
-    <div class="nav-brand-icon">🎙️</div>
-    <div class="nav-brand-text">
-      <div class="b1" id="nav-name">רדיו מדברים בדסמ</div>
-      <div class="b2">הרדיו הרשמי של מדברים בדסמ</div>
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-brand-icon"><i class="fa-solid fa-microphone-lines"></i></div>
+      <div class="nav-brand-text">
+        <h1 id="nav-name">רדיו מדברים בדסמ</h1>
+        <p>הקול של הקהילה</p>
+      </div>
     </div>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#" class="act">בית</a></li>
-    <li><a href="#sec-sch">לוח שידורים</a></li>
-    <li><a href="#sec-team">הצוות</a></li>
-    <li><a href="#sec-news">דשים</a></li>
-  </ul>
-</nav>
+    <ul class="nav-links">
+      <li><a href="#" class="act">בית</a></li>
+      <li><a href="#schedule">לוח שידורים</a></li>
+      <li><a href="#shoutouts">דשים</a></li>
+      <li><a href="#parties">מסיבות</a></li>
+    </ul>
+  </nav>
+</div>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-fade"></div>
-  <div class="hero-body">
-    <h1 id="hero-t">רדיו מדברים בדסמ</h1>
-    <p id="hero-d">הרדיו הרשמי של מדברים בדסמ — האזינו לנו חי!</p>
-    <a class="btn-play" href="#player">
-      PLAY LIVE
-      <span class="dot"></span>
-    </a>
-    <div class="hero-sub">האזינו עכשיו</div>
-  </div>
-</section>
-
-<!-- NOW ON AIR -->
-<div class="now-card">
-  <div class="now-inner">
-    <div class="now-left">
-      <div class="now-meta">
-        <div class="row">שדרן: <span id="now-dj">טוען...</span></div>
-        <div class="row">תוכנית: <span id="now-show">—</span></div>
-        <div class="row">סגנון: <span id="now-genre">—</span></div>
+<header class="hero-section">
+  <div class="hero-grid">
+    <!-- Content -->
+    <div class="hero-content">
+      <div class="live-badge">
+        <span class="status-dot"></span>
+        שידור חי מהאולפן
       </div>
+      <h2 class="hero-title">
+        רדיו<br>
+        <span class="accent" id="hero-t">מדברים בדסמ</span>
+      </h2>
+      <p class="hero-desc" id="hero-d">הקול של הקהילה. רשת חברתית בדסמית בשידור חי 24/7.</p>
+      <a class="btn-cta" href="#shoutouts">שלח ד"ש לשדרן</a>
+    </div>
+
+    <!-- Player Card -->
+    <div class="player-card">
+      <div class="player-card-header">
+        <div class="lbl">
+          <i class="fa-solid fa-tower-broadcast"></i>
+          Live Player
+        </div>
+        <div class="connected-badge">Connected</div>
+      </div>
+      <div class="player-embed-box">
+        <iframe
+          src="https://hub.cloud.caster.fm/public/widgets/player/?token=60e730b1-7eca-48ab-92da-977474cf4482&theme=dark&color=ff0000"
+          width="100%" height="110" frameborder="0" scrolling="no" allow="autoplay"
+          style="display:block;border:none;background:transparent;border-radius:12px;">
+        </iframe>
+      </div>
+      <!-- Now playing info inside card -->
+      <div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:10px;color:#333;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;text-align:center;">עכשיו בשידור</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div style="text-align:right;">
+            <div style="font-size:15px;font-weight:700;color:#fff;" id="now-dj">טוען...</div>
+            <div style="font-size:12px;color:#555;" id="now-show">—</div>
+          </div>
+          <div id="now-photo-small" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;">🎧</div>
+        </div>
+      </div>
+      <div class="player-footer">Live Station Player</div>
+    </div>
+  </div>
+</header>
+
+<!-- FULL NOW ON AIR BAR -->
+<div style="background:#0a0a0a;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="now-wrap" style="padding-top:16px;padding-bottom:16px;">
+    <div class="now-card">
       <div class="now-photo" id="now-photo">🎧</div>
-    </div>
-    <div class="now-right">
-      <div class="now-right-label">מי בשידור?</div>
-      <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <div class="now-air-line">NOW ON AIR</div>
-    </div>
-  </div>
-</div>
-
-<!-- PLAYER -->
-<div class="player-wrap" id="player">
-  <div class="player-inner">
-    <div class="player-lbl">שידור חי</div>
-    <div class="embed-wrap">
-      <div data-type="newStreamPlayer"
-           data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482"
-           data-theme="dark" data-color="e81e4d"
-           data-channelId="" data-rendered="false" class="cstrEmbed">
-        <a href="https://www.caster.fm">Shoutcast Hosting</a>
-        <a href="https://www.caster.fm">Stream Hosting</a>
-        <a href="https://www.caster.fm">Radio Server Hosting</a>
+      <div class="now-meta">
+        <div class="now-row"><span class="lbl">שדרן:</span><span class="val" id="now-dj2">טוען...</span></div>
+        <div class="now-row"><span class="lbl">תוכנית:</span><span class="val" id="now-show2">—</span></div>
+        <div class="now-row"><span class="lbl">סגנון:</span><span class="val" id="now-genre">—</span></div>
       </div>
-      <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
+      <div class="now-right">
+        <h3>מי בשידור?</h3>
+        <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="on-air-row">NOW ON AIR</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- MAIN: Schedule + Side -->
-<div class="main">
-
-  <!-- Schedule -->
-  <div id="sec-sch">
-    <div class="sec-title">לוח שידורים</div>
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Time</th><th>Program</th><th>DJ</th><th>Genre</th>
-        </tr>
-      </thead>
-      <tbody id="pub-sch"></tbody>
-    </table>
-  </div>
-
-  <!-- Side: form + news -->
-  <div>
-    <div class="side" id="sec-news">
-      <div class="sec-title">פינת הדשים והקדשות</div>
-      <div class="side-sub">שלחו לנו מסר</div>
-      <div class="fld"><input type="text" id="m-nick" placeholder="כינוי (דיסקרטי)"/></div>
-      <div class="fld"><input type="text" id="m-txt"  placeholder="המסר שלך"/></div>
-      <div class="fld"><textarea id="m-song" placeholder="הקדשת שיר"></textarea></div>
-      <button class="btn-send" onclick="sendMsg()">שלח</button>
+<!-- SCHEDULE + FORM -->
+<div class="section" id="schedule" style="max-width:1100px;">
+  <div class="two-col">
+    <div>
+      <div class="section-title">לוח שידורים</div>
+      <table class="sch-table">
+        <thead><tr><th>שעה</th><th>תוכנית</th><th>שדרן</th><th>סגנון</th></tr></thead>
+        <tbody id="pub-sch"></tbody>
+      </table>
     </div>
-
-    <!-- News items below form -->
-    <div style="margin-top:24px;" id="sec-news-list">
-      <div class="sec-title" style="font-size:16px;">דשים וחדשות</div>
-      <div id="pub-news"></div>
+    <div id="shoutouts">
+      <div class="section-title">שלח ד"ש לשדרן</div>
+      <div class="glass-card">
+        <div class="fld"><input type="text" id="m-nick" placeholder="הכינוי שלך"/></div>
+        <div class="fld"><textarea id="m-txt" placeholder="מה תרצו להגיד באוויר?" rows="4"></textarea></div>
+        <div class="fld"><input type="text" id="m-song" placeholder="הקדשת שיר (אופציונלי)"/></div>
+        <button class="btn-send" onclick="sendMsg()">שלח עכשיו</button>
+      </div>
+      <div style="margin-top:28px;">
+        <div class="section-title" style="font-size:20px;margin-bottom:16px;">חדשות אחרונות</div>
+        <div id="pub-news"></div>
+      </div>
     </div>
   </div>
 </div>
+
+<div class="divider"></div>
 
 <!-- TEAM -->
-<div style="max-width:1060px;margin:0 auto;padding:0 24px 52px;" id="sec-team">
-  <div class="sec-title">הצוות שלנו</div>
-  <div id="pub-team" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;"></div>
+<div class="section" id="team">
+  <div class="section-title">הצוות שלנו</div>
+  <div class="team-grid" id="pub-team"></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PARTIES -->
+<div class="section" id="parties">
+  <div class="section-title">מסיבות השבוע</div>
+  <div class="parties-grid" id="pub-parties"></div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <a href="#">הצהרת הדיסקרטיות</a>
-  <a href="#">מדיניות פרטיות</a>
+  <div class="footer-icon"><i class="fa-solid fa-microphone-lines"></i></div>
+  <div class="footer-name" id="footer-name">רדיו מדברים בדסמ</div>
+  <div class="footer-sub">הקול של הקהילה</div>
+  <div class="footer-links">
+    <a href="#">בית</a>
+    <a href="#schedule">לוח שידורים</a>
+    <a href="#shoutouts">דשים</a>
+    <a href="#parties">מסיבות</a>
+    <a href="#">מדיניות פרטיות</a>
+    <a href="#">מחיקת חשבון</a>
+  </div>
+  <div class="footer-copy" id="footer-copy">© 2026 רדיו מדברים בדסמ — כל הזכויות שמורות</div>
 </footer>
 
 <script>
-function gd(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function gd(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
 function sd(k,v){localStorage.setItem(k,JSON.stringify(v));}
 function uid(){return Date.now();}
 function today(){return new Date().toLocaleDateString('he-IL');}
 
-let sch  = gd('rdx_sch',[
-  {id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},
-  {id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},
-  {id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},
-  {id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'},
-]);
-let team = gd('rdx_team',[
-  {id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},
-  {id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},
-  {id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'},
-]);
-let news = gd('rdx_news',[
-  {id:1,ti:'ברוכים הבאים!',bo:'אנחנו שמחים לפתוח את דלתות הרדיו. הישארו מעודכנים!',dt:today()},
-]);
-let cfg  = gd('rdx_cfg',{n:'רדיו מדברים בדסמ',d:'הרדיו הרשמי של מדברים בדסמ — האזינו לנו חי!'});
+var sch     = gd('rdx_sch',[{id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},{id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},{id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},{id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'}]);
+var team    = gd('rdx_team',[{id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},{id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},{id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'},{id:4,n:'עורך מוזיקה',r:'מוזיקאי',a:'🎵'}]);
+var news    = gd('rdx_news',[{id:1,ti:'ברוכים הבאים לרדיו!',bo:'הרדיו הרשמי של מדברים בדסמ פתוח. האזינו לנו 24/7!',dt:today()}]);
+var parties = gd('rdx_parties',[{id:1,name:'Midnight Fetish',desc:'חגיגת לייטקס ועור במועדון המרתף.'},{id:2,name:'The Rope Ritual',desc:'ערב המוקדש לאמנות השבורי והקשירות.'},{id:3,name:'Afternoon Bondage',desc:'מסיבת צהריים קלילה עם קוקטיילים.'}]);
+var cfg     = gd('rdx_cfg',{n:'מדברים בדסמ',d:'הקול של הקהילה. רשת חברתית בדסמית בשידור חי 24/7.'});
 
 function rSch(){
-  document.getElementById('pub-sch').innerHTML = sch.length
-    ? sch.map(s=>`<tr><td class="tc">${s.t}</td><td>${s.p}</td><td>${s.d}</td><td><span class="badge">${s.g}</span></td></tr>`).join('')
-    : '<tr><td colspan="4" style="text-align:center;color:#555;padding:20px">אין שידורים</td></tr>';
+  var el=document.getElementById('pub-sch');
+  if(!sch.length){el.innerHTML='<tr><td colspan="4" style="padding:20px;text-align:center;color:#222">אין שידורים</td></tr>';return;}
+  var h='';
+  for(var i=0;i<sch.length;i++){var s=sch[i];
+    h+='<tr><td class="tc">'+s.t+'</td><td>'+s.p+'</td><td class="td">'+s.d+'</td><td><span class="tg">'+s.g+'</span></td></tr>';
+  }
+  el.innerHTML=h;
 }
 function rTeam(){
-  document.getElementById('pub-team').innerHTML = team.length
-    ? team.map(t=>`
-        <div style="background:#252525;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:18px 12px;text-align:center;">
-          <div style="width:58px;height:58px;border-radius:50%;background:#333;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid rgba(255,255,255,0.07);overflow:hidden;">
-            ${t.a.startsWith('http')?`<img src="${t.a}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='🎙️'">`:t.a}
-          </div>
-          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:3px">${t.n}</div>
-          <div style="font-size:11px;color:#c0392b;font-weight:600">${t.r}</div>
-        </div>`).join('')
-    : '<p style="color:#555">אין אנשי צוות</p>';
+  var el=document.getElementById('pub-team');
+  if(!team.length){el.innerHTML='<p style="color:#222">אין אנשי צוות</p>';return;}
+  var h='';
+  for(var i=0;i<team.length;i++){var t=team[i];
+    var av=t.a.indexOf('http')===0?('<img src="'+t.a+'" onerror="this.parentElement.textContent=\'🎙️\'">'):t.a;
+    h+='<div class="team-card"><div class="team-av">'+av+'</div><div class="team-name">'+t.n+'</div><div class="team-role">'+t.r+'</div></div>';
+  }
+  el.innerHTML=h;
 }
 function rNews(){
-  document.getElementById('pub-news').innerHTML = [...news].reverse().map(n=>`
-    <div style="background:#252525;border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:14px;margin-bottom:10px;">
-      <div style="font-size:11px;color:#555;margin-bottom:4px">${n.dt}</div>
-      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">${n.ti}</div>
-      <div style="font-size:13px;color:#888;line-height:1.55">${n.bo}</div>
-    </div>`).join('') || '<p style="color:#555;font-size:13px">אין דשים עדיין</p>';
+  var el=document.getElementById('pub-news');
+  var rev=news.slice().reverse();
+  if(!rev.length){el.innerHTML='<p style="color:#222;font-size:13px">אין דשים עדיין</p>';return;}
+  var h='';
+  for(var i=0;i<rev.length;i++){var n=rev[i];
+    h+='<div class="news-item"><div class="news-date">'+n.dt+'</div><div class="news-title">'+n.ti+'</div><div class="news-body">'+n.bo+'</div></div>';
+  }
+  el.innerHTML=h;
+}
+function rParties(){
+  var el=document.getElementById('pub-parties');
+  if(!parties.length){el.innerHTML='<p style="color:#222">אין אירועים</p>';return;}
+  var h='';
+  for(var i=0;i<parties.length;i++){var p=parties[i];
+    h+='<div class="party-card"><div class="party-name">'+p.name+'</div><div class="party-desc">'+p.desc+'</div><button class="party-btn">להרשמה לאירוע</button></div>';
+  }
+  el.innerHTML=h;
 }
 function applyCfg(){
-  document.getElementById('hero-t').textContent  = cfg.n;
-  document.getElementById('hero-d').textContent  = cfg.d;
-  document.getElementById('nav-name').textContent = cfg.n;
-  document.title = cfg.n;
+  document.getElementById('hero-t').textContent=cfg.n;
+  document.getElementById('hero-d').textContent=cfg.d;
+  document.getElementById('nav-name').textContent='רדיו '+cfg.n;
+  document.getElementById('footer-name').textContent='רדיו '+cfg.n;
+  document.title='רדיו '+cfg.n;
 }
-
 function sendMsg(){
-  const nick = document.getElementById('m-nick').value.trim();
-  const txt  = document.getElementById('m-txt').value.trim();
-  const song = document.getElementById('m-song').value.trim();
-  if(!nick && !txt){ showToast('⚠️ מלא לפחות כינוי ומסר'); return; }
-  let inbox = gd('rdx_inbox',[]);
-  inbox.push({
-    id: uid(), nick: nick||'אנונימי', txt, song,
-    dt: today(),
-    time: new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})
-  });
-  sd('rdx_inbox', inbox);
-  ['m-nick','m-txt','m-song'].forEach(i=>document.getElementById(i).value='');
+  var nick=document.getElementById('m-nick').value.trim();
+  var txt=document.getElementById('m-txt').value.trim();
+  var song=document.getElementById('m-song').value.trim();
+  if(!nick&&!txt){showToast('⚠️ מלא לפחות כינוי ומסר');return;}
+  var inbox=gd('rdx_inbox',[]);
+  inbox.push({id:uid(),nick:nick||'אנונימי',txt:txt,song:song,dt:today(),time:new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
+  sd('rdx_inbox',inbox);
+  document.getElementById('m-nick').value='';
+  document.getElementById('m-txt').value='';
+  document.getElementById('m-song').value='';
   showToast('📨 המסר נשלח! תודה 💙');
 }
-
 function showToast(msg){
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 2600);
+  var el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},2600);
 }
-
-function applyOnAir(dj, show, genre, photo){
-  document.getElementById('now-dj').textContent    = dj    || 'בשידור חי';
-  document.getElementById('now-show').textContent  = show  || '—';
-  document.getElementById('now-genre').textContent = genre || '—';
-  const photoEl = document.getElementById('now-photo');
-  if(photo){
-    const isUrl = photo.startsWith('http');
-    photoEl.innerHTML = isUrl
-      ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.textContent='🎧'">`
-      : photo;
-  } else {
-    photoEl.textContent = '🎧';
+function applyOnAir(dj,show,genre,photo){
+  document.getElementById('now-dj').textContent=dj||'בשידור חי';
+  document.getElementById('now-dj2').textContent=dj||'בשידור חי';
+  document.getElementById('now-show').textContent=show||'—';
+  document.getElementById('now-show2').textContent=show||'—';
+  document.getElementById('now-genre').textContent=genre||'—';
+  var els=[document.getElementById('now-photo'),document.getElementById('now-photo-small')];
+  for(var i=0;i<els.length;i++){
+    if(photo&&photo.indexOf('http')===0){
+      els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.textContent=\'🎧\'">';
+    } else if(photo&&photo.length<=2){els[i].textContent=photo;}
   }
 }
-
-async function fetchNow(){
-  // Try multiple CORS proxies
-  const TARGET = 'https://morcast.caster.fm:13763/status-json.xsl';
-  const PROXIES = [
-    'https://corsproxy.io/?' + encodeURIComponent(TARGET),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(TARGET),
-  ];
-
-  for(const url of PROXIES){
-    try{
-      const r = await fetch(url, {cache:'no-cache'});
-      const d = await r.json();
-      const sources = d?.icestats?.source;
-      let src = Array.isArray(sources)
-        ? (sources.find(s=>s.listenurl?.includes('/y4k1D')) || sources[0])
-        : sources;
-      if(src){
+function fetchNow(){
+  // בדוק עדכון ידני מהפאנל קודם
+  var manual=gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
+  if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);return;}
+  // שלוף מ-Vercel API
+  fetch('/api/nowplaying',{cache:'no-cache'})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.online){
         applyOnAir(
-          src.server_name || src.title || 'בשידור',
-          src.title || src.song || '—',
-          src.genre || '—',
+          d.dj||d.title||'בשידור',
+          d.title||'—',
+          d.genre||'—',
           ''
         );
-        const lEl = document.getElementById('now-listeners');
-        if(lEl && src.listeners > 0) lEl.textContent = src.listeners + ' מאזינים';
-        return; // success — stop trying
+      } else {
+        document.getElementById('now-dj').textContent='השרת לא פעיל';
+        document.getElementById('now-dj2').textContent='השרת לא פעיל';
       }
-    } catch(e){ continue; }
-  }
-  // all failed
-  document.getElementById('now-dj').textContent = 'בשידור חי';
+    })
+    .catch(function(){
+      document.getElementById('now-dj').textContent='בשידור חי';
+      document.getElementById('now-dj2').textContent='בשידור חי';
+    });
 }
-
 function reload(){
-  sch  = gd('rdx_sch', sch);
-  team = gd('rdx_team', team);
-  news = gd('rdx_news', news);
-  cfg  = gd('rdx_cfg', cfg);
-  rSch(); rTeam(); rNews(); applyCfg();
+  sch=gd('rdx_sch',sch);team=gd('rdx_team',team);
+  news=gd('rdx_news',news);parties=gd('rdx_parties',parties);cfg=gd('rdx_cfg',cfg);
+  rSch();rTeam();rNews();rParties();applyCfg();
 }
-
-reload();
-fetchNow();
-setInterval(fetchNow, 30000);
-setInterval(reload, 10000);
+reload();fetchNow();
+setInterval(fetchNow,30000);setInterval(reload,8000);
 </script>
 </body>
 </html>

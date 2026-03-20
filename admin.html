@@ -121,6 +121,7 @@ body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-heigh
       <div class="adm-menu-item" onclick="showPage('schedule',this)">📅 לוח שידורים</div>
       <div class="adm-menu-item" onclick="showPage('team',this)">👥 צוות</div>
       <div class="adm-menu-item" onclick="showPage('news',this)">📰 דשים</div>
+      <div class="adm-menu-item" onclick="showPage('parties',this)">🎉 מסיבות</div>
       <div class="adm-menu-item" onclick="showPage('settings',this)">⚙️ הגדרות</div>
     </div>
 
@@ -199,6 +200,18 @@ body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-heigh
         <ul class="list" id="news-list"></ul>
       </div>
 
+      <!-- PARTIES -->
+      <div class="page" id="page-parties">
+        <div class="page-title">🎉 מסיבות השבוע</div>
+        <div class="card">
+          <h4>➕ הוסף מסיבה</h4>
+          <div class="af"><label>שם המסיבה</label><input type="text" id="p-name" placeholder="שם האירוע"/></div>
+          <div class="af"><label>תיאור</label><textarea id="p-desc" placeholder="תיאור קצר..." style="min-height:70px;resize:vertical;"></textarea></div>
+          <button class="btn-add" onclick="addParty()">הוסף אירוע</button>
+        </div>
+        <ul class="list" id="parties-list"></ul>
+      </div>
+
       <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="page-title">⚙️ הגדרות</div>
@@ -232,6 +245,7 @@ function sd(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 function uid() { return Date.now(); }
 function today() { return new Date().toLocaleDateString('he-IL'); }
 
+let parties = gd('rdx_parties',[{id:1,name:'Midnight Fetish',desc:'חגיגת לייטקס ועור במועדון המרתף.'},{id:2,name:'The Rope Ritual',desc:'ערב המוקדש לאמנות השבורי.'},{id:3,name:'Afternoon Bondage',desc:'מסיבת צהריים קלילה.'}]);
 let sch   = gd('rdx_sch',  [{id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},{id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},{id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},{id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'}]);
 let team  = gd('rdx_team', [{id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},{id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},{id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'}]);
 let news  = gd('rdx_news', [{id:1,ti:'ברוכים הבאים!',bo:'אנחנו שמחים לפתוח את דלתות הרדיו!',dt:today()}]);
@@ -268,13 +282,14 @@ function showPage(name, el) {
     document.getElementById('cfg-d').value = cfg.d;
   }
   if (name === 'onair') { loadOnAirForm(); }
+  if (name === 'parties') { rParties(); }
   if (name === 'inbox') { inbox = gd('rdx_inbox',[]); rInbox(); }
 }
 
 // ---- RENDER ----
 function renderAll() {
   inbox = gd('rdx_inbox',[]);
-  rInbox(); rSch(); rTeam(); rNews();
+  rInbox(); rSch(); rTeam(); rNews(); rParties();
 }
 
 function rInbox() {
@@ -428,6 +443,33 @@ function savePass() {
   localStorage.setItem(PK,p);
   document.getElementById('cfg-p').value='';
   toast('🔐 סיסמה עודכנה!');
+}
+
+// ---- PARTIES ----
+function rParties() {
+  var el = document.getElementById('parties-list');
+  if (!el) return;
+  if (!parties.length) { el.innerHTML = '<div class="empty">אין מסיבות</div>'; return; }
+  var html = '';
+  for (var i = 0; i < parties.length; i++) {
+    var p = parties[i];
+    html += '<li class="li"><div class="info"><div class="title">' + p.name + '</div><div class="sub">' + p.desc.substring(0,50) + '...</div></div><button class="btn-del" onclick="delParty(' + p.id + ')">מחק</button></li>';
+  }
+  el.innerHTML = html;
+}
+function addParty() {
+  var name = document.getElementById('p-name').value.trim();
+  var desc = document.getElementById('p-desc').value.trim();
+  if (!name || !desc) { toast('⚠️ מלא שם ותיאור'); return; }
+  parties.push({id:uid(), name:name, desc:desc});
+  sd('rdx_parties', parties); rParties();
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-desc').value = '';
+  toast('✅ מסיבה נוספה!');
+}
+function delParty(id) {
+  parties = parties.filter(function(p){ return p.id !== id; });
+  sd('rdx_parties', parties); rParties(); toast('🗑️ נמחק');
 }
 
 // ---- TOAST ----
