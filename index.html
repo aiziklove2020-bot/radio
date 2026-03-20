@@ -485,27 +485,36 @@ function applyOnAir(dj, show, genre, photo){
 }
 
 async function fetchNow(){
-  try{
-    const r = await fetch('/api/nowplaying', {cache:'no-cache'});
-    const d = await r.json();
-    if(d.online){
-      applyOnAir(
-        d.dj   || d.title || 'בשידור',
-        d.title || '—',
-        d.genre || '—',
-        ''
-      );
-      // listeners
-      const lEl = document.getElementById('now-listeners');
-      if(lEl) lEl.textContent = d.listeners > 0 ? d.listeners + ' מאזינים' : '';
-    } else {
-      document.getElementById('now-dj').textContent    = 'השרת לא פעיל';
-      document.getElementById('now-show').textContent  = '—';
-      document.getElementById('now-genre').textContent = '—';
-    }
-  } catch{
-    document.getElementById('now-dj').textContent = 'בשידור חי';
+  // Try multiple CORS proxies
+  const TARGET = 'https://morcast.caster.fm:13763/status-json.xsl';
+  const PROXIES = [
+    'https://corsproxy.io/?' + encodeURIComponent(TARGET),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(TARGET),
+  ];
+
+  for(const url of PROXIES){
+    try{
+      const r = await fetch(url, {cache:'no-cache'});
+      const d = await r.json();
+      const sources = d?.icestats?.source;
+      let src = Array.isArray(sources)
+        ? (sources.find(s=>s.listenurl?.includes('/y4k1D')) || sources[0])
+        : sources;
+      if(src){
+        applyOnAir(
+          src.server_name || src.title || 'בשידור',
+          src.title || src.song || '—',
+          src.genre || '—',
+          ''
+        );
+        const lEl = document.getElementById('now-listeners');
+        if(lEl && src.listeners > 0) lEl.textContent = src.listeners + ' מאזינים';
+        return; // success — stop trying
+      }
+    } catch(e){ continue; }
   }
+  // all failed
+  document.getElementById('now-dj').textContent = 'בשידור חי';
 }
 
 function reload(){
