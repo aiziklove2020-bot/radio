@@ -497,6 +497,7 @@ footer{
           <div class="fb-progress"><div class="fb-progress-bar" id="fb-bar"></div></div>
         </div>
         <audio id="fb-audio" preload="none"></audio>
+      <div id="fb-autoplay-hint" style="display:none;text-align:center;margin-top:10px;font-size:12px;color:#4a9eff;">&#9654; לחץ על כפתור הניגון להתחיל</div>
       </div>
       <!-- Now playing info inside card -->
       <div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.05);">
@@ -717,14 +718,27 @@ function fbPlay(index){
   var track = FALLBACK_PLAYLIST[fbIndex % FALLBACK_PLAYLIST.length];
   fbAudio.src = track.url;
   fbTrackName.textContent = track.title;
-  fbAudio.play().then(function(){
-    fbPlaying = true;
-    fbPlayPause.textContent = '⏸';
-  }).catch(function(){});
+  var p = fbAudio.play();
+  if(p !== undefined){
+    p.then(function(){
+      fbPlaying = true;
+      fbPlayPause.textContent = '\u23F8';
+      var hint = document.getElementById('fb-autoplay-hint');
+      if(hint) hint.style.display = 'none';
+    }).catch(function(){
+      fbPlaying = false;
+      fbPlayPause.textContent = '\u25B6';
+      var hint = document.getElementById('fb-autoplay-hint');
+      if(hint) hint.style.display = 'block';
+    });
+  }
 }
 function fbToggle(){
-  if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='▶'; }
-  else { fbAudio.play(); fbPlaying=true; fbPlayPause.textContent='⏸'; }
+  if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='\u25B6'; }
+  else {
+    var p = fbAudio.play();
+    if(p !== undefined) p.then(function(){ fbPlaying=true; fbPlayPause.textContent='\u23F8'; var hint=document.getElementById('fb-autoplay-hint'); if(hint) hint.style.display='none'; });
+  }
 }
 fbAudio.addEventListener('ended', function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); });
 fbAudio.addEventListener('timeupdate', function(){
