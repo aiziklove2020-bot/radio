@@ -332,6 +332,54 @@ footer{
 .footer-links a:hover{color:#ff0000;}
 .footer-copy{font-size:10px;color:#1a1a1a;text-transform:uppercase;letter-spacing:2px;}
 
+/* ── FALLBACK PLAYER ── */
+.fallback-player{
+  display:none;
+  background:rgba(0,0,0,0.6);
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,0.05);
+  padding:18px 20px;
+  margin-bottom:24px;
+}
+.fallback-player.visible{display:block;}
+.fallback-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.fallback-label{
+  font-size:10px;color:#4a9eff;text-transform:uppercase;
+  letter-spacing:2px;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.fallback-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#4a9eff;animation:pulse 2s infinite;
+}
+.fallback-track{
+  font-size:13px;color:#fff;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:200px;text-align:right;
+}
+.fallback-controls{
+  display:flex;align-items:center;gap:10px;margin-top:12px;
+}
+.fb-btn{
+  background:rgba(255,255,255,0.07);border:none;
+  color:#aaa;border-radius:8px;
+  width:34px;height:34px;cursor:pointer;
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.fb-btn:hover{background:rgba(255,0,0,0.2);color:#fff;}
+.fb-progress{
+  flex:1;height:3px;background:rgba(255,255,255,0.1);
+  border-radius:3px;overflow:hidden;
+}
+.fb-progress-bar{
+  height:100%;background:#ff0000;width:0%;
+  transition:width 1s linear;border-radius:3px;
+}
+
 /* Toast */
 .toast{
   position:fixed;bottom:22px;left:50%;
@@ -417,7 +465,7 @@ footer{
         </div>
         <div class="connected-badge">Connected</div>
       </div>
-      <div class="player-embed-box" style="padding:16px;">
+      <div class="player-embed-box" style="padding:16px;" id="live-embed-box">
         <div data-type="newStreamPlayer"
              data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482"
              data-theme="dark"
@@ -431,6 +479,24 @@ footer{
           <a href="https://www.caster.fm">Radio Server Hosting</a>
         </div>
         <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
+      </div>
+
+      <!-- FALLBACK PLAYER (מופיע רק כשהסטרים כבוי) -->
+      <div class="fallback-player" id="fallback-player">
+        <div class="fallback-header">
+          <div class="fallback-label">
+            <span class="fallback-dot"></span>
+            פלייליסט גיבוי
+          </div>
+          <div class="fallback-track" id="fb-track-name">טוען...</div>
+        </div>
+        <div class="fallback-controls">
+          <button class="fb-btn" id="fb-prev" title="הקודם">⏮</button>
+          <button class="fb-btn" id="fb-playpause" title="נגן/השהה">▶</button>
+          <button class="fb-btn" id="fb-next" title="הבא">⏭</button>
+          <div class="fb-progress"><div class="fb-progress-bar" id="fb-bar"></div></div>
+        </div>
+        <audio id="fb-audio" preload="none"></audio>
       </div>
       <!-- Now playing info inside card -->
       <div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.05);">
@@ -614,14 +680,84 @@ function applyOnAir(dj,show,genre,photo){
     } else if(photo&&photo.length<=2){els[i].textContent=photo;}
   }
 }
+// =============================================
+// פלייליסט גיבוי — ערוך כאן את השירים שלך
+// =============================================
+var FALLBACK_PLAYLIST = [
+  { title: "Metallica – The Unforgiven (Remastered)",        url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29%28mp3j.cc%29.mp3" },
+  { title: "Rammstein – Deutschland",                        url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Deutschland%28mp3j.cc%29.mp3" },
+  { title: "Rammstein – Engel",                              url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Engel%28mp3j.cc%29.mp3" },
+  { title: "Evanescence – Bring Me To Life (Remastered)",    url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Evanescence%20-%20Bring%20Me%20To%20Life%20%28Remastered%202023%29%20-%20Official%20Visualizer%28mp3j.cc%29.mp3" },
+  { title: "Slipknot – Spit It Out",                         url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Spit%20It%20Out.mp3" },
+  { title: "Måneskin – Beggin'",                             url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Ma%CC%8Aneskin%20-%20Beggin%27%20%28LyricsTesto%29%28mp3j.cc%29.mp3" },
+  { title: "IAMX – Happiness",                               url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/IAMX%20-%20Happiness%20%28Official%20Music%20Video%29.mp3" },
+  { title: "Everybody Loves An Outlaw – I See Red",          url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Everybody%20Loves%20An%20Outlaw%20-%20I%20See%20Red%20%28Official%20Lyric%20Video%29%28mp3j.cc%29.mp3" },
+  { title: "Ellie Goulding – Love Me Like You Do",           url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Ellie%20Goulding%20-%20Love%20Me%20Like%20You%20Do%20%28Official%20Video%29%28mp3j.cc%29.mp3" },
+  { title: "Kaoma – Lambada 2.0 (Afro House Remix)",         url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Kaoma%20-%20Lambada%202.0%20%28ENNEM%20Afro%20House%20Remix%29%28mp3j.cc%29.mp3" },
+  { title: "Aven Grey – Bella Ciao Rock (La Casa de Papel)", url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Aven%20Grey%20%E2%80%93%20Bella%20Ciao%20Rock%20La%20Casa%20de%20Papel%20Inspired%20Cover.mp3" }
+];
+// =============================================
+
+var fbAudio = document.getElementById('fb-audio');
+var fbTrackName = document.getElementById('fb-track-name');
+var fbBar = document.getElementById('fb-bar');
+var fbPlayPause = document.getElementById('fb-playpause');
+var fbPrev = document.getElementById('fb-prev');
+var fbNext = document.getElementById('fb-next');
+var fallbackPlayer = document.getElementById('fallback-player');
+var liveEmbedBox = document.getElementById('live-embed-box');
+
+var fbIndex = 0;
+var fbPlaying = false;
+var streamWasOnline = null;
+
+function fbPlay(index){
+  if(index !== undefined) fbIndex = index;
+  if(!FALLBACK_PLAYLIST.length) return;
+  var track = FALLBACK_PLAYLIST[fbIndex % FALLBACK_PLAYLIST.length];
+  fbAudio.src = track.url;
+  fbTrackName.textContent = track.title;
+  fbAudio.play().then(function(){
+    fbPlaying = true;
+    fbPlayPause.textContent = '⏸';
+  }).catch(function(){});
+}
+function fbToggle(){
+  if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='▶'; }
+  else { fbAudio.play(); fbPlaying=true; fbPlayPause.textContent='⏸'; }
+}
+fbAudio.addEventListener('ended', function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); });
+fbAudio.addEventListener('timeupdate', function(){
+  if(fbAudio.duration) fbBar.style.width=(fbAudio.currentTime/fbAudio.duration*100)+'%';
+});
+fbAudio.addEventListener('error', function(){
+  setTimeout(function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); }, 1000);
+});
+if(fbPlayPause) fbPlayPause.addEventListener('click', fbToggle);
+if(fbPrev) fbPrev.addEventListener('click', function(){ fbIndex=(fbIndex-1+FALLBACK_PLAYLIST.length)%FALLBACK_PLAYLIST.length; fbPlay(); });
+if(fbNext) fbNext.addEventListener('click', function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); });
+
+function setStreamMode(online){
+  if(online === streamWasOnline) return;
+  streamWasOnline = online;
+  if(online){
+    liveEmbedBox.style.display='';
+    fallbackPlayer.classList.remove('visible');
+    if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='▶'; }
+  } else {
+    liveEmbedBox.style.display='none';
+    fallbackPlayer.classList.add('visible');
+    if(!fbPlaying) fbPlay();
+  }
+}
+
 function fetchNow(){
-  // בדוק עדכון ידני מהפאנל קודם
   var manual=gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
-  if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);return;}
-  // שלוף מ-Vercel API
+  if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);}
   fetch('/api/nowplaying',{cache:'no-cache'})
     .then(function(r){return r.json();})
     .then(function(d){
+      setStreamMode(!!d.online);
       if(d.online){
         applyOnAir(
           d.dj||d.title||'בשידור',
@@ -630,8 +766,8 @@ function fetchNow(){
           ''
         );
       } else {
-        document.getElementById('now-dj').textContent='השרת לא פעיל';
-        document.getElementById('now-dj2').textContent='השרת לא פעיל';
+        document.getElementById('now-dj').textContent='לא בשידור';
+        document.getElementById('now-dj2').textContent='לא בשידור';
       }
     })
     .catch(function(){
@@ -639,6 +775,7 @@ function fetchNow(){
       document.getElementById('now-dj2').textContent='בשידור חי';
     });
 }
+
 function reload(){
   sch=gd('rdx_sch',sch);team=gd('rdx_team',team);
   news=gd('rdx_news',news);parties=gd('rdx_parties',parties);cfg=gd('rdx_cfg',cfg);
