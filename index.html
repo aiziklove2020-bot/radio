@@ -696,7 +696,7 @@ function applyOnAir(dj,show,genre,photo){
   document.getElementById('now-genre').textContent=genre||'—';
   var els=[document.getElementById('now-photo'),document.getElementById('now-photo-small')];
   for(var i=0;i<els.length;i++){
-    if(photo&&photo.indexOf('http')===0){
+    if(photo&&(photo.indexOf('http')===0||photo.indexOf('data:')===0)){
       els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.textContent=\'🎧\'">';
     } else if(photo&&photo.length<=2){els[i].textContent=photo;}
   }
