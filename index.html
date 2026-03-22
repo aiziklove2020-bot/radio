@@ -28,7 +28,7 @@ body {
 .hero-bg {
     position: relative;
     height: 80vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(8,8,8,1)), 
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(8,8,8,1)), 
                 url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
@@ -86,72 +86,84 @@ header {
 }
 .nav-links a:hover { opacity: 1; color: var(--primary); }
 
-/* ── Unified Media Player ── */
-.custom-player {
-    margin-top: 30px;
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(15px);
+/* ── Hidden Engines ── */
+.hidden-engines {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* ── Custom Styled Player UI ── */
+.player-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 100px;
-    padding: 15px 30px;
-    max-width: 500px;
-    width: 100%;
+    padding: 12px 30px 12px 15px;
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-top: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    min-width: 320px;
 }
 
-.play-pause-btn {
+.play-trigger {
+    width: 65px;
+    height: 65px;
     background: var(--primary);
-    color: white;
-    border: none;
-    width: 60px;
-    height: 60px;
     border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    flex-shrink: 0;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
 }
-.play-pause-btn:hover { transform: scale(1.1); background: var(--primary-dark); }
+.play-trigger:hover { transform: scale(1.08); background: var(--primary-dark); }
+.play-trigger:disabled { opacity: 0.5; cursor: wait; }
 
-.player-info {
+.play-trigger.is-playing {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+.track-info {
     text-align: right;
     flex: 1;
 }
-.player-info .status-tag {
-    font-size: 10px;
-    background: rgba(231, 76, 60, 0.2);
-    color: var(--primary);
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-weight: 800;
-    margin-bottom: 4px;
-    display: inline-block;
-}
-.player-info .track-name {
-    font-size: 16px;
-    font-weight: 700;
-    color: #fff;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.volume-control {
-    display: flex;
+.live-indicator {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--primary);
+    background: rgba(231, 76, 60, 0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
 }
-.volume-slider {
-    width: 70px;
-    cursor: pointer;
-    accent-color: var(--primary);
+.live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
+.live-dot.offline { background: #888; }
+
+.track-title {
+    font-size: 18px;
+    font-weight: 700;
+    display: block;
 }
 
 /* ── On Air Card ── */
@@ -163,7 +175,7 @@ header {
     padding: 25px;
     width: 90%;
     max-width: 700px;
-    margin: -70px auto 70px;
+    margin: -60px auto 70px;
     display: flex;
     align-items: center;
     gap: 25px;
@@ -190,10 +202,8 @@ header {
 }
 
 @media (max-width: 768px) {
-    .nav-links { gap: 15px; }
-    .nav-links a { font-size: 14px; }
     .main-grid { grid-template-columns: 1fr; }
-    .now-on-air-card { flex-direction: column; text-align: center; margin-top: -40px; }
+    .now-on-air-card { flex-direction: column; text-align: center; }
 }
 </style>
 </head>
@@ -212,96 +222,145 @@ header {
 </header>
 
 <section class="hero-bg" id="home">
-    <div style="max-width: 800px; width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <h1 style="font-size: clamp(35px, 8vw, 65px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
-        
-        <div class="custom-player">
-            <button class="play-pause-btn" id="master-play-btn">
-                <i class="fa-solid fa-play" id="btn-icon"></i>
-            </button>
-            <div class="player-info">
-                <span class="status-tag" id="internal-status">מוכן לנגינה</span>
-                <span class="track-name" id="track-label">Metallica - Unforgiven</span>
-            </div>
-            <div class="volume-control">
-                <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1" id="vol-slider">
-            </div>
-        </div>
+    <h1 style="font-size: clamp(35px, 8vw, 60px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
+    <p style="opacity: 0.6; margin-top: 10px;">שידור חי, מוזיקה ודיונים - הכל במקום אחד.</p>
 
-        <!-- נגן גיבוי נסתר למחצה -->
-        <div style="margin-top:20px;">
-            <audio id="audio-engine" controls style="height:35px; border-radius:10px; width:280px;"></audio>
-            <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:5px;">אם הכפתור למעלה לא מגיב, השתמש בנגן הגיבוי כאן</p>
+    <div class="player-container">
+        <div class="track-info">
+            <div class="live-indicator" id="live-indicator-box">
+                <div class="live-dot" id="live-status-dot"></div>
+                <span id="live-status-text">בודק שידור...</span>
+            </div>
+            <span class="track-title" id="status-text">טוען נגן...</span>
         </div>
+        
+        <button class="play-trigger" id="master-play-btn" disabled>
+            <i class="fa-solid fa-play" id="btn-icon"></i>
+        </button>
+    </div>
+
+    <!-- נגנים מוסתרים -->
+    <div class="hidden-engines">
+        <div id="youtube-engine"></div>
+        <!-- נגן הגיבוי מ-Archive.org -->
+        <iframe id="backup-engine" src="https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321" allow="autoplay"></iframe>
     </div>
 </section>
 
 <div class="now-on-air-card">
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb">
     <div style="flex:1; text-align: right;">
-        <div id="air-badge" style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">מצב שידור</div>
+        <div style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">סטטוס שידור</div>
         <h2 id="dj-name-display" style="font-size: 28px;">רדיו מדברים בדסמ</h2>
-        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">שידור פלייליסט פעיל</p>
+        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">מחוברים למערכת השידור</p>
     </div>
 </div>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
         <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">לוח שידורים</h2>
-        <p>שידורי מוזיקה ופלייליסט 24/7.</p>
+        <p>כשאנחנו לא בשידור חי, תוכלו ליהנות ממוזיקה שנבחרה עבורכם מתוך הארכיון שלנו.</p>
     </div>
     <div class="box-container" id="dashim">
         <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">שלח ד"ש</h2>
-        <input type="text" id="msg-name" placeholder="שם" style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #333; color:#fff;">
-        <textarea id="msg-content" placeholder="הודעה" style="width:100%; padding:10px; background:#222; border:1px solid #333; color:#fff;"></textarea>
-        <button onclick="sendGreeting()" style="width:100%; padding:10px; background:var(--primary); color:#fff; border:none; cursor:pointer;">שלח</button>
+        <input type="text" id="msg-name" placeholder="שם המוסר" style="width:100%; padding:12px; margin-bottom:10px; background:#222; border:1px solid #333; color:#fff; border-radius:10px;">
+        <textarea id="msg-content" placeholder="הודעה לשדרן..." style="width:100%; padding:12px; background:#222; border:1px solid #333; color:#fff; border-radius:10px; height:80px;"></textarea>
+        <button onclick="sendGreeting()" style="width:100%; padding:12px; background:var(--primary); color:#fff; border:none; cursor:pointer; border-radius:10px; font-weight:bold;">שלח הודעה</button>
     </div>
 </div>
 
 <script>
-// הכתובת הישירה ביותר לקובץ ה-MP3 מתוך ה-Archive
-const AUDIO_URL = "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3";
+let ytPlayer;
+let isYtReady = false;
+let isPlaying = false;
+let currentMode = 'none'; // 'youtube' or 'backup'
+let pendingYtId = null;
 
-const audio = document.getElementById('audio-engine');
 const playBtn = document.getElementById('master-play-btn');
 const btnIcon = document.getElementById('btn-icon');
-const statusTag = document.getElementById('internal-status');
+const statusText = document.getElementById('status-text');
+const liveText = document.getElementById('live-status-text');
+const liveDot = document.getElementById('live-status-dot');
+const backupFrame = document.getElementById('backup-engine');
 
-// הגדרה ראשונית
-audio.src = AUDIO_URL;
+// טעינת YouTube API
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-function togglePlay() {
-    if (audio.paused) {
-        statusTag.innerText = "מתחבר...";
-        audio.play().then(() => {
-            isPlaying = true;
-            btnIcon.className = "fa-solid fa-pause";
-            statusTag.innerText = "מנגן כעת";
-        }).catch(err => {
-            console.error("Play failed:", err);
-            statusTag.innerText = "שגיאת טעינה";
-        });
-    } else {
-        audio.pause();
-        btnIcon.className = "fa-solid fa-play";
-        statusTag.innerText = "מושהה";
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('youtube-engine', {
+        height: '1', width: '1', videoId: '',
+        playerVars: { 'autoplay': 0, 'controls': 0 },
+        events: {
+            'onReady': onYtReady,
+            'onStateChange': onYtStateChange,
+            'onError': switchToBackup
+        }
+    });
+}
+
+function onYtReady() {
+    isYtReady = true;
+    playBtn.disabled = false;
+    if (pendingYtId) {
+        ytPlayer.cueVideoById(pendingYtId);
+        checkLiveStatus(pendingYtId);
+        pendingYtId = null;
     }
 }
 
-playBtn.addEventListener('click', togglePlay);
+function checkLiveStatus(id) {
+    if(!id) {
+        switchToBackup();
+        return;
+    }
+    // בגרסה זו, אנחנו פשוט מנסים לטעון. אם יוטיוב יחזיר שגיאה, הוא יעבור לגיבוי.
+    currentMode = 'youtube';
+    liveText.innerText = "LIVE ON YOUTUBE";
+    liveDot.className = "live-dot";
+    statusText.innerText = "מוכן לשידור חי";
+}
 
-// סנכרון בין נגן הגיבוי לכפתור המעוצב
-audio.onplay = () => {
-    btnIcon.className = "fa-solid fa-pause";
-    statusTag.innerText = "מנגן כעת";
-};
-audio.onpause = () => {
-    btnIcon.className = "fa-solid fa-play";
-    statusTag.innerText = "מושהה";
-};
+function switchToBackup() {
+    currentMode = 'backup';
+    liveText.innerText = "ARCHIVE PLAYER";
+    liveDot.className = "live-dot offline";
+    statusText.innerText = "מנגן מהארכיון";
+    if(ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
+}
 
-document.getElementById('vol-slider').addEventListener('input', (e) => {
-    audio.volume = e.target.value;
+function onYtStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        isPlaying = true;
+        updateUI(true);
+    } else {
+        isPlaying = false;
+        updateUI(false);
+    }
+}
+
+function updateUI(playing) {
+    btnIcon.className = playing ? "fa-solid fa-pause" : "fa-solid fa-play";
+    if (playing) playBtn.classList.add('is-playing');
+    else playBtn.classList.remove('is-playing');
+}
+
+playBtn.addEventListener('click', () => {
+    if (currentMode === 'youtube') {
+        if (isPlaying) ytPlayer.pauseVideo();
+        else ytPlayer.playVideo();
+    } else {
+        // שליטה על ה-Iframe של הארכיון היא מוגבלת, אז פשוט נפעיל/נכבה את ה-Src או נשתמש בפוסט-מסג'
+        // בגלל מגבלות Iframe, הדרך הכי פשוטה היא לשלוח "Play" לנגן
+        isPlaying = !isPlaying;
+        updateUI(isPlaying);
+        // הערה: נגני Archive.org בדרך כלל דורשים אינטראקציה ישירה בתוך ה-Iframe.
+        // כאן המשתמש יוכל לשמוע את הסאונד ברקע.
+        if(!isPlaying) backupFrame.src = ""; 
+        else backupFrame.src = "https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321&autoplay=1";
+    }
 });
 </script>
 
@@ -318,8 +377,19 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
-    if(doc.exists && doc.data().image) {
-        document.getElementById('dj-image-display').src = doc.data().image;
+    if(doc.exists) {
+        const data = doc.data();
+        if(data.image) document.getElementById('dj-image-display').src = data.image;
+        if(data.youtubeId) {
+            if (isYtReady) {
+                ytPlayer.cueVideoById(data.youtubeId);
+                checkLiveStatus(data.youtubeId);
+            } else {
+                pendingYtId = data.youtubeId;
+            }
+        } else {
+            switchToBackup();
+        }
     }
 });
 
@@ -328,12 +398,10 @@ function sendGreeting() {
     const c = document.getElementById('msg-content').value.trim();
     if(!n || !c) return;
     db.collection('greetings').add({
-        sender: n,
-        text: c,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        sender: n, text: c, timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
         document.getElementById('msg-content').value = "";
-        alert("נשלח!");
+        alert("הד\"ש נשלח!");
     });
 }
 </script>
