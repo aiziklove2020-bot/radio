@@ -166,38 +166,6 @@
             color: white;
         }
 
-        .schedule-header {
-            display: grid;
-            grid-template-columns: 140px 1fr 1fr 50px;
-            gap: 15px;
-            padding: 10px;
-            color: var(--text-dim);
-            font-size: 13px;
-        }
-
-        .schedule-row {
-            display: grid;
-            grid-template-columns: 140px 1fr 1fr 50px;
-            gap: 15px;
-            align-items: center;
-            padding: 12px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            margin-bottom: 10px;
-        }
-
-        .time-label { font-weight: bold; color: var(--primary); font-size: 13px; }
-
-        .btn-icon-delete {
-            background: rgba(235, 77, 75, 0.1);
-            color: var(--danger);
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border-radius: 10px;
-        }
-        .btn-icon-delete:hover { background: var(--danger); color: white; }
-
         .status-badge {
             display: flex;
             align-items: center;
@@ -231,10 +199,6 @@
 
         @media (max-width: 850px) {
             .grid { grid-template-columns: 1fr; }
-            .schedule-header { display: none; }
-            .schedule-row { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .time-label { grid-column: 1 / -1; }
-            .btn-icon-delete { grid-column: 2; justify-self: end; }
         }
     </style>
 </head>
@@ -258,7 +222,7 @@
         
         <div class="form-group">
             <label>מלל חופשי / הודעה רצה בנגן</label>
-            <textarea id="scrolling-text" placeholder="הכנס הודעה שתופיע בנגן (למשל: דרישת שלום, הודעה על תוכנית קרובה...)" rows="2"></textarea>
+            <textarea id="scrolling-text" placeholder="הכנס הודעה שתופיע בנגן..." rows="2"></textarea>
         </div>
 
         <div class="grid">
@@ -289,13 +253,10 @@
         </div>
     </div>
 
-    <!-- WEEKLY SCHEDULE -->
+    <!-- WEEKLY SCHEDULE - ONLY FREE TEXT -->
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי</h2>
-            <button class="btn-danger-outline" onclick="clearEntireDay()">
-                <i class="fa-solid fa-trash-can"></i> נקה את כל יום <span class="active-day-text">ראשון</span>
-            </button>
+            <h2 style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי (מלל חופשי)</h2>
         </div>
         
         <div class="schedule-tabs" id="day-tabs">
@@ -308,26 +269,13 @@
             <button class="tab-btn" onclick="switchDay('saturday')">שבת</button>
         </div>
 
-        <!-- NEW: Free text for schedule -->
         <div class="form-group">
-            <label>מלל חופשי ליום <span class="active-day-text">ראשון</span> (יופיע מעל לוח השידורים)</label>
-            <textarea id="schedule-free-text" placeholder="למשל: יום שידורים מיוחד לרגל החג, הערות מיוחדות..." rows="2"></textarea>
+            <label>מה משודר ביום <span class="active-day-text">ראשון</span>?</label>
+            <textarea id="schedule-free-text" placeholder="כתוב כאן את לוח השידורים של היום בצורה חופשית..." rows="10"></textarea>
         </div>
 
-        <div id="schedule-editor">
-            <div class="schedule-header">
-                <div>שעה</div>
-                <div>שם התוכנית</div>
-                <div>שדרן/ית</div>
-                <div>מחק</div>
-            </div>
-            <div id="time-slots-container">
-                <!-- Slots rendered via JS -->
-            </div>
-        </div>
-
-        <button class="btn-save" style="margin-top: 25px; width: 100%;" onclick="saveSchedule()">
-            <i class="fa-solid fa-floppy-disk"></i> שמור שינויים ליום <span class="active-day-text">ראשון</span>
+        <button class="btn-save" style="width: 100%;" onclick="saveSchedule()">
+            <i class="fa-solid fa-floppy-disk"></i> שמור לוח שידורים ליום <span class="active-day-text">ראשון</span>
         </button>
     </div>
 
@@ -340,8 +288,8 @@
                 <input type="text" id="p1-date" placeholder="תאריך ושעה" class="form-group">
                 <input type="text" id="p1-link" placeholder="לינק לכרטיסים/מידע" class="form-group">
             </div>
-            <textarea id="p1-free-text" placeholder="מלל חופשי (למשל: דגשים חשובים, מבצעים...)" rows="2" class="form-group"></textarea>
-            <textarea id="p1-desc" placeholder="תיאור מלא של האירוע" rows="3"></textarea>
+            <textarea id="p1-free-text" placeholder="מלל חופשי לאירוע" rows="2" class="form-group"></textarea>
+            <textarea id="p1-desc" placeholder="תיאור מלא" rows="3"></textarea>
         </div>
         <div class="card">
             <h2><i class="fa-solid fa-calendar-check"></i> אירוע 2</h2>
@@ -350,8 +298,8 @@
                 <input type="text" id="p2-date" placeholder="תאריך ושעה" class="form-group">
                 <input type="text" id="p2-link" placeholder="לינק לכרטיסים/מידע" class="form-group">
             </div>
-            <textarea id="p2-free-text" placeholder="מלל חופשי (למשל: דגשים חשובים, מבצעים...)" rows="2" class="form-group"></textarea>
-            <textarea id="p2-desc" placeholder="תיאור מלא של האירוע" rows="3"></textarea>
+            <textarea id="p2-free-text" placeholder="מלל חופשי לאירוע" rows="2" class="form-group"></textarea>
+            <textarea id="p2-desc" placeholder="תיאור מלא" rows="3"></textarea>
         </div>
     </div>
     <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני אירועים</button>
@@ -361,7 +309,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
         authDomain: "radio-163cd.firebaseapp.com",
@@ -373,71 +320,27 @@
 
     let djBase64 = "", offlineBase64 = "", currentDay = "sunday", fullSchedule = {};
 
-    const timeSlots = [
-        "08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", 
-        "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00", 
-        "20:00 - 22:00", "22:00 - 00:00", "00:00 - 08:00"
-    ];
-
     const dayNames = {
         sunday: "ראשון", monday: "שני", tuesday: "שלישי", 
         wednesday: "רביעי", thursday: "חמישי", friday: "שישי", saturday: "שבת"
     };
 
-    function renderSlots() {
-        const container = document.getElementById('time-slots-container');
-        container.innerHTML = '';
-        timeSlots.forEach((slot, index) => {
-            const div = document.createElement('div');
-            div.className = 'schedule-row';
-            div.innerHTML = `
-                <div class="time-label">${slot}</div>
-                <input type="text" id="prog-${index}" placeholder="שם התוכנית">
-                <input type="text" id="host-${index}" placeholder="שדרן">
-                <button class="btn-icon-delete" onclick="clearSlot(${index})" title="מחק שורה זו">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            `;
-            container.appendChild(div);
-        });
-        loadAllSchedule();
-    }
-
-    async function loadAllSchedule() {
-        db.collection('settings').doc('schedule').onSnapshot(doc => {
-            if (doc.exists) {
-                fullSchedule = doc.data();
-                loadDayData();
-            }
-        });
-    }
+    // Load Schedule
+    db.collection('settings').doc('schedule').onSnapshot(doc => {
+        if (doc.exists) {
+            fullSchedule = doc.data();
+            loadDayData();
+        }
+    });
 
     function loadDayData() {
-        clearInputs(false);
         const data = fullSchedule[currentDay];
-        // Handle both old format (array only) and new format (object with slots and freeText)
-        let slots = [];
-        let freeText = "";
-
+        // In this version, we only care about freeText
+        let text = "";
         if (data) {
-            if (Array.isArray(data)) {
-                slots = data;
-            } else {
-                slots = data.slots || [];
-                freeText = data.freeText || "";
-            }
+            text = typeof data === 'string' ? data : (data.freeText || "");
         }
-
-        document.getElementById('schedule-free-text').value = freeText;
-
-        slots.forEach((slotData, i) => {
-            if (i < timeSlots.length) {
-                const progEl = document.getElementById(`prog-${i}`);
-                const hostEl = document.getElementById(`host-${i}`);
-                if(progEl) progEl.value = slotData.title || "";
-                if(hostEl) hostEl.value = slotData.host || "";
-            }
-        });
+        document.getElementById('schedule-free-text').value = text;
     }
 
     function switchDay(day) {
@@ -449,50 +352,17 @@
         loadDayData();
     }
 
-    function clearInputs(confirmAction = true) {
-        if (confirmAction && !confirm(`האם אתה בטוח שברצונך לנקות את כל השורות ביום ${dayNames[currentDay]}?`)) return;
-        timeSlots.forEach((_, i) => {
-            const prog = document.getElementById(`prog-${i}`);
-            const host = document.getElementById(`host-${i}`);
-            if(prog) prog.value = "";
-            if(host) host.value = "";
-        });
-        if(confirmAction) document.getElementById('schedule-free-text').value = "";
-    }
-
-    function clearSlot(index) {
-        const prog = document.getElementById(`prog-${index}`);
-        const host = document.getElementById(`host-${index}`);
-        if(prog) prog.value = "";
-        if(host) host.value = "";
-    }
-
-    function clearEntireDay() {
-        clearInputs(true);
-    }
-
     async function saveSchedule() {
-        const slotsArray = timeSlots.map((slot, i) => ({
-            time: slot,
-            title: document.getElementById(`prog-${i}`).value.trim(),
-            host: document.getElementById(`host-${i}`).value.trim()
-        }));
-
-        const freeText = document.getElementById('schedule-free-text').value.trim();
-
-        // Save as an object containing both the slots and the free text
-        fullSchedule[currentDay] = {
-            slots: slotsArray,
-            freeText: freeText
-        };
+        const freeText = document.getElementById('schedule-free-text').value;
+        fullSchedule[currentDay] = { freeText: freeText };
 
         try {
             await db.collection('settings').doc('schedule').set(fullSchedule);
-            alert(`נתוני יום ${dayNames[currentDay]} (כולל מלל חופשי) עודכנו בלוח השידורים!`);
-        } catch (e) { alert("שגיאה בעדכון: " + e.message); }
+            alert(`לוח השידורים ליום ${dayNames[currentDay]} נשמר בהצלחה!`);
+        } catch (e) { alert("שגיאה בשמירה: " + e.message); }
     }
 
-    // Live Info Logic
+    // Live Control logic (remains same)
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const d = doc.data();
@@ -512,22 +382,18 @@
     });
 
     async function updateLive() {
-        const name = document.getElementById('dj-name').value;
-        const sUrl = document.getElementById('stream-url').value;
-        const sText = document.getElementById('scrolling-text').value;
         await db.collection('settings').doc('dj_info').set({
-            name: name,
-            streamUrl: sUrl,
-            scrollingText: sText,
+            name: document.getElementById('dj-name').value,
+            streamUrl: document.getElementById('stream-url').value,
+            scrollingText: document.getElementById('scrolling-text').value,
             image: djBase64 || document.getElementById('dj-img-preview').src,
             offlineImage: offlineBase64 || document.getElementById('offline-img-preview').src
         }, { merge: true });
-        alert("סטטוס שידור ומלל עודכנו!");
+        alert("עודכן!");
     }
 
     async function clearLive() {
-        const offImg = document.getElementById('offline-img-preview').src;
-        await db.collection('settings').doc('dj_info').update({ name: "", image: offImg });
+        await db.collection('settings').doc('dj_info').update({ name: "", image: document.getElementById('offline-img-preview').src });
         alert("השידור הופסק");
     }
 
@@ -568,10 +434,9 @@
             }
         };
         await db.collection('settings').doc('parties_info').set(data);
-        alert("נתוני אירועים עודכנו!");
+        alert("אירועים עודכנו!");
     }
 
-    // Load Events Initial Data
     db.collection('settings').doc('parties_info').get().then(doc => {
         if(doc.exists) {
             const d = doc.data();
@@ -591,8 +456,6 @@
             }
         }
     });
-
-    renderSlots();
 </script>
 </body>
 </html>
