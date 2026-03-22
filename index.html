@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>רדיו מדברים בדסמ | הקול של הקהילה</title>
+    <title>רדיו מדברים בדס"מ | לוח שידורים</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -192,11 +192,25 @@
 
         .schedule-item {
             display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .schedule-time { color: var(--primary); font-weight: bold; width: 70px; font-size: 14px; }
+        .schedule-item:last-child { border-bottom: none; }
+        .schedule-time { 
+            color: var(--primary); 
+            font-weight: 800; 
+            min-width: 85px; 
+            font-size: 14px;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .schedule-info { flex: 1; }
+        .schedule-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .schedule-host { font-size: 13px; opacity: 0.6; }
 
         .party-grid {
             display: grid;
@@ -275,14 +289,14 @@
 
 <div class="main-grid">
     <div class="box-container" id="dashim">
-        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px;">שלח ד"ש</h2>
-        <input type="text" id="msg-name" placeholder="שם המוסר">
-        <textarea id="msg-content" placeholder="הודעה לשדרן..." style="height:80px; resize: none;"></textarea>
+        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; margin-bottom: 15px;">שלח ד"ש לשדרן</h2>
+        <input type="text" id="msg-name" placeholder="השם שלך">
+        <textarea id="msg-content" placeholder="מה תרצו למסור?" style="height:100px; resize: none;"></textarea>
         <button class="submit-btn" onclick="sendGreeting(event)">שלח הודעה</button>
     </div>
     
     <div class="box-container" id="schedule">
-        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px;">לוח שידורים - <span id="current-day-label"></span></h2>
+        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; margin-bottom: 15px;">לוח שידורים - <span id="current-day-label"></span></h2>
         <div id="schedule-content" style="font-size: 14px;">טוען לוח שידורים...</div>
     </div>
 </div>
@@ -371,6 +385,7 @@ playBtn.addEventListener('click', function() {
     updateUI();
 });
 
+// Sync DJ Info
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
@@ -390,29 +405,78 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
     }
 });
 
+// Sync Schedule with enhanced sync logic
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const now = new Date();
 document.getElementById('current-day-label').innerText = daysHeb[now.getDay()];
 
 db.collection('settings').doc('schedule').onSnapshot(doc => {
+    const container = document.getElementById('schedule-content');
     if(doc.exists) {
-        const s = doc.data()[daysEng[now.getDay()]] || [];
-        const container = document.getElementById('schedule-content');
-        container.innerHTML = s.length ? s.map(i => `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${i.title}</b><br><small>${i.host || ''}</small></div></div>`).join('') : "מוזיקה ברצף";
+        const rawData = doc.data()[daysEng[now.getDay()]];
+        
+        // Handle both Array and Object formats from Firestore
+        let s = [];
+        if (Array.isArray(rawData)) {
+            s = rawData;
+        } else if (typeof rawData === 'object' && rawData !== null) {
+            s = Object.values(rawData); // Convert {0: {}, 1: {}} to [{}, {}]
+        }
+
+        if (s.length > 0) {
+            // Sort by time field (handles 'time' or 'hour' labels)
+            s.sort((a, b) => {
+                const timeA = a.time || a.hour || "00:00";
+                const timeB = b.time || b.hour || "00:00";
+                return timeA > timeB ? 1 : -1;
+            });
+            
+            container.innerHTML = s.map(item => `
+                <div class="schedule-item">
+                    <div class="schedule-time">${item.time || item.hour || 'שידור'}</div>
+                    <div class="schedule-info">
+                        <div class="schedule-title">${item.title || 'תוכנית ללא שם'}</div>
+                        <div class="schedule-host">${item.host ? 'בהגשת ' + item.host : 'רדיו מדברים בדס"מ'}</div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = `<div style="text-align:center; padding: 20px; opacity: 0.5;">אין שידורים מתוכננים להיום.<br>מוזיקה מעולה ברצף 24/7!</div>`;
+        }
+    } else {
+        container.innerHTML = "טוען לוח שידורים...";
     }
 });
 
+// Sync Parties with dynamic mapping
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
         const container = document.getElementById('party-container');
         container.innerHTML = "";
-        ['party1', 'party2'].forEach(p => {
-            if(data[p] && data[p].title) {
-                container.innerHTML += `<div class="party-card"><img src="${data[p].img || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img"><div class="party-content"><div style="color:var(--primary); font-weight:bold; font-size:12px;">${data[p].date || ''}</div><h3>${data[p].title}</h3><p style="opacity:0.6; font-size:12px;">${data[p].desc || ''}</p></div></div>`;
+        
+        // Loop through all properties in case they are not named party1/party2
+        const partyKeys = Object.keys(data).sort(); 
+        
+        partyKeys.forEach(p => {
+            const party = data[p];
+            if(party && (party.title || party.name)) {
+                container.innerHTML += `
+                    <div class="party-card">
+                        <img src="${party.img || party.image || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img">
+                        <div class="party-content">
+                            <div style="color:var(--primary); font-weight:bold; font-size:12px;">${party.date || ''}</div>
+                            <h3 style="margin: 5px 0;">${party.title || party.name}</h3>
+                            <p style="opacity:0.6; font-size:12px; height: 36px; overflow: hidden;">${party.desc || party.description || ''}</p>
+                        </div>
+                    </div>`;
             }
         });
+        
+        if (container.innerHTML === "") {
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; opacity:0.5;">אין מסיבות קרובות כרגע.</div>`;
+        }
     }
 });
 
