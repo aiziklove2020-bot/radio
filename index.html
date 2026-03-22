@@ -217,18 +217,15 @@ header {
 <section class="hero-bg" id="home">
     <div style="max-width: 800px; width: 100%; display: flex; flex-direction: column; align-items: center;">
         <h1 style="font-size: clamp(35px, 8vw, 65px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
-        <p style="color: rgba(255,255,255,0.6); margin-top: 10px;">שידור חי ופלייליסט 24/7 בנגן אחד</p>
-        
         <div class="custom-player">
             <button class="play-pause-btn" id="master-play-btn">
                 <i class="fa-solid fa-play" id="btn-icon"></i>
             </button>
             <div class="player-info">
-                <span class="status-tag" id="internal-status">מתחבר...</span>
-                <span class="track-name" id="track-label">טוען נגן...</span>
+                <span class="status-tag" id="internal-status">מוכן</span>
+                <span class="track-name" id="track-label">לחץ להאזנה</span>
             </div>
             <div class="volume-control">
-                <i class="fa-solid fa-volume-low" style="color: rgba(255,255,255,0.3); font-size: 12px;"></i>
                 <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1" id="vol-slider">
             </div>
         </div>
@@ -238,47 +235,32 @@ header {
 <div class="now-on-air-card">
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb">
     <div style="flex:1; text-align: right;">
-        <div id="air-badge" style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">בדיקת מערכת...</div>
+        <div id="air-badge" style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">מצב שידור</div>
         <h2 id="dj-name-display" style="font-size: 28px;">רדיו מדברים בדסמ</h2>
-        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">מיד נתחיל במוזיקה...</p>
-    </div>
-    <div id="live-indicator" style="display:none;" class="blink">
-        <i class="fa-solid fa-signal" style="color: var(--primary); font-size: 20px;"></i>
+        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">טוען נתונים...</p>
     </div>
 </div>
 
-<audio id="audio-engine" preload="none"></audio>
+<!-- הגדרות אודיו משופרות לקבצים סטטיים -->
+<audio id="audio-engine" crossorigin="anonymous" preload="metadata"></audio>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
         <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">לוח שידורים</h2>
-        <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                <span>שידורים חיים</span>
-                <span style="color: var(--primary); font-weight: 800;">LIVE</span>
-            </div>
-            <p style="font-size: 13px; color: rgba(255,255,255,0.4);">ימי חול החל מ-22:00 בלילה</p>
-        </div>
+        <p>שידורי מוזיקה ופלייליסט 24/7.</p>
     </div>
-
     <div class="box-container" id="dashim">
-        <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">שלח ד"ש לשדרן</h2>
-        <div style="display:flex; flex-direction:column; gap:15px;">
-            <input type="text" id="msg-name" placeholder="שם שלך" style="width:100%; padding:15px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff;">
-            <textarea id="msg-content" placeholder="ההודעה שלך..." rows="3" style="width:100%; padding:15px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; font-family:inherit;"></textarea>
-            <button onclick="sendGreeting()" style="background:var(--primary); color:#fff; border:none; padding:15px; border-radius:12px; font-weight:900; cursor:pointer;">שלח מסר</button>
-        </div>
+        <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">שלח ד"ש</h2>
+        <input type="text" id="msg-name" placeholder="שם" style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #333; color:#fff;">
+        <textarea id="msg-content" placeholder="הודעה" style="width:100%; padding:10px; background:#222; border:1px solid #333; color:#fff;"></textarea>
+        <button onclick="sendGreeting()" style="width:100%; padding:10px; background:var(--primary); color:#fff; border:none; cursor:pointer;">שלח</button>
     </div>
 </div>
 
-<footer style="padding: 60px; text-align: center; opacity: 0.2; font-size: 12px;">
-    &copy; 2024 רדיו מדברים בדסמ | חוויה אחודה
-</footer>
-
 <script>
 const CONFIG = {
-    playlist: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3",
-    live: "https://shaincast.caster.fm:18126/listen.mp3"
+    // לינק ישיר של Archive.org שמוודא HTTPS
+    playlist: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3"
 };
 
 const audio = document.getElementById('audio-engine');
@@ -286,87 +268,46 @@ const playBtn = document.getElementById('master-play-btn');
 const btnIcon = document.getElementById('btn-icon');
 const statusTag = document.getElementById('internal-status');
 const trackLabel = document.getElementById('track-label');
-const volSlider = document.getElementById('vol-slider');
 
 let isPlaying = false;
-let isLive = false;
 
-// פונקציה שמכריחה את האודיו להיטען ולנגן
-async function forcePlay() {
-    try {
-        const target = isLive ? CONFIG.live : CONFIG.playlist;
-        
-        // בכל פעם שמתחילים, נותנים למקור "דחיפה" חדשה למנוע קיפאון
-        audio.src = target;
-        audio.load();
-        
-        await audio.play();
-        isPlaying = true;
-        btnIcon.className = "fa-solid fa-pause";
-        statusTag.innerText = isLive ? "שידור חי" : "מנגן כעת";
-    } catch (err) {
-        console.error("Playback failed:", err);
-        statusTag.innerText = "שגיאה בחיבור";
-    }
-}
-
-playBtn.addEventListener('click', () => {
+// פונקציית נגינה חכמה לקבצי Archive
+async function togglePlay() {
     if (!isPlaying) {
-        forcePlay();
+        statusTag.innerText = "טוען...";
+        
+        // אם ה-SRC ריק, נגדיר אותו
+        if (!audio.src || audio.src === "") {
+            audio.src = CONFIG.playlist;
+        }
+
+        try {
+            await audio.play();
+            isPlaying = true;
+            btnIcon.className = "fa-solid fa-pause";
+            statusTag.innerText = "מנגן";
+            trackLabel.innerText = "The Unforgiven - Metallica";
+        } catch (err) {
+            console.error("Playback error:", err);
+            statusTag.innerText = "שגיאה בטעינה";
+        }
     } else {
         audio.pause();
-        audio.src = ""; // מנקה את ה-buffer בשידורים חיים
         isPlaying = false;
         btnIcon.className = "fa-solid fa-play";
         statusTag.innerText = "מושהה";
     }
-});
+}
 
-volSlider.addEventListener('input', (e) => {
+playBtn.addEventListener('click', togglePlay);
+
+document.getElementById('vol-slider').addEventListener('input', (e) => {
     audio.volume = e.target.value;
 });
 
-async function checkServerStatus() {
-    const api = `https://api.caster.fm/query.php?publicToken=60e730b1-7eca-48ab-92da-977474cf4482&t=${Date.now()}`;
-    try {
-        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(api)}`);
-        const json = await res.json();
-        const data = JSON.parse(json.contents);
-        
-        const oldLiveState = isLive;
-        isLive = (data.status === 'online');
-
-        if(isLive) {
-            trackLabel.innerText = data.dj_name || "שדרן באוויר";
-            document.getElementById('air-badge').innerText = "LIVE ON AIR";
-            document.getElementById('live-indicator').style.display = 'block';
-            document.getElementById('dj-name-display').innerText = data.dj_name || "שדרן אורח";
-            document.getElementById('song-name-display').innerText = data.song_title || "מנגנים עכשיו";
-        } else {
-            trackLabel.innerText = "פלייליסט הקהילה";
-            document.getElementById('air-badge').innerText = "שידור אוטומטי";
-            document.getElementById('live-indicator').style.display = 'none';
-            document.getElementById('dj-name-display').innerText = "Auto DJ";
-            document.getElementById('song-name-display').innerText = "מוזיקה ברצף 24/7";
-        }
-
-        // אם המצב השתנה בזמן שהמאזין שומע - עוברים למקור החדש
-        if(oldLiveState !== isLive && isPlaying) {
-            forcePlay();
-        }
-    } catch(e) {
-        console.warn("Status check failed, staying on current mode.");
-    }
-}
-
-// בדיקת מצב שרת כל 15 שניות
-checkServerStatus();
-setInterval(checkServerStatus, 15000);
-
-// טיפול בשגיאות זרימה
-audio.addEventListener('stalled', () => {
-    if(isPlaying) forcePlay();
-});
+// עדכון ראשוני של ממשק
+trackLabel.innerText = "The Unforgiven (Archive)";
+document.getElementById('song-name-display').innerText = "שידור פלייליסט פעיל";
 </script>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -397,10 +338,9 @@ function sendGreeting() {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
         document.getElementById('msg-content').value = "";
-        alert("ד\"ש נשלח!");
+        alert("נשלח!");
     });
 }
 </script>
-
 </body>
 </html>
