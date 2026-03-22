@@ -214,17 +214,24 @@ header {
 <section class="hero-bg" id="home">
     <div style="max-width: 800px; width: 100%; display: flex; flex-direction: column; align-items: center;">
         <h1 style="font-size: clamp(35px, 8vw, 65px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
+        
         <div class="custom-player">
             <button class="play-pause-btn" id="master-play-btn">
                 <i class="fa-solid fa-play" id="btn-icon"></i>
             </button>
             <div class="player-info">
-                <span class="status-tag" id="internal-status">מוכן</span>
-                <span class="track-name" id="track-label">לחץ להאזנה</span>
+                <span class="status-tag" id="internal-status">מוכן לנגינה</span>
+                <span class="track-name" id="track-label">Metallica - Unforgiven</span>
             </div>
             <div class="volume-control">
                 <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1" id="vol-slider">
             </div>
+        </div>
+
+        <!-- נגן גיבוי נסתר למחצה -->
+        <div style="margin-top:20px;">
+            <audio id="audio-engine" controls style="height:35px; border-radius:10px; width:280px;"></audio>
+            <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:5px;">אם הכפתור למעלה לא מגיב, השתמש בנגן הגיבוי כאן</p>
         </div>
     </div>
 </section>
@@ -237,8 +244,6 @@ header {
         <p id="song-name-display" style="color: rgba(255,255,255,0.5);">שידור פלייליסט פעיל</p>
     </div>
 </div>
-
-<audio id="audio-engine" crossorigin="anonymous" preload="auto"></audio>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
@@ -254,41 +259,30 @@ header {
 </div>
 
 <script>
-const CONFIG = {
-    // כתובת ה-Proxy שעוקפת את בעיית הטעינה של Archive.org
-    playlist: "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3")
-};
+// הכתובת הישירה ביותר לקובץ ה-MP3 מתוך ה-Archive
+const AUDIO_URL = "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3";
 
 const audio = document.getElementById('audio-engine');
 const playBtn = document.getElementById('master-play-btn');
 const btnIcon = document.getElementById('btn-icon');
 const statusTag = document.getElementById('internal-status');
-const trackLabel = document.getElementById('track-label');
 
-let isPlaying = false;
+// הגדרה ראשונית
+audio.src = AUDIO_URL;
 
-async function togglePlay() {
-    if (!isPlaying) {
+function togglePlay() {
+    if (audio.paused) {
         statusTag.innerText = "מתחבר...";
-        
-        // אתחול מחדש של ה-src כדי לוודא שאין "תקיעה"
-        audio.pause();
-        audio.src = CONFIG.playlist;
-        audio.load();
-
-        try {
-            await audio.play();
+        audio.play().then(() => {
             isPlaying = true;
             btnIcon.className = "fa-solid fa-pause";
-            statusTag.innerText = "מנגן";
-            trackLabel.innerText = "The Unforgiven - Metallica";
-        } catch (err) {
-            console.error("Playback error:", err);
-            statusTag.innerText = "שגיאה בטעינה";
-        }
+            statusTag.innerText = "מנגן כעת";
+        }).catch(err => {
+            console.error("Play failed:", err);
+            statusTag.innerText = "שגיאת טעינה";
+        });
     } else {
         audio.pause();
-        isPlaying = false;
         btnIcon.className = "fa-solid fa-play";
         statusTag.innerText = "מושהה";
     }
@@ -296,17 +290,19 @@ async function togglePlay() {
 
 playBtn.addEventListener('click', togglePlay);
 
-// טיפול בשגיאות אוטומטי
-audio.addEventListener('error', (e) => {
-    console.error("Audio engine error event:", e);
-    statusTag.innerText = "שגיאת נגן";
-});
+// סנכרון בין נגן הגיבוי לכפתור המעוצב
+audio.onplay = () => {
+    btnIcon.className = "fa-solid fa-pause";
+    statusTag.innerText = "מנגן כעת";
+};
+audio.onpause = () => {
+    btnIcon.className = "fa-solid fa-play";
+    statusTag.innerText = "מושהה";
+};
 
 document.getElementById('vol-slider').addEventListener('input', (e) => {
     audio.volume = e.target.value;
 });
-
-trackLabel.innerText = "The Unforgiven (Archive)";
 </script>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
