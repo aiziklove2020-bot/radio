@@ -2,7 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- מניעת זום אוטומטי במכשירים ניידים תוך שמירה על העיצוב המודרני -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>רדיו מדברים בדסמ | הקול של הקהילה</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +16,8 @@
             --bg-dark: #080808;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Heebo', sans-serif;
             background-color: var(--bg-dark);
@@ -454,6 +456,7 @@ playBtn.addEventListener('click', () => {
             backupFrame.style.display = "none";
         } else {
             backupFrame.style.display = "block";
+            // כאן ניתן להכניס לינק לסטרים גיבוי/MP3
             backupFrame.src = "https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321&autoplay=1";
         }
     }
