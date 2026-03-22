@@ -189,9 +189,6 @@ header {
     padding: 35px;
 }
 
-.blink { animation: blinker 1.5s linear infinite; }
-@keyframes blinker { 50% { opacity: 0.3; } }
-
 @media (max-width: 768px) {
     .nav-links { gap: 15px; }
     .nav-links a { font-size: 14px; }
@@ -237,12 +234,11 @@ header {
     <div style="flex:1; text-align: right;">
         <div id="air-badge" style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">מצב שידור</div>
         <h2 id="dj-name-display" style="font-size: 28px;">רדיו מדברים בדסמ</h2>
-        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">טוען נתונים...</p>
+        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">שידור פלייליסט פעיל</p>
     </div>
 </div>
 
-<!-- הגדרות אודיו משופרות לקבצים סטטיים -->
-<audio id="audio-engine" crossorigin="anonymous" preload="metadata"></audio>
+<audio id="audio-engine" crossorigin="anonymous" preload="auto"></audio>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
@@ -259,8 +255,8 @@ header {
 
 <script>
 const CONFIG = {
-    // לינק ישיר של Archive.org שמוודא HTTPS
-    playlist: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3"
+    // כתובת ה-Proxy שעוקפת את בעיית הטעינה של Archive.org
+    playlist: "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3")
 };
 
 const audio = document.getElementById('audio-engine');
@@ -271,15 +267,14 @@ const trackLabel = document.getElementById('track-label');
 
 let isPlaying = false;
 
-// פונקציית נגינה חכמה לקבצי Archive
 async function togglePlay() {
     if (!isPlaying) {
-        statusTag.innerText = "טוען...";
+        statusTag.innerText = "מתחבר...";
         
-        // אם ה-SRC ריק, נגדיר אותו
-        if (!audio.src || audio.src === "") {
-            audio.src = CONFIG.playlist;
-        }
+        // אתחול מחדש של ה-src כדי לוודא שאין "תקיעה"
+        audio.pause();
+        audio.src = CONFIG.playlist;
+        audio.load();
 
         try {
             await audio.play();
@@ -301,13 +296,17 @@ async function togglePlay() {
 
 playBtn.addEventListener('click', togglePlay);
 
+// טיפול בשגיאות אוטומטי
+audio.addEventListener('error', (e) => {
+    console.error("Audio engine error event:", e);
+    statusTag.innerText = "שגיאת נגן";
+});
+
 document.getElementById('vol-slider').addEventListener('input', (e) => {
     audio.volume = e.target.value;
 });
 
-// עדכון ראשוני של ממשק
 trackLabel.innerText = "The Unforgiven (Archive)";
-document.getElementById('song-name-display').innerText = "שידור פלייליסט פעיל";
 </script>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
