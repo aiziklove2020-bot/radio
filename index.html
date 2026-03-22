@@ -33,7 +33,7 @@
 
         .hero-bg {
             position: relative;
-            height: 65vh;
+            height: 60vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(8,8,8,1)), 
                         url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
@@ -44,7 +44,7 @@
             justify-content: center;
             text-align: center;
             padding: 15px;
-            padding-top: 100px;
+            padding-top: 80px;
             z-index: 1;
         }
 
@@ -113,25 +113,26 @@
         }
 
         .play-trigger {
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             background: var(--primary);
             border-radius: 50%;
             border: none;
             color: white;
-            font-size: 22px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
         }
         .play-trigger:active { transform: scale(0.9); }
-        .play-trigger.is-playing { animation: pulse-red 2s infinite; }
+        .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
 
         @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
             100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
 
@@ -148,8 +149,11 @@
             border-radius: 4px;
             margin-bottom: 2px;
         }
-        .live-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
+        .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
         .live-dot.offline { background: #555; }
+        .live-dot.active { animation: blink 1s infinite; }
+
+        @keyframes blink { 50% { opacity: 0.3; } }
 
         .now-on-air-card {
             background: rgba(25, 25, 25, 0.6);
@@ -159,14 +163,14 @@
             padding: 15px;
             width: 95%;
             max-width: 700px;
-            margin: -40px auto 40px;
+            margin: -30px auto 30px;
             display: flex;
             align-items: center;
             gap: 15px;
             position: relative;
             z-index: 10;
         }
-        .dj-thumb { width: 80px; height: 80px; border-radius: 15px; object-fit: cover; border: 2px solid var(--primary); }
+        .dj-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
 
         .main-grid {
             display: grid;
@@ -214,9 +218,9 @@
         @media (max-width: 768px) {
             .main-grid, .party-grid { grid-template-columns: 1fr; gap: 10px; }
             .player-container { min-width: 90%; }
-            .hero-bg { height: 55vh; padding-top: 110px; }
-            .now-on-air-card { margin-top: -30px; margin-bottom: 30px; }
-            .party-img { height: 200px; }
+            .hero-bg { height: 50vh; padding-top: 100px; }
+            .now-on-air-card { margin-top: -20px; margin-bottom: 25px; }
+            .party-img { height: 180px; }
         }
     </style>
 </head>
@@ -235,8 +239,8 @@
 </header>
 
 <section class="hero-bg">
-    <h1 style="font-size: clamp(28px, 7vw, 45px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
-    <p style="opacity: 0.6; font-size: 16px;">שידור חי 24/7</p>
+    <h1 style="font-size: clamp(26px, 6vw, 42px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
+    <p style="opacity: 0.6; font-size: 15px;">שידור חי 24/7</p>
 
     <div class="player-container">
         <div class="track-info">
@@ -244,7 +248,7 @@
                 <div class="live-dot" id="live-status-dot"></div>
                 <span id="live-status-text">מתחבר...</span>
             </div>
-            <span id="status-text" style="font-size: 16px; font-weight: 700; display: block;">מוזיקה בטעינה...</span>
+            <span id="status-text" style="font-size: 15px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">מוזיקה בטעינה...</span>
         </div>
         
         <button class="play-trigger" id="master-play-btn">
@@ -252,7 +256,7 @@
         </button>
     </div>
 
-    <div style="display:none;">
+    <div style="display:none; visibility: hidden; height: 0; width: 0;">
         <div id="youtube-engine"></div>
         <audio id="audio-engine" preload="auto" crossorigin="anonymous" playsinline src="https://icecast.walmradio.com:8000/rock"></audio>
     </div>
@@ -262,8 +266,8 @@
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 11px;">בשידור כרגע</div>
-        <h2 id="dj-name-display" style="font-size: 22px; margin-bottom: 2px;">טוען...</h2>
-        <p style="color: rgba(255,255,255,0.5); font-size: 13px;">רדיו מדברים בדסמ</p>
+        <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים</h2>
+        <p id="sub-status" style="color: rgba(255,255,255,0.5); font-size: 13px;">טוען נתונים...</p>
     </div>
 </div>
 
@@ -271,8 +275,8 @@
     <div class="box-container" id="dashim">
         <h2 style="border-right: 3px solid var(--primary); padding-right: 10px;">שלח ד"ש</h2>
         <input type="text" id="msg-name" placeholder="שם המוסר" style="width:100%; padding:12px; margin-bottom:8px; background:#222; border:none; color:#fff; border-radius:8px; font-size:14px;">
-        <textarea id="msg-content" placeholder="הודעה לשדרן..." style="width:100%; padding:12px; background:#222; border:none; color:#fff; border-radius:8px; height:80px; font-size:14px;"></textarea>
-        <button onclick="sendGreeting()" style="width:100%; padding:12px; background:var(--primary); color:#fff; border:none; cursor:pointer; border-radius:8px; font-weight:bold; margin-top:5px;">שלח</button>
+        <textarea id="msg-content" placeholder="הודעה לשדרן..." style="width:100%; padding:12px; background:#222; border:none; color:#fff; border-radius:8px; height:80px; font-size:14px; resize: none;"></textarea>
+        <button onclick="sendGreeting()" style="width:100%; padding:12px; background:var(--primary); color:#fff; border:none; cursor:pointer; border-radius:8px; font-weight:bold; margin-top:5px;">שלח הודעה</button>
     </div>
     
     <div class="box-container" id="schedule">
@@ -281,7 +285,7 @@
     </div>
 </div>
 
-<div id="parties" style="padding: 0 15px; max-width: 1200px; margin: 0 auto 15px;">
+<div id="parties" style="padding: 0 15px; max-width: 1200px; margin: 0 auto 10px;">
     <h2 style="border-right: 3px solid var(--primary); padding-right: 10px;">מסיבות קרובות</h2>
 </div>
 <div class="party-grid" id="party-container"></div>
@@ -305,10 +309,23 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// פונקציית עזר לעדכון ה-UI
+function updateUI() {
+    btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
+    if (isPlaying) {
+        playBtn.classList.add('is-playing');
+        liveDot.classList.add('active');
+    } else {
+        playBtn.classList.remove('is-playing');
+        liveDot.classList.remove('active');
+    }
+}
+
+// יוטיוב
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube-engine', {
-        height: '1', width: '1', videoId: '',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'origin': window.location.origin },
+        height: '0', width: '0', videoId: '',
+        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
         events: {
             'onReady': () => { 
                 isYtReady = true; 
@@ -323,11 +340,6 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-function updateUI() {
-    btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
-    isPlaying ? playBtn.classList.add('is-playing') : playBtn.classList.remove('is-playing');
-}
-
 function loadYoutube(id) {
     if (currentMode !== 'youtube' || pendingYtId !== id) {
         currentMode = 'youtube';
@@ -335,7 +347,7 @@ function loadYoutube(id) {
         liveText.innerText = "שידור חי LIVE";
         liveDot.className = "live-dot";
         audioEngine.pause();
-        if(isYtReady) {
+        if(isYtReady && ytPlayer && ytPlayer.loadVideoById) {
             ytPlayer.loadVideoById(id);
             if(isPlaying) ytPlayer.playVideo();
         }
@@ -346,43 +358,67 @@ function switchToBackup() {
     if (currentMode !== 'backup') {
         currentMode = 'backup';
         pendingYtId = null;
-        liveText.innerText = "OFFLINE";
+        liveText.innerText = "גיבוי אופליין";
         liveDot.className = "live-dot offline";
-        statusText.innerText = "מוזיקת רוק (גיבוי)";
-        document.getElementById('dj-name-display').innerText = "מוזיקת רוק";
-        if (isYtReady) ytPlayer.pauseVideo();
+        statusText.innerText = "מוזיקת רוק";
+        document.getElementById('dj-name-display').innerText = "מוזיקת גיבוי";
+        document.getElementById('sub-status').innerText = "שידור חי יחזור בקרוב";
+        if (isYtReady && ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
         if(isPlaying) {
-            audioEngine.play().catch(e => console.log("Playback error"));
+            audioEngine.play().catch(e => console.log("Audio Playback error"));
         }
     }
 }
 
-playBtn.addEventListener('click', () => {
+// טיפול בלחיצה
+playBtn.addEventListener('click', function() {
     if (currentMode === 'youtube' && isYtReady) {
-        if (isPlaying) ytPlayer.pauseVideo(); else ytPlayer.playVideo();
+        if (isPlaying) {
+            ytPlayer.pauseVideo();
+            isPlaying = false;
+        } else {
+            ytPlayer.playVideo();
+            isPlaying = true;
+        }
     } else {
+        // מצב אודיו גיבוי
         if (isPlaying) {
             audioEngine.pause();
             isPlaying = false;
         } else {
-            audioEngine.play().then(() => { isPlaying = true; updateUI(); }).catch(e => {
-                // ניסיון טעינה חוזר במקרה של שגיאה
-                audioEngine.load();
-                audioEngine.play().then(() => { isPlaying = true; updateUI(); });
-            });
+            // וודא שיש מקור (Source)
+            if (!audioEngine.src) audioEngine.src = "https://icecast.walmradio.com:8000/rock";
+            
+            const playPromise = audioEngine.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    updateUI();
+                }).catch(error => {
+                    console.error("Playback failed:", error);
+                    // ניסיון איפוס וטעינה מחדש
+                    audioEngine.load();
+                    audioEngine.play().then(() => {
+                        isPlaying = true;
+                        updateUI();
+                    });
+                });
+            }
         }
     }
     updateUI();
 });
 
+// Firebase Listeners
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
         if(d.youtubeId && d.youtubeId.trim().length > 5) {
             statusText.innerText = d.name || "בשידור חי";
             document.getElementById('dj-name-display').innerText = d.name || "בשידור";
+            document.getElementById('sub-status').innerText = "רדיו מדברים בדסמ";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
-            loadYoutube(d.youtubeId);
+            loadYoutube(d.youtubeId.trim());
         } else {
             switchToBackup();
         }
@@ -393,6 +429,7 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
 
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+
 db.collection('settings').doc('schedule').onSnapshot(doc => {
     if(doc.exists) {
         const s = doc.data();
@@ -401,10 +438,10 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         document.getElementById('current-day-label').innerText = daysHeb[d.getDay()];
         const container = document.getElementById('schedule-content');
         const todaySchedule = s[today];
-        if (Array.isArray(todaySchedule)) {
-            container.innerHTML = todaySchedule.map(item => item.title ? `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${item.title}</b><br><small>${item.host || ''}</small></div></div>` : '').join('') || "מוזיקה ברצף";
+        if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
+            container.innerHTML = todaySchedule.map(item => item.title ? `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${item.title}</b><br><small>${item.host || ''}</small></div></div>` : '').join('');
         } else {
-            container.innerHTML = "מוזיקה ברצף";
+            container.innerHTML = "<div style='opacity:0.5; padding:10px;'>מוזיקה ברצף ללא הפסקה</div>";
         }
     }
 });
@@ -416,7 +453,15 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
         container.innerHTML = "";
         ['party1', 'party2'].forEach(p => {
             if(data[p] && data[p].title) {
-                container.innerHTML += `<div class="party-card"><img src="${data[p].img || ''}" class="party-img"><div class="party-content"><div style="color:var(--primary); font-weight:bold; font-size:12px;">${data[p].date || ''}</div><h3 style="font-size:16px;">${data[p].title}</h3><p style="opacity:0.6; font-size:12px;">${data[p].desc || ''}</p></div></div>`;
+                container.innerHTML += `
+                    <div class="party-card">
+                        <img src="${data[p].img || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img">
+                        <div class="party-content">
+                            <div style="color:var(--primary); font-weight:bold; font-size:12px;">${data[p].date || ''}</div>
+                            <h3 style="font-size:16px;">${data[p].title}</h3>
+                            <p style="opacity:0.6; font-size:12px;">${data[p].desc || ''}</p>
+                        </div>
+                    </div>`;
             }
         });
     }
@@ -426,20 +471,40 @@ async function sendGreeting() {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
     if(!n || !c) return;
     try {
+        const btn = event.target;
+        btn.innerText = "שולח...";
+        btn.disabled = true;
+        
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
         });
-        alert("נשלח!");
+        
+        btn.innerText = "נשלח בהצלחה!";
+        btn.style.background = "#27ae60";
         document.getElementById('msg-content').value = "";
-    } catch(e) {}
+        
+        setTimeout(() => {
+            btn.innerText = "שלח הודעה";
+            btn.style.background = "var(--primary)";
+            btn.disabled = false;
+        }, 3000);
+    } catch(e) {
+        alert("שגיאה בשליחה. נסה שוב.");
+    }
 }
 
-// התחלה בטוחה
+// אתחול דף
 window.addEventListener('load', () => {
-    statusText.innerText = "מוזיקת רוק (גיבוי)";
-    liveText.innerText = "OFFLINE";
+    statusText.innerText = "בודק שידור...";
+    // אם תוך 4 שניות שום דבר לא קרה - עבור לגיבוי
+    setTimeout(() => {
+        if(currentMode === 'backup' && !isPlaying) {
+            statusText.innerText = "מוזיקת רוק (גיבוי)";
+            liveText.innerText = "OFFLINE";
+        }
+    }, 4000);
 });
 </script>
 </body>
