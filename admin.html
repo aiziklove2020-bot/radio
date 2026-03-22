@@ -135,13 +135,26 @@
         .btn-save:hover { background: var(--primary-hover); transform: scale(1.02); }
 
         .btn-clear { background: var(--secondary); color: white; }
-        .btn-danger-outline { 
-            background: transparent; 
-            color: var(--danger); 
-            border: 1px solid var(--danger); 
-            font-size: 13px;
+        
+        .preview-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #262933;
+            padding: 15px;
+            border-radius: 15px;
+            flex: 1;
+            margin-bottom: 10px;
         }
-        .btn-danger-outline:hover { background: var(--danger); color: white; }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #111;
+        }
 
         .schedule-tabs {
             display: flex;
@@ -178,24 +191,6 @@
 
         .status-live { background: rgba(46, 213, 115, 0.2); color: var(--success); }
         .status-offline { background: rgba(164, 176, 190, 0.2); color: var(--text-dim); }
-
-        .preview-area {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: #262933;
-            padding: 15px;
-            border-radius: 15px;
-            flex: 1;
-        }
-
-        .preview-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
 
         @media (max-width: 850px) {
             .grid { grid-template-columns: 1fr; }
@@ -237,12 +232,12 @@
         </div>
         <div class="grid" style="margin-bottom: 20px;">
             <div class="preview-area">
-                <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=DJ">
+                <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
                 <input type="file" id="dj-file-input" style="display:none" onchange="handleImageUpload('dj')">
                 <button onclick="document.getElementById('dj-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">החלף תמונת שדרן</button>
             </div>
             <div class="preview-area">
-                <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=OFF">
+                <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=OFF">
                 <input type="file" id="offline-file-input" style="display:none" onchange="handleImageUpload('offline')">
                 <button onclick="document.getElementById('offline-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">תמונת Offline</button>
             </div>
@@ -253,12 +248,9 @@
         </div>
     </div>
 
-    <!-- WEEKLY SCHEDULE - ONLY FREE TEXT -->
+    <!-- WEEKLY SCHEDULE -->
     <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי (מלל חופשי)</h2>
-        </div>
-        
+        <h2><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי (מלל חופשי)</h2>
         <div class="schedule-tabs" id="day-tabs">
             <button class="tab-btn active" onclick="switchDay('sunday')">ראשון</button>
             <button class="tab-btn" onclick="switchDay('monday')">שני</button>
@@ -281,8 +273,16 @@
 
     <!-- EVENTS -->
     <div class="grid">
+        <!-- Event 1 -->
         <div class="card">
             <h2><i class="fa-solid fa-star"></i> אירוע 1</h2>
+            
+            <div class="preview-area">
+                <img id="p1-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=Party+1">
+                <input type="file" id="p1-file-input" style="display:none" onchange="handleImageUpload('p1')">
+                <button onclick="document.getElementById('p1-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">העלה תמונת אירוע</button>
+            </div>
+
             <input type="text" id="p1-title" placeholder="כותרת האירוע" class="form-group">
             <div class="grid" style="gap:10px; grid-template-columns: 1fr 1fr;">
                 <input type="text" id="p1-date" placeholder="תאריך ושעה" class="form-group">
@@ -291,8 +291,17 @@
             <textarea id="p1-free-text" placeholder="מלל חופשי לאירוע" rows="2" class="form-group"></textarea>
             <textarea id="p1-desc" placeholder="תיאור מלא" rows="3"></textarea>
         </div>
+
+        <!-- Event 2 -->
         <div class="card">
             <h2><i class="fa-solid fa-calendar-check"></i> אירוע 2</h2>
+
+            <div class="preview-area">
+                <img id="p2-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=Party+2">
+                <input type="file" id="p2-file-input" style="display:none" onchange="handleImageUpload('p2')">
+                <button onclick="document.getElementById('p2-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">העלה תמונת אירוע</button>
+            </div>
+
             <input type="text" id="p2-title" placeholder="כותרת האירוע" class="form-group">
             <div class="grid" style="gap:10px; grid-template-columns: 1fr 1fr;">
                 <input type="text" id="p2-date" placeholder="תאריך ושעה" class="form-group">
@@ -302,7 +311,8 @@
             <textarea id="p2-desc" placeholder="תיאור מלא" rows="3"></textarea>
         </div>
     </div>
-    <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני אירועים</button>
+    
+    <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני אירועים ותמונות</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -318,7 +328,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let djBase64 = "", offlineBase64 = "", currentDay = "sunday", fullSchedule = {};
+    let djBase64 = "", offlineBase64 = "", p1Base64 = "", p2Base64 = "";
+    let currentDay = "sunday", fullSchedule = {};
 
     const dayNames = {
         sunday: "ראשון", monday: "שני", tuesday: "שלישי", 
@@ -335,11 +346,8 @@
 
     function loadDayData() {
         const data = fullSchedule[currentDay];
-        // In this version, we only care about freeText
         let text = "";
-        if (data) {
-            text = typeof data === 'string' ? data : (data.freeText || "");
-        }
+        if (data) text = typeof data === 'string' ? data : (data.freeText || "");
         document.getElementById('schedule-free-text').value = text;
     }
 
@@ -353,16 +361,14 @@
     }
 
     async function saveSchedule() {
-        const freeText = document.getElementById('schedule-free-text').value;
-        fullSchedule[currentDay] = { freeText: freeText };
-
+        fullSchedule[currentDay] = { freeText: document.getElementById('schedule-free-text').value };
         try {
             await db.collection('settings').doc('schedule').set(fullSchedule);
-            alert(`לוח השידורים ליום ${dayNames[currentDay]} נשמר בהצלחה!`);
-        } catch (e) { alert("שגיאה בשמירה: " + e.message); }
+            alert(`לוח השידורים ליום ${dayNames[currentDay]} נשמר!`);
+        } catch (e) { alert("שגיאה: " + e.message); }
     }
 
-    // Live Control logic (remains same)
+    // Live Control
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const d = doc.data();
@@ -389,7 +395,7 @@
             image: djBase64 || document.getElementById('dj-img-preview').src,
             offlineImage: offlineBase64 || document.getElementById('offline-img-preview').src
         }, { merge: true });
-        alert("עודכן!");
+        alert("שידור חי עודכן!");
     }
 
     async function clearLive() {
@@ -397,6 +403,7 @@
         alert("השידור הופסק");
     }
 
+    // Handle Image Uploads with Resizing
     function handleImageUpload(type) {
         const file = event.target.files[0];
         if(!file) return;
@@ -405,11 +412,15 @@
             const img = new Image();
             img.onload = () => {
                 const cvs = document.createElement('canvas');
+                // Target size for performance
                 cvs.width = 400; cvs.height = 400;
                 cvs.getContext('2d').drawImage(img, 0, 0, 400, 400);
                 const url = cvs.toDataURL('image/jpeg', 0.7);
+                
                 if(type === 'dj') { djBase64 = url; document.getElementById('dj-img-preview').src = url; }
-                else { offlineBase64 = url; document.getElementById('offline-img-preview').src = url; }
+                else if(type === 'offline') { offlineBase64 = url; document.getElementById('offline-img-preview').src = url; }
+                else if(type === 'p1') { p1Base64 = url; document.getElementById('p1-img-preview').src = url; }
+                else if(type === 'p2') { p2Base64 = url; document.getElementById('p2-img-preview').src = url; }
             };
             img.src = e.target.result;
         };
@@ -423,20 +434,25 @@
                 date: document.getElementById('p1-date').value, 
                 link: document.getElementById('p1-link').value, 
                 freeText: document.getElementById('p1-free-text').value,
-                desc: document.getElementById('p1-desc').value 
+                desc: document.getElementById('p1-desc').value,
+                image: p1Base64 || document.getElementById('p1-img-preview').src
             },
             party2: { 
                 title: document.getElementById('p2-title').value, 
                 date: document.getElementById('p2-date').value, 
                 link: document.getElementById('p2-link').value, 
                 freeText: document.getElementById('p2-free-text').value,
-                desc: document.getElementById('p2-desc').value 
+                desc: document.getElementById('p2-desc').value,
+                image: p2Base64 || document.getElementById('p2-img-preview').src
             }
         };
-        await db.collection('settings').doc('parties_info').set(data);
-        alert("אירועים עודכנו!");
+        try {
+            await db.collection('settings').doc('parties_info').set(data);
+            alert("אירועים ותמונות עודכנו בהצלחה!");
+        } catch (e) { alert("שגיאה: " + e.message); }
     }
 
+    // Load Party Info on Start
     db.collection('settings').doc('parties_info').get().then(doc => {
         if(doc.exists) {
             const d = doc.data();
@@ -446,6 +462,7 @@
                 document.getElementById('p1-link').value = d.party1.link || "";
                 document.getElementById('p1-free-text').value = d.party1.freeText || "";
                 document.getElementById('p1-desc').value = d.party1.desc || "";
+                if(d.party1.image) document.getElementById('p1-img-preview').src = d.party1.image;
             }
             if(d.party2) {
                 document.getElementById('p2-title').value = d.party2.title || "";
@@ -453,6 +470,7 @@
                 document.getElementById('p2-link').value = d.party2.link || "";
                 document.getElementById('p2-free-text').value = d.party2.freeText || "";
                 document.getElementById('p2-desc').value = d.party2.desc || "";
+                if(d.party2.image) document.getElementById('p2-img-preview').src = d.party2.image;
             }
         }
     });
