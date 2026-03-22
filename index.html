@@ -718,18 +718,30 @@ function fbPlay(index){
   var track = FALLBACK_PLAYLIST[fbIndex % FALLBACK_PLAYLIST.length];
   fbAudio.src = track.url;
   fbTrackName.textContent = track.title;
+  fbAudio.muted = true;
   var p = fbAudio.play();
   if(p !== undefined){
     p.then(function(){
+      fbAudio.muted = false;
       fbPlaying = true;
-      fbPlayPause.textContent = '\u23F8';
+      fbPlayPause.textContent = '⏸';
       var hint = document.getElementById('fb-autoplay-hint');
       if(hint) hint.style.display = 'none';
     }).catch(function(){
+      fbAudio.muted = false;
       fbPlaying = false;
-      fbPlayPause.textContent = '\u25B6';
+      fbPlayPause.textContent = '▶';
       var hint = document.getElementById('fb-autoplay-hint');
       if(hint) hint.style.display = 'block';
+      document.addEventListener('click', function tryPlay(){
+        fbAudio.muted = false;
+        fbAudio.play().then(function(){
+          fbPlaying = true;
+          fbPlayPause.textContent = '⏸';
+          if(hint) hint.style.display = 'none';
+        });
+        document.removeEventListener('click', tryPlay);
+      }, {once:true});
     });
   }
 }
@@ -798,6 +810,20 @@ function reload(){
 }
 reload();fetchNow();
 setInterval(fetchNow,30000);setInterval(reload,8000);
+
+// הפעל מוזיקה ברגע שהמשתמש לוחץ כל דבר בדף (עוקף חסימת autoplay)
+var fbUserInteracted = false;
+function fbTryAutoplay(){
+  if(fbUserInteracted) return;
+  fbUserInteracted = true;
+  var hint = document.getElementById('fb-autoplay-hint');
+  if(hint) hint.style.display = 'none';
+  if(fallbackPlayer.classList.contains('visible') && !fbPlaying){
+    fbPlay();
+  }
+}
+document.addEventListener('click', fbTryAutoplay, {once:true});
+document.addEventListener('touchstart', fbTryAutoplay, {once:true});
 </script>
 </body>
 </html>
