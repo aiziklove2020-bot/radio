@@ -390,9 +390,21 @@ function handlePhotoUpload(input) {
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(e) {
-    onair.photo = e.target.result;
-    updatePhotoPreview(onair.photo);
-    renderOnAirPreview();
+    // דחוס את התמונה לפני השמירה (Firestore מוגבל ל-1MB)
+    var img = new Image();
+    img.onload = function(){
+      var canvas = document.createElement('canvas');
+      var MAX = 300;
+      var w = img.width, h = img.height;
+      if(w > h){ if(w>MAX){h=Math.round(h*MAX/w);w=MAX;} }
+      else { if(h>MAX){w=Math.round(w*MAX/h);h=MAX;} }
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      onair.photo = canvas.toDataURL('image/jpeg', 0.7);
+      updatePhotoPreview(onair.photo);
+      renderOnAirPreview();
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
