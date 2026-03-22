@@ -225,7 +225,7 @@
     </header>
 
     <div class="grid">
-        <!-- כרטיס שידור חי -->
+        <!-- Live Broadcast Management -->
         <div class="card card-full">
             <h2><i class="fa-solid fa-tower-broadcast"></i> ניהול שידור חי</h2>
             
@@ -250,7 +250,7 @@
 
             <div class="form-group">
                 <label><i class="fa-solid fa-upload"></i> העלאת תמונת שדרן מהמחשב</label>
-                <input type="file" id="dj-file-input" accept="image/*" onchange="previewFile()">
+                <input type="file" id="dj-file-input" accept="image/*" onchange="handleImageUpload()">
                 <div class="preview-area">
                     <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
                     <div>
@@ -270,7 +270,7 @@
             </div>
         </div>
 
-        <!-- מסיבה 1 -->
+        <!-- Party 1 -->
         <div class="card">
             <h2><i class="fa-solid fa-star"></i> מסיבה קרובה 1</h2>
             <div class="party-box">
@@ -290,7 +290,7 @@
             </div>
         </div>
 
-        <!-- מסיבה 2 -->
+        <!-- Party 2 -->
         <div class="card">
             <h2><i class="fa-solid fa-calendar-check"></i> מסיבה קרובה 2</h2>
             <div class="party-box">
@@ -331,9 +331,9 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let base64Image = ""; // משתנה גלובלי לאחסון התמונה שהועלתה
+    let base64Image = ""; 
 
-    // Listener for live state
+    // Sync from Firestore
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
@@ -358,23 +358,48 @@
         }
     });
 
-    // פונקציית תצוגה מקדימה והמרת קובץ ל-Base64
-    function previewFile() {
+    // Image Upload Handling with Resize to prevent Firestore limit issues
+    function handleImageUpload() {
         const file = document.getElementById('dj-file-input').files[0];
+        if (!file) return;
+
         const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                // Resize image to max 300px width/height to keep Base64 small
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = img.width;
+                let height = img.height;
 
-        reader.onloadend = function() {
-            base64Image = reader.result;
-            document.getElementById('dj-img-preview').src = base64Image;
-            document.getElementById('file-status').innerText = "קובץ נטען בהצלחה";
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                base64Image = canvas.toDataURL('image/jpeg', 0.7); // 70% quality jpeg
+                document.getElementById('dj-img-preview').src = base64Image;
+                document.getElementById('file-status').innerText = "תמונה עובדה ומוכנה";
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 
-    // Listener for parties
+    // Party info sync
     db.collection('settings').doc('parties_info').onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
@@ -408,11 +433,13 @@
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
-                image: base64Image // שומר את ה-Base64 ב-Firestore
+                image: base64Image,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
-            alert("השידור עודכן והתמונה הועלתה בהצלחה!");
+            alert("השידור עודכן בהצלחה! האתר יתעדכן תוך מספר שניות.");
         } catch (e) {
-            alert("שגיאה: " + e.message);
+            alert("שגיאה בעדכון: " + e.message);
+            console.error(e);
         }
     }
 
@@ -421,9 +448,10 @@
         try {
             await db.collection('settings').doc('dj_info').update({
                 youtubeId: "",
-                name: ""
+                name: "",
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert("חזרנו למצב פלייליסט");
+            alert("השידור הופסק.");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
@@ -451,7 +479,7 @@
             await db.collection('settings').doc('parties_info').set(partyData);
             alert("המסיבות עודכנו בהצלחה!");
         } catch (e) {
-            alert("שגיאה: " + e.message);
+            alert("שגיאה בעדכון מסיבות: " + e.message);
         }
     }
 </script>
