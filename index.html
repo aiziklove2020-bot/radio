@@ -78,7 +78,8 @@
             color: #fff;
             text-decoration: none;
         }
-        .logo-area span.highlight { color: var(--primary); }
+        .logo-area .brand-white { color: #ffffff; }
+        .logo-area .brand-red { color: var(--primary); }
 
         .nav-links { 
             display: flex; 
@@ -235,7 +236,7 @@
 <header>
     <a href="#" class="logo-area">
         <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
-        <div> רדיו מדברים <span class="highlight">בדס"מ</span></div>
+        <div><span class="brand-white">רדיו מדברים</span> <span class="brand-red">בדס"מ</span></div>
     </a>
     <nav class="nav-links">
         <a href="#dashim">ד"שים</a>
@@ -267,7 +268,7 @@
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 11px;">בשידור כרגע</div>
-        <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים</h2>
+        <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים בדס"מ</h2>
         <p id="sub-status" style="color: rgba(255,255,255,0.5); font-size: 13px;">טוען נתונים...</p>
     </div>
 </div>
@@ -341,7 +342,7 @@ function updateUI() {
 
 function switchToBackup() {
     currentMode = 'backup';
-    statusText.innerText = "מוזיקה ברצף (גיבוי)";
+    statusText.innerText = "מוזיקה ברצף";
     document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
     document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
     liveText.innerText = "OFFLINE";
@@ -377,7 +378,7 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(youtubeId.length > 5) {
             currentMode = 'youtube';
             statusText.innerText = d.name || "בשידור חי";
-            document.getElementById('dj-name-display').innerText = d.name || "רדיו מדברים";
+            document.getElementById('dj-name-display').innerText = d.name || "רדיו מדברים בדס\"מ";
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
             liveText.innerText = "LIVE";
