@@ -839,8 +839,6 @@ function reload(){
 reload();fetchNow();
 setInterval(fetchNow,30000);setInterval(reload,8000);
 
-// הפעל פלייליסט מיד — ייעצר אם השידור החי מאושר
-setTimeout(function(){ setStreamMode(false); }, 800);
 
 // הפעל מוזיקה ברגע שהמשתמש לוחץ כל דבר בדף (עוקף חסימת autoplay)
 var fbUserInteracted = false;
