@@ -522,8 +522,7 @@ const db = firebase.firestore();
             <div style="font-size:15px;font-weight:700;color:#fff;" id="now-dj">טוען...</div>
             <div style="font-size:12px;color:#555;" id="now-show">—</div>
           </div>
-          <div id="now-photo-small" onclick="document.getElementById('photo-upload').click()" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;cursor:pointer;border:1px dashed rgba(255,0,0,0.3);" title="לחץ להעלאת תמונה">🎧</div>
-<input type="file" id="photo-upload" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+          <div id="now-photo-small" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;">🎧</div>
         </div>
       </div>
       <div class="player-footer">Live Station Player</div>
@@ -707,12 +706,18 @@ function applyOnAir(dj,show,genre,photo){
   document.getElementById('now-dj2').textContent=dj||'בשידור חי';
   document.getElementById('now-show').textContent=show||'—';
   document.getElementById('now-show2').textContent=show||'—';
-  document.getElementById('now-genre').textContent=genre||'—';
+  var genreEl=document.getElementById('now-genre');
+  if(genreEl) genreEl.textContent=genre||'—';
   var els=[document.getElementById('now-photo'),document.getElementById('now-photo-small')];
   for(var i=0;i<els.length;i++){
-    if(photo&&photo.indexOf('http')===0){
-      els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.textContent=\'🎧\'">';
-    } else if(photo&&photo.length<=2){els[i].textContent=photo;}
+    if(!els[i]) continue;
+    if(photo&&(photo.indexOf('http')===0||photo.indexOf('data:')===0)){
+      els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.innerHTML='🎧'" style="width:100%;height:100%;object-fit:cover;">';
+    } else if(photo&&photo.length<=2){
+      els[i].textContent=photo;
+    } else {
+      els[i].innerHTML='🎧';
+    }
   }
 }
 // =============================================
