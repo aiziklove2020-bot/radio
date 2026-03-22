@@ -401,44 +401,57 @@
             `;
             container.appendChild(div);
         });
+        // טעינה ראשונית של כל הלוח
         loadAllSchedule();
     }
 
     function switchDay(day) {
         currentDay = day;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.trim() === dayNames[day]);
+        if(activeBtn) activeBtn.classList.add('active');
+        
         document.querySelectorAll('.active-day-text').forEach(el => el.innerText = dayNames[day]);
         loadDayData();
     }
 
     async function loadAllSchedule() {
-        const doc = await db.collection('settings').doc('schedule').get();
-        if (doc.exists) {
-            fullSchedule = doc.data();
-            loadDayData();
-        }
+        // האזנה לשינויים בזמן אמת כדי להבטיח סנכרון מלא
+        db.collection('settings').doc('schedule').onSnapshot(doc => {
+            if (doc.exists) {
+                fullSchedule = doc.data();
+                loadDayData();
+            }
+        });
     }
 
     function loadDayData() {
+        // ניקוי לפני טעינת יום חדש כדי למנוע שאריות
+        clearInputs();
         if (fullSchedule[currentDay]) {
             fillInputs(fullSchedule[currentDay]);
-        } else {
-            clearInputs();
         }
     }
 
     function fillInputs(data) {
         timeSlots.forEach((_, i) => {
-            document.getElementById(`prog-${i}`).value = data[i]?.title || "";
-            document.getElementById(`host-${i}`).value = data[i]?.host || "";
+            const progInput = document.getElementById(`prog-${i}`);
+            const hostInput = document.getElementById(`host-${i}`);
+            if (progInput && hostInput) {
+                progInput.value = data[i]?.title || "";
+                hostInput.value = data[i]?.host || "";
+            }
         });
     }
 
     function clearInputs() {
         timeSlots.forEach((_, i) => {
-            document.getElementById(`prog-${i}`).value = "";
-            document.getElementById(`host-${i}`).value = "";
+            const progInput = document.getElementById(`prog-${i}`);
+            const hostInput = document.getElementById(`host-${i}`);
+            if (progInput && hostInput) {
+                progInput.value = "";
+                hostInput.value = "";
+            }
         });
     }
 
@@ -457,22 +470,25 @@
         const dayData = {};
         timeSlots.forEach((_, i) => {
             dayData[i] = {
-                title: document.getElementById(`prog-${i}`).value,
-                host: document.getElementById(`host-${i}`).value
+                title: document.getElementById(`prog-${i}`).value.trim(),
+                host: document.getElementById(`host-${i}`).value.trim()
             };
         });
 
+        // עדכון האובייקט המקומי לפני השליחה
         fullSchedule[currentDay] = dayData;
 
         try {
-            await db.collection('settings').doc('schedule').set(fullSchedule);
-            alert(`לוח השידורים ליום ${dayNames[currentDay]} נשמר בהצלחה!`);
+            // שמירה של כל האובייקט (כל השבוע) כדי לוודא ששום יום אחר לא נמחק
+            await db.collection('settings').doc('schedule').set(fullSchedule, { merge: true });
+            alert(`לוח השידורים ליום ${dayNames[currentDay]} סונכרן ונשמר בהצלחה!`);
         } catch (e) {
-            alert("שגיאה בשמירה: " + e.message);
+            console.error("Error saving schedule: ", e);
+            alert("שגיאה בסנכרון מול השרת: " + e.message);
         }
     }
 
-    // --- Live & Parties logic (Same as before) ---
+    // --- Live & Parties logic ---
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
@@ -553,6 +569,7 @@
         alert("המסיבות עודכנו!");
     }
 
+    // הפעלה ראשונית
     renderSlots();
 </script>
 
