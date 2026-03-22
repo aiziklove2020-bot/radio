@@ -354,7 +354,15 @@ playBtn.addEventListener('click', function() {
             audioEngine.play();
             isPlaying = true;
         } else {
-            alert("השידור לא זמין כרגע");
+            // הוספת מנגנון טעינה במידה וה-URL עדיין לא נטען
+            db.collection('settings').doc('dj_info').get().then(doc => {
+                if(doc.exists && doc.data().streamUrl) {
+                    audioEngine.src = doc.data().streamUrl;
+                    audioEngine.play();
+                    isPlaying = true;
+                    updateUI();
+                }
+            });
         }
     }
     updateUI();
@@ -384,12 +392,12 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
             if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
             liveText.innerText = "OFFLINE";
             liveDot.className = "live-dot offline";
-            audioEngine.src = stream; // Keep playing automation stream if exists
+            audioEngine.src = stream; 
         }
     }
 });
 
-// Sync Schedule (Free Text Mode)
+// Sync Schedule
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const now = new Date();
@@ -402,7 +410,6 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         const data = doc.data();
         const todayData = data[todayEng];
         
-        // Check if data is free text or the new object structure
         let freeText = "";
         if (typeof todayData === 'string') {
             freeText = todayData;
@@ -411,7 +418,7 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         }
 
         if (freeText && freeText.trim() !== "") {
-            container.innerHTML = freeText;
+            container.innerText = freeText;
         } else {
             container.innerHTML = `<div style="text-align:center; padding: 20px; opacity: 0.5;">אין שידורים מתוכננים להיום.<br>מוזיקה מעולה ברצף 24/7!</div>`;
         }
