@@ -130,6 +130,7 @@
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
             outline: none;
         }
+        .play-trigger:active { transform: scale(0.9); }
         .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
 
         @keyframes pulse-red {
@@ -314,7 +315,7 @@
 </div>
 <div class="party-grid" id="party-container"></div>
 
-<audio id="audio-engine" preload="auto" crossorigin="anonymous"></audio>
+<audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -328,6 +329,9 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
+// כתובת סטרים לגיבוי אם Firebase ריק
+const DEFAULT_STREAM = "https://icecast.walmradio.com:8000/chill"; 
 
 let isPlaying = false;
 let currentStreamUrl = "";
@@ -346,63 +350,58 @@ function updateUI() {
     }
 }
 
-async function startPlayback() {
-    try {
-        if (!currentStreamUrl) {
-            const doc = await db.collection('settings').doc('dj_info').get();
-            if (doc.exists) currentStreamUrl = doc.data().streamUrl;
-        }
-        
-        if (currentStreamUrl) {
-            audioEngine.src = currentStreamUrl;
-            audioEngine.load();
-            const playPromise = audioEngine.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    isPlaying = true;
-                    updateUI();
-                }).catch(error => {
-                    console.error("Playback failed:", error);
-                    isPlaying = false;
-                    updateUI();
-                });
-            }
-        }
-    } catch (e) {
-        console.error("Error starting playback:", e);
-    }
-}
-
-playBtn.addEventListener('click', function() {
+async function togglePlay() {
     if (isPlaying) {
         audioEngine.pause();
-        audioEngine.src = ""; // Clear source to stop buffer
+        audioEngine.src = "";
         isPlaying = false;
         updateUI();
     } else {
-        startPlayback();
+        // פידבק מיידי למשתמש
+        statusText.innerText = "מתחבר...";
+        
+        try {
+            // אם אין כתובת מה-Firebase, ננסה למשוך שוב או נשתמש בגיבוי
+            if (!currentStreamUrl) {
+                const doc = await db.collection('settings').doc('dj_info').get();
+                currentStreamUrl = doc.exists ? doc.data().streamUrl : DEFAULT_STREAM;
+            }
+            
+            audioEngine.src = currentStreamUrl || DEFAULT_STREAM;
+            audioEngine.load();
+            
+            const startPlay = await audioEngine.play();
+            isPlaying = true;
+            updateUI();
+            statusText.innerText = document.getElementById('dj-name-display').innerText || "בשידור";
+        } catch (err) {
+            console.error("Playback error:", err);
+            statusText.innerText = "שגיאה בחיבור";
+            isPlaying = false;
+            updateUI();
+        }
     }
-});
+}
+
+playBtn.addEventListener('click', togglePlay);
 
 // Sync DJ & Stream Info
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        currentStreamUrl = d.streamUrl || "";
+        currentStreamUrl = d.streamUrl || DEFAULT_STREAM;
         const name = d.name || "";
         
         document.getElementById('marquee-text').innerText = d.scrollingText || "ברוכים הבאים לרדיו מדברים בדס\"מ";
         
         if(name && name !== "") {
-            statusText.innerText = name;
+            statusText.innerText = isPlaying ? name : "מוכן לשידור";
             document.getElementById('dj-name-display').innerText = name;
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
             liveText.innerText = "LIVE";
             liveDot.className = "live-dot active";
         } else {
-            statusText.innerText = "מוזיקה ברצף";
             document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
             document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
             if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
@@ -410,12 +409,15 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
             liveDot.className = "live-dot offline";
         }
         
-        // If already playing and stream changes, update source
+        // עדכון סטרים בזמן אמת אם השתנה בזמן נגינה
         if(isPlaying && audioEngine.src !== currentStreamUrl) {
             audioEngine.src = currentStreamUrl;
-            audioEngine.play();
+            audioEngine.play().catch(() => {});
         }
     }
+}, err => {
+    console.error("Firestore error:", err);
+    currentStreamUrl = DEFAULT_STREAM;
 });
 
 // Sync Schedule
@@ -430,19 +432,8 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
         const todayData = data[todayEng];
-        
-        let freeText = "";
-        if (typeof todayData === 'string') {
-            freeText = todayData;
-        } else if (todayData && todayData.freeText) {
-            freeText = todayData.freeText;
-        }
-
-        if (freeText && freeText.trim() !== "") {
-            container.innerText = freeText;
-        } else {
-            container.innerHTML = `<div style="text-align:center; padding: 20px; opacity: 0.5;">אין שידורים מתוכננים להיום.<br>מוזיקה מעולה ברצף 24/7!</div>`;
-        }
+        let freeText = (typeof todayData === 'string') ? todayData : (todayData?.freeText || "");
+        container.innerText = freeText.trim() !== "" ? freeText : "אין שידורים מתוכננים להיום. מוזיקה מעולה ברצף 24/7!";
     }
 });
 
@@ -484,9 +475,6 @@ async function sendGreeting(event) {
         setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000);
     } catch(e) { btn.innerText = "שגיאה"; setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000); }
 }
-
-audioEngine.addEventListener('playing', () => { isPlaying = true; updateUI(); });
-audioEngine.addEventListener('pause', () => { isPlaying = false; updateUI(); });
 </script>
 </body>
 </html>
