@@ -27,13 +27,13 @@
             font-family: 'Heebo', sans-serif;
             background-color: var(--bg-dark);
             color: #fff;
-            line-height: 1.4; /* צמצום מרווח שורות */
+            line-height: 1.4;
             overflow-x: hidden;
         }
 
         .hero-bg {
             position: relative;
-            height: 70vh; /* צמצום גובה ה-Hero */
+            height: 65vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(8,8,8,1)), 
                         url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
@@ -44,23 +44,23 @@
             justify-content: center;
             text-align: center;
             padding: 15px;
-            padding-top: 100px; /* צמצום Padding עליון */
+            padding-top: 100px;
             z-index: 1;
         }
 
         header {
             position: absolute;
-            top: 10px; /* צמצום מרחק מהטופ */
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 95%; /* הרחבת הרוחב לניצול מקום */
+            width: 95%;
             max-width: 800px;
             background: rgba(20, 20, 20, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 15px; /* פינות פחות עגולות לחסכון במקום */
-            padding: 8px 15px; /* צמצום פנימי */
+            border-radius: 15px;
+            padding: 8px 15px;
             display: flex;
             flex-direction: column; 
             align-items: center;
@@ -74,7 +74,7 @@
             align-items: center; 
             gap: 8px; 
             font-weight: 900; 
-            font-size: 22px; /* הקטנה קלה */
+            font-size: 22px;
             color: #fff;
             text-decoration: none;
         }
@@ -102,7 +102,7 @@
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            padding: 10px 20px 10px 10px; /* צמצום פנימי */
+            padding: 10px 20px 10px 10px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -113,7 +113,7 @@
         }
 
         .play-trigger {
-            width: 55px; /* הקטנת הכפתור */
+            width: 55px;
             height: 55px;
             background: var(--primary);
             border-radius: 50%;
@@ -124,6 +124,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.2s;
+        }
+        .play-trigger:active { transform: scale(0.9); }
+        .play-trigger.is-playing { animation: pulse-red 2s infinite; }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
 
         .track-info { text-align: right; flex: 1; }
@@ -140,16 +149,17 @@
             margin-bottom: 2px;
         }
         .live-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
+        .live-dot.offline { background: #555; }
 
         .now-on-air-card {
             background: rgba(25, 25, 25, 0.6);
             backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 15px; /* צמצום פנימי */
+            padding: 15px;
             width: 95%;
             max-width: 700px;
-            margin: -40px auto 40px; /* צמצום מרחקים חיצוניים */
+            margin: -40px auto 40px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -161,7 +171,7 @@
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr; 
-            gap: 15px; /* צמצום רווח בין עמודות */
+            gap: 15px;
             max-width: 1200px;
             margin: 0 auto 30px;
             padding: 0 15px;
@@ -171,13 +181,13 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 20px; /* צמצום פנימי */
+            padding: 20px;
         }
 
         .schedule-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0; /* צמצום רווח בשורות הלו"ז */
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .schedule-time { color: var(--primary); font-weight: bold; width: 70px; font-size: 14px; }
@@ -204,7 +214,7 @@
         @media (max-width: 768px) {
             .main-grid, .party-grid { grid-template-columns: 1fr; gap: 10px; }
             .player-container { min-width: 90%; }
-            .hero-bg { height: 60vh; padding-top: 110px; }
+            .hero-bg { height: 55vh; padding-top: 110px; }
             .now-on-air-card { margin-top: -30px; margin-bottom: 30px; }
             .party-img { height: 200px; }
         }
@@ -232,19 +242,19 @@
         <div class="track-info">
             <div class="live-indicator">
                 <div class="live-dot" id="live-status-dot"></div>
-                <span id="live-status-text">בודק...</span>
+                <span id="live-status-text">מתחבר...</span>
             </div>
-            <span id="status-text" style="font-size: 16px; font-weight: 700; display: block;">טוען נגן...</span>
+            <span id="status-text" style="font-size: 16px; font-weight: 700; display: block;">מוזיקה בטעינה...</span>
         </div>
         
-        <button class="play-trigger" id="master-play-btn" disabled>
+        <button class="play-trigger" id="master-play-btn">
             <i class="fa-solid fa-play" id="btn-icon"></i>
         </button>
     </div>
 
     <div style="display:none;">
         <div id="youtube-engine"></div>
-        <audio id="audio-engine" preload="auto" crossorigin="anonymous" playsinline></audio>
+        <audio id="audio-engine" preload="auto" crossorigin="anonymous" playsinline src="https://icecast.walmradio.com:8000/rock"></audio>
     </div>
 </section>
 
@@ -281,7 +291,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-let ytPlayer, isYtReady = false, isPlaying = false, currentMode = 'none', pendingYtId = null;
+let ytPlayer, isYtReady = false, isPlaying = false, currentMode = 'backup', pendingYtId = null;
 const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
 const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text'), liveDot = document.getElementById('live-status-dot');
@@ -298,17 +308,17 @@ const db = firebase.firestore();
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube-engine', {
         height: '1', width: '1', videoId: '',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
+        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1, 'origin': window.location.origin },
         events: {
             'onReady': () => { 
                 isYtReady = true; 
-                playBtn.disabled = false; 
                 if(pendingYtId) loadYoutube(pendingYtId); 
             },
             'onStateChange': (e) => { 
                 isPlaying = (e.data == YT.PlayerState.PLAYING); 
                 updateUI(); 
-            }
+            },
+            'onError': () => switchToBackup()
         }
     });
 }
@@ -321,14 +331,13 @@ function updateUI() {
 function loadYoutube(id) {
     if (currentMode !== 'youtube' || pendingYtId !== id) {
         currentMode = 'youtube';
+        pendingYtId = id;
         liveText.innerText = "שידור חי LIVE";
         liveDot.className = "live-dot";
         audioEngine.pause();
         if(isYtReady) {
             ytPlayer.loadVideoById(id);
             if(isPlaying) ytPlayer.playVideo();
-        } else {
-            pendingYtId = id;
         }
     }
 }
@@ -336,31 +345,31 @@ function loadYoutube(id) {
 function switchToBackup() {
     if (currentMode !== 'backup') {
         currentMode = 'backup';
+        pendingYtId = null;
         liveText.innerText = "OFFLINE";
         liveDot.className = "live-dot offline";
-        statusText.innerText = "מוזיקת רוק ברצף";
+        statusText.innerText = "מוזיקת רוק (גיבוי)";
         document.getElementById('dj-name-display').innerText = "מוזיקת רוק";
         if (isYtReady) ytPlayer.pauseVideo();
-        audioEngine.src = "https://icecast.walmradio.com:8000/rock"; 
-        audioEngine.load();
         if(isPlaying) {
-            audioEngine.play().catch(e => console.log("Auto-play blocked"));
+            audioEngine.play().catch(e => console.log("Playback error"));
         }
     }
 }
 
 playBtn.addEventListener('click', () => {
-    if (currentMode === 'youtube') {
+    if (currentMode === 'youtube' && isYtReady) {
         if (isPlaying) ytPlayer.pauseVideo(); else ytPlayer.playVideo();
     } else {
         if (isPlaying) {
             audioEngine.pause();
             isPlaying = false;
         } else {
-            const playPromise = audioEngine.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => { isPlaying = true; updateUI(); }).catch(e => console.log(e));
-            }
+            audioEngine.play().then(() => { isPlaying = true; updateUI(); }).catch(e => {
+                // ניסיון טעינה חוזר במקרה של שגיאה
+                audioEngine.load();
+                audioEngine.play().then(() => { isPlaying = true; updateUI(); });
+            });
         }
     }
     updateUI();
@@ -369,7 +378,7 @@ playBtn.addEventListener('click', () => {
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        if(d.youtubeId && d.youtubeId.length > 5) {
+        if(d.youtubeId && d.youtubeId.trim().length > 5) {
             statusText.innerText = d.name || "בשידור חי";
             document.getElementById('dj-name-display').innerText = d.name || "בשידור";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
@@ -380,7 +389,6 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
     } else {
         switchToBackup();
     }
-    playBtn.disabled = false;
 });
 
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
@@ -388,8 +396,9 @@ const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי
 db.collection('settings').doc('schedule').onSnapshot(doc => {
     if(doc.exists) {
         const s = doc.data();
-        const today = daysEng[new Date().getDay()];
-        document.getElementById('current-day-label').innerText = daysHeb[new Date().getDay()];
+        const d = new Date();
+        const today = daysEng[d.getDay()];
+        document.getElementById('current-day-label').innerText = daysHeb[d.getDay()];
         const container = document.getElementById('schedule-content');
         const todaySchedule = s[today];
         if (Array.isArray(todaySchedule)) {
@@ -427,7 +436,11 @@ async function sendGreeting() {
     } catch(e) {}
 }
 
-setTimeout(() => { if(currentMode === 'none') switchToBackup(); }, 5000);
+// התחלה בטוחה
+window.addEventListener('load', () => {
+    statusText.innerText = "מוזיקת רוק (גיבוי)";
+    liveText.innerText = "OFFLINE";
+});
 </script>
 </body>
 </html>
