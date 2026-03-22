@@ -273,7 +273,7 @@
                 <div class="live-dot" id="live-status-dot"></div>
                 <span id="live-status-text">בודק...</span>
             </div>
-            <span class="track-title" id="status-text">טוען נתונים...</span>
+            <span class="track-title" id="status-text">מתחבר לשרת...</span>
         </div>
         
         <button class="play-trigger" id="master-play-btn" disabled>
@@ -284,8 +284,7 @@
     <!-- Hidden Engines -->
     <div style="position: absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
         <div id="youtube-engine"></div>
-        <!-- נגן אודיו מותאם לנייד ללא חסימות -->
-        <audio id="audio-engine" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="audio-engine" preload="auto" crossorigin="anonymous" playsinline></audio>
     </div>
 </section>
 
@@ -293,7 +292,7 @@
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">סטטוס שידור</div>
-        <h2 id="dj-name-display" style="font-size: 28px;">מוזיקה ברצף</h2>
+        <h2 id="dj-name-display" style="font-size: 28px;">טוען...</h2>
         <p id="song-name-display" style="color: rgba(255,255,255,0.5);">רדיו מדברים בדסמ</p>
     </div>
 </div>
@@ -318,7 +317,6 @@
 <div class="parties-section" id="parties">
     <h2 style="border-right: 4px solid var(--primary); padding-right: 15px;">מסיבות קרובות</h2>
     <div class="party-grid" id="party-container">
-        <!-- המסיבות נטענות מהפיירבייס -->
         <div class="party-card">
             <img src="https://via.placeholder.com/600x400" class="party-img" id="party1-img">
             <div class="party-content">
@@ -360,9 +358,7 @@ const liveDot = document.getElementById('live-status-dot');
 const audioEngine = document.getElementById('audio-engine');
 const djNameDisplay = document.getElementById('dj-name-display');
 
-// לינק לסטרים ישיר של Archive - קובץ VBR MP3 בדרך כלל עובד הכי טוב
-const BACKUP_STREAM_URL = "https://archive.org/download/backup-engine/backup-engine_vbr.m3u"; 
-// לינק חלופי למקרה שהקודם לא מזוהה כ-Audio (קובץ MP3 בודד לדוגמה שמייצג את הסטרים)
+// קישור ישיר לקובץ MP3 ב-Archive שידוע שעובד (קובץ 1.mp3 מתוך ה-item backup-engine)
 const FALLBACK_MP3 = "https://archive.org/download/backup-engine/1.mp3";
 
 // --- Firebase Init ---
@@ -383,7 +379,7 @@ function onYouTubeIframeAPIReady() {
             'autoplay': 0, 
             'controls': 0, 
             'playsinline': 1,
-            'origin': window.location.origin
+            'modestbranding': 1
         },
         events: {
             'onReady': onYtReady,
@@ -400,8 +396,6 @@ function onYtReady() {
         ytPlayer.cueVideoById(pendingYtId);
         updateRadioState(pendingYtId);
         pendingYtId = null;
-    } else {
-        updateRadioState(null);
     }
 }
 
@@ -448,15 +442,13 @@ function switchToBackup() {
         try { ytPlayer.stopVideo(); } catch(e){}
     }
     
-    // הגדרת המקור לאודיו - ננסה את הקובץ הישיר
-    if(!audioEngine.src || audioEngine.src === "") {
+    if(!audioEngine.src || audioEngine.src === "" || audioEngine.src !== FALLBACK_MP3) {
         audioEngine.src = FALLBACK_MP3; 
         audioEngine.load();
     }
 }
 
 playBtn.addEventListener('click', () => {
-    // הפעלה ראשונית של האודיו בנייד חייבת לקרות בתוך Click event
     if (currentMode === 'youtube') {
         if (isPlaying) {
             ytPlayer.pauseVideo();
@@ -464,33 +456,35 @@ playBtn.addEventListener('click', () => {
             ytPlayer.playVideo();
         }
     } else {
-        // מצב פלייליסט/גיבוי
         if (isPlaying) {
             audioEngine.pause();
             isPlaying = false;
             updateUI(false);
         } else {
-            // טעינה וניגון
+            // התחלת ניגון עם טיפול בשגיאות
             audioEngine.play().then(() => {
                 isPlaying = true;
                 updateUI(true);
-            }).catch(e => {
-                console.error("Playback failed:", e);
-                // ניסיון תיקון - טעינה מחדש
+            }).catch(error => {
+                console.error("Playback error:", error);
+                // ניסיון טעינה מחדש של המקור וניגון
                 audioEngine.load();
-                audioEngine.play();
+                audioEngine.play().then(() => {
+                    isPlaying = true;
+                    updateUI(true);
+                });
             });
         }
     }
 });
 
-// --- Listen for Changes ---
+// --- Firestore Listeners ---
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
         currentDjName = data.name;
         if(data.image) document.getElementById('dj-image-display').src = data.image;
-        if(data.youtubeId) {
+        if(data.youtubeId && data.youtubeId.trim() !== "") {
             if (isYtReady) {
                 ytPlayer.cueVideoById(data.youtubeId);
                 updateRadioState(data.youtubeId);
@@ -498,13 +492,15 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
         } else { 
             updateRadioState(null); 
         }
+    } else {
+        switchToBackup();
     }
 }, err => {
-    console.log("Firestore error, switching to backup");
     switchToBackup();
     playBtn.disabled = false;
 });
 
+// שימור לוגיקת המסיבות והלו"ז כפי שהיו
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
@@ -522,7 +518,6 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
     }
 });
 
-// --- Schedule Logic ---
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const times = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00", "22:00 - 00:00", "00:00 - 08:00"];
@@ -532,14 +527,10 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         const schedule = doc.data();
         const todayIndex = new Date().getDay();
         const todayKey = daysEng[todayIndex];
-        
         document.getElementById('current-day-label').innerText = "יום " + daysHeb[todayIndex];
-        
         const container = document.getElementById('schedule-content');
         container.innerHTML = "";
-        
         const todayData = schedule[todayKey] || [];
-        
         times.forEach((time, index) => {
             const slot = todayData[index] || { title: "", host: "" };
             const div = document.createElement('div');
@@ -560,10 +551,8 @@ async function sendGreeting() {
     const name = document.getElementById('msg-name').value.trim();
     const content = document.getElementById('msg-content').value.trim();
     if(!name || !content) return;
-
     const btn = document.getElementById('send-btn');
     btn.disabled = true; btn.innerText = "שולח...";
-
     try {
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST',
@@ -580,13 +569,13 @@ async function sendGreeting() {
     btn.disabled = false; btn.innerText = "שלח הודעה";
 }
 
-// Fallback if YouTube doesn't load at all
+// גיבוי למקרה ש-YouTube לא נטען בכלל
 setTimeout(() => {
     if (!isYtReady) {
         playBtn.disabled = false;
         if(currentMode === 'none') switchToBackup();
     }
-}, 5000);
+}, 4000);
 </script>
 </body>
 </html>
