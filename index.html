@@ -20,7 +20,6 @@
             padding: 0; 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
         
         body {
@@ -31,11 +30,11 @@
             overflow-x: hidden;
         }
 
-        /* Hero & Header Styles */
+        /* Hero & Header */
         .hero-bg {
             position: relative;
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(8,8,8,1)), 
+            height: 50vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(8,8,8,1)), 
                         url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -46,7 +45,6 @@
             text-align: center;
             padding: 15px;
             padding-top: 80px;
-            z-index: 1;
         }
 
         header {
@@ -56,7 +54,7 @@
             transform: translateX(-50%);
             width: 95%;
             max-width: 800px;
-            background: rgba(20, 20, 20, 0.8);
+            background: rgba(20, 20, 20, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -65,8 +63,6 @@
             display: flex;
             flex-direction: column; 
             align-items: center;
-            justify-content: center;
-            gap: 5px;
             z-index: 1000;
         }
 
@@ -75,11 +71,11 @@
             align-items: center; 
             gap: 8px; 
             font-weight: 900; 
-            font-size: 22px;
+            font-size: 20px;
             color: #fff;
             text-decoration: none;
+            margin-bottom: 5px;
         }
-        .logo-area .brand-white { color: #ffffff; }
         .logo-area .brand-red { color: var(--primary); }
 
         .nav-links { 
@@ -91,52 +87,43 @@
             width: 100%;
             justify-content: center;
         }
-        .nav-links a { 
-            color: #fff; 
-            text-decoration: none; 
-            font-weight: 500; 
-            font-size: 14px; 
-            opacity: 0.7;
-        }
+        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; font-size: 13px; opacity: 0.7; }
 
-        /* Player Styles */
+        /* Player */
         .player-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            padding: 10px 20px 10px 10px;
+            padding: 8px 15px 8px 8px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             margin-top: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            min-width: 320px;
-            z-index: 10;
+            min-width: 280px;
         }
 
         .play-trigger {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: var(--primary);
             border-radius: 50%;
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
-            outline: none;
         }
-        .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
+        .play-trigger.is-playing { animation: pulse-red 2s infinite; background: #fff; color: var(--primary); }
 
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
         }
 
@@ -151,59 +138,37 @@
             background: rgba(255, 71, 87, 0.1);
             padding: 1px 6px;
             border-radius: 4px;
-            margin-bottom: 2px;
         }
         .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
         .live-dot.offline { background: #555; }
         .live-dot.active { animation: blink 1s infinite; }
-
         @keyframes blink { 50% { opacity: 0.3; } }
 
+        /* Now On Air */
         .now-on-air-card {
-            background: rgba(25, 25, 25, 0.6);
+            background: rgba(25, 25, 25, 0.8);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 15px;
+            padding: 12px;
             width: 95%;
-            max-width: 700px;
-            margin: -30px auto 30px;
+            max-width: 600px;
+            margin: -25px auto 25px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            position: relative;
+            gap: 12px;
             z-index: 10;
+            position: relative;
         }
-        .dj-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
+        .dj-thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
 
-        /* Marquee */
-        .scrolling-wrapper {
-            background: rgba(255, 71, 87, 0.1);
-            color: var(--primary);
-            padding: 5px 0;
-            font-size: 13px;
-            font-weight: 700;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-bottom: 20px;
-        }
-        .scrolling-text {
-            display: inline-block;
-            padding-right: 100%;
-            animation: marquee 20s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100%, 0); }
-        }
-
-        /* Layout Grid */
+        /* Sections */
         .main-grid {
             display: grid;
-            grid-template-columns: 1fr 1.6fr; 
+            grid-template-columns: 1fr 1.5fr; 
             gap: 15px;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto 30px;
             padding: 0 15px;
         }
@@ -212,112 +177,112 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 20px;
+            padding: 15px;
         }
 
-        .free-text-schedule {
-            font-size: 16px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            color: rgba(255, 255, 255, 0.9);
-        }
+        .free-text-schedule { font-size: 15px; line-height: 1.5; white-space: pre-wrap; color: rgba(255, 255, 255, 0.8); }
 
-        /* Party Section - Horizontal Layout */
-        .party-grid {
+        /* Horizontal Party Cards */
+        .party-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-width: 1200px;
+            gap: 15px;
+            max-width: 900px;
             margin: 0 auto 50px;
             padding: 0 15px;
         }
 
-        .party-card {
+        .party-row {
             background: rgba(30, 30, 30, 0.4);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            overflow: hidden;
-            display: flex; /* Horizontal by default */
-            flex-direction: row;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-height: 250px;
-        }
-        
-        .party-card:hover {
-            transform: scale(1.01);
-            background: rgba(40, 40, 40, 0.6);
-            border-color: rgba(255, 71, 87, 0.3);
-        }
-        
-        .party-image-container {
-            width: 35%; /* Fixed width for the image part */
-            min-width: 250px;
-            background: #000;
-            overflow: hidden;
-            position: relative;
+            border-radius: 16px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            border-left: 1px solid var(--glass-border);
+            overflow: hidden;
+            height: 140px;
+            transition: 0.3s;
         }
 
-        .party-card-img-blur {
-            position: absolute;
-            width: 120%;
-            height: 120%;
-            object-fit: cover;
-            filter: blur(15px) brightness(0.4);
-            z-index: 1;
+        .party-row:hover {
+            background: rgba(45, 45, 45, 0.6);
+            border-color: rgba(255, 71, 87, 0.4);
+            transform: scale(1.01);
         }
 
-        .party-card-img {
+        .party-row-img-wrap {
+            width: 140px;
+            min-width: 140px;
+            height: 100%;
             position: relative;
+            background: #000;
+        }
+
+        .party-row-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            z-index: 2;
-            image-rendering: -webkit-optimize-contrast;
+            object-fit: cover;
         }
 
-        .party-content { 
-            padding: 30px; 
-            text-align: right; 
+        .party-row-content {
+            padding: 12px 15px;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex: 1;
-            background: linear-gradient(to right, rgba(255,255,255,0.02), transparent);
+            justify-content: center;
+            text-align: right;
+            overflow: hidden;
         }
 
-        .party-date-tag {
+        .party-row-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .party-row-date {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .party-row-desc {
+            font-size: 13px;
+            opacity: 0.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .party-row-btn {
             background: var(--primary);
             color: #fff;
-            padding: 4px 14px;
-            border-radius: 8px;
-            font-size: 13px;
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 800;
-            display: inline-block;
-            margin-bottom: 15px;
-            width: fit-content;
+            align-self: flex-start;
         }
 
-        /* Form Elements */
+        /* Forms */
         input, textarea {
-            width:100%; padding:12px; margin-bottom:8px; background:#222; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:12px; font-size:14px; text-align: right; transition: 0.3s;
+            width:100%; padding:10px; margin-bottom:8px; background:#1a1a1a; border:1px solid rgba(255,255,255,0.08); color:#fff; border-radius:10px; font-size:14px; text-align: right;
         }
-        input:focus, textarea:focus { outline: none; border-color: var(--primary); background: #2a2a2a; }
-        
         .submit-btn {
-            width:100%; padding:14px; background:var(--primary); color:#fff; border:none; cursor:pointer; border-radius:12px; font-weight:900; margin-top:5px; transition: 0.3s; font-size: 16px;
+            width:100%; padding:12px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size: 15px;
         }
-        .submit-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
 
         @media (max-width: 768px) {
             .main-grid { grid-template-columns: 1fr; }
-            .party-card { flex-direction: column; height: auto; }
-            .party-image-container { width: 100%; height: 250px; border-left: none; border-bottom: 1px solid var(--glass-border); }
-            .player-container { min-width: 90%; }
-            .hero-bg { height: 50vh; padding-top: 100px; }
+            .party-row { height: auto; min-height: 120px; }
+            .party-row-img-wrap { width: 100px; min-width: 100px; }
+            .party-row-title { font-size: 16px; }
         }
     </style>
 </head>
@@ -326,67 +291,58 @@
 <header>
     <a href="#" class="logo-area">
         <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
-        <div><span class="brand-white">רדיו מדברים</span> <span class="brand-red">בדס"מ</span></div>
+        <div><span>רדיו מדברים</span> <span class="brand-red">בדס"מ</span></div>
     </a>
     <nav class="nav-links">
         <a href="#dashim">ד"שים</a>
-        <a href="#schedule">לוח שידורים</a>
+        <a href="#schedule">שידורים</a>
         <a href="#parties">מסיבות</a>
     </nav>
 </header>
 
 <section class="hero-bg">
-    <h1 style="font-size: clamp(26px, 6vw, 42px); font-weight: 900; letter-spacing: -1px;">הקול של הקהילה</h1>
-    <p style="opacity: 0.6; font-size: 15px;">שידור חי 24/7</p>
-
+    <h1 style="font-size: 32px; font-weight: 900;">הקול של הקהילה</h1>
     <div class="player-container">
         <div class="track-info">
             <div class="live-indicator">
                 <div class="live-dot" id="live-status-dot"></div>
                 <span id="live-status-text">מתחבר...</span>
             </div>
-            <span id="status-text" style="font-size: 15px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">טוען נגן...</span>
+            <span id="status-text" style="font-size: 14px; font-weight: 700; display: block;">טוען נגן...</span>
         </div>
-        
-        <button class="play-trigger" id="master-play-btn">
-            <i class="fa-solid fa-play" id="btn-icon"></i>
-        </button>
+        <button class="play-trigger" id="master-play-btn"><i class="fa-solid fa-play" id="btn-icon"></i></button>
     </div>
 </section>
 
-<div class="scrolling-wrapper">
-    <div class="scrolling-text" id="marquee-text">ברוכים הבאים לרדיו מדברים בדס"מ - הקול של הקהילה!</div>
-</div>
-
 <div class="now-on-air-card">
-    <img id="dj-image-display" src="https://via.placeholder.com/200?text=OFFLINE" class="dj-thumb">
+    <img id="dj-image-display" src="https://via.placeholder.com/100" class="dj-thumb">
     <div style="flex:1; text-align: right;">
-        <div style="color: var(--primary); font-weight: 800; font-size: 11px;">בשידור כרגע</div>
-        <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים בדס"מ</h2>
-        <p id="sub-status" style="color: rgba(255,255,255,0.5); font-size: 13px;">טוען נתונים...</p>
+        <div style="color: var(--primary); font-weight: 800; font-size: 10px;">LIVE NOW</div>
+        <h2 id="dj-name-display" style="font-size: 18px;">רדיו מדברים בדס"מ</h2>
+        <p id="sub-status" style="color: rgba(255,255,255,0.4); font-size: 12px;">טוען נתונים...</p>
     </div>
 </div>
 
 <div class="main-grid">
     <div class="box-container" id="dashim">
-        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; margin-bottom: 15px;">שלח ד"ש לשדרן</h2>
+        <h3 style="margin-bottom: 12px; font-weight: 900; color: var(--primary);">שלח ד"ש</h3>
         <input type="text" id="msg-name" placeholder="השם שלך">
-        <textarea id="msg-content" placeholder="מה תרצו למסור?" style="height:100px; resize: none;"></textarea>
-        <button class="submit-btn" onclick="sendGreeting(event)">שלח הודעה</button>
+        <textarea id="msg-content" placeholder="ההודעה שלך..." style="height:80px;"></textarea>
+        <button class="submit-btn" onclick="sendGreeting(event)">שלח ד"ש לשדרן</button>
     </div>
     
     <div class="box-container" id="schedule">
-        <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; margin-bottom: 15px;">לוח שידורים - <span id="current-day-label"></span></h2>
-        <div id="schedule-content" class="free-text-schedule">טוען לוח שידורים...</div>
+        <h3 style="margin-bottom: 12px; font-weight: 900; color: var(--primary);">לוח שידורים: <span id="current-day-label"></span></h3>
+        <div id="schedule-content" class="free-text-schedule">טוען...</div>
     </div>
 </div>
 
-<div id="parties" style="padding: 0 15px; max-width: 1200px; margin: 40px auto 10px; text-align: right;">
-    <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; display: inline-block;">מסיבות ואירועים</h2>
+<div id="parties" style="padding: 0 15px; max-width: 900px; margin: 20px auto 10px; text-align: right;">
+    <h3 style="font-weight: 900; color: var(--primary);">מסיבות ואירועים</h3>
 </div>
-<div class="party-grid" id="party-container"></div>
+<div class="party-list" id="party-container"></div>
 
-<audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
+<audio id="audio-engine" crossorigin="anonymous"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -402,145 +358,97 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const DEFAULT_STREAM = "https://stream.zeno.fm/0r0xa792kwzuv"; 
-
 let isPlaying = false;
-let currentStreamUrl = "";
 const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
 const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text'), liveDot = document.getElementById('live-status-dot');
 
-function updateUI() {
-    btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
-    if (isPlaying) {
-        playBtn.classList.add('is-playing');
-        liveDot.classList.add('active');
-    } else {
-        playBtn.classList.remove('is-playing');
-        liveDot.classList.remove('active');
-    }
-}
-
-function fixUrl(url) {
-    if (!url) return DEFAULT_STREAM;
-    if (url.startsWith('http://')) return url.replace('http://', 'https://');
-    return url;
-}
-
 async function togglePlay() {
     if (isPlaying) {
-        audioEngine.pause();
-        audioEngine.src = "";
-        isPlaying = false;
-        updateUI();
+        audioEngine.pause(); audioEngine.src = ""; isPlaying = false;
     } else {
         statusText.innerText = "מתחבר...";
+        const doc = await db.collection('settings').doc('dj_info').get();
+        audioEngine.src = (doc.exists && doc.data().streamUrl) ? doc.data().streamUrl : DEFAULT_STREAM;
         try {
-            const doc = await db.collection('settings').doc('dj_info').get();
-            let targetUrl = doc.exists && doc.data().streamUrl ? doc.data().streamUrl : DEFAULT_STREAM;
-            currentStreamUrl = fixUrl(targetUrl);
-            audioEngine.src = currentStreamUrl;
-            audioEngine.load();
-            await audioEngine.play();
+            await audioEngine.play(); 
             isPlaying = true;
-            updateUI();
-            statusText.innerText = document.getElementById('dj-name-display').innerText || "בשידור";
-        } catch (err) {
+            statusText.innerText = document.getElementById('dj-name-display').innerText;
+        } catch(e) {
             statusText.innerText = "שגיאה בחיבור";
-            isPlaying = false;
-            updateUI();
         }
     }
+    btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
+    playBtn.classList.toggle('is-playing', isPlaying);
 }
-
 playBtn.addEventListener('click', togglePlay);
 
-// Realtime DJ Updates
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        let newUrl = fixUrl(d.streamUrl || DEFAULT_STREAM);
-        document.getElementById('marquee-text').innerText = d.scrollingText || "ברוכים הבאים לרדיו מדברים בדס\"מ";
         const name = d.name || "";
-        if(name && name.trim() !== "") {
-            statusText.innerText = isPlaying ? name : "מוכן לשידור";
+        if(name.trim() !== "") {
             document.getElementById('dj-name-display').innerText = name;
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
-            liveText.innerText = "LIVE";
-            liveDot.className = "live-dot active";
+            liveText.innerText = "LIVE"; liveDot.className = "live-dot active";
         } else {
             document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
             document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
             if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
-            liveText.innerText = "OFFLINE";
-            liveDot.className = "live-dot offline";
+            liveText.innerText = "OFFLINE"; liveDot.className = "live-dot offline";
         }
-        currentStreamUrl = newUrl;
     }
 });
 
-// Schedule Logic
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const now = new Date();
 document.getElementById('current-day-label').innerText = daysHeb[now.getDay()];
 
 db.collection('settings').doc('schedule').onSnapshot(doc => {
-    const container = document.getElementById('schedule-content');
     if(doc.exists) {
-        const data = doc.data();
-        const todayData = data[daysEng[now.getDay()]];
-        let freeText = (typeof todayData === 'string') ? todayData : (todayData?.freeText || "");
-        container.innerText = freeText.trim() !== "" ? freeText : "אין שידורים מתוכננים להיום. מוזיקה מעולה ברצף 24/7!";
+        const todayData = doc.data()[daysEng[now.getDay()]];
+        document.getElementById('schedule-content').innerText = (typeof todayData === 'string' ? todayData : todayData?.freeText) || "מוזיקה ברצף!";
     }
 });
 
-// Parties Logic - Horizontal Cards
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
-        const data = doc.data();
-        const container = document.getElementById('party-container');
+        const data = doc.data(), container = document.getElementById('party-container');
         container.innerHTML = "";
-        
         Object.keys(data).sort().forEach(key => {
             const p = data[key];
             if(p && p.title) {
-                const imageUrl = p.image || p.imageUrl || "";
                 container.innerHTML += `
-                    <div class="party-card">
-                        ${imageUrl ? `
-                        <div class="party-image-container">
-                            <img src="${imageUrl}" class="party-card-img-blur">
-                            <img src="${imageUrl}" class="party-card-img" alt="${p.title}">
-                        </div>` : ''}
-                        <div class="party-content">
-                            <div class="party-date-tag">${p.date || 'בקרוב'}</div>
-                            <h3 style="margin-bottom: 10px; font-size: 1.6rem; font-weight: 900; color: #fff;">${p.title}</h3>
-                            <div style="font-size:16px; color:var(--primary); margin-bottom:15px; font-weight: 700;">${p.freeText || ''}</div>
-                            <p style="opacity:0.8; font-size:15px; line-height: 1.6; margin-bottom: 25px; flex-grow: 1;">${p.desc || ''}</p>
-                            <div style="margin-top: auto;">
-                                ${p.link ? `<a href="${p.link}" target="_blank" class="submit-btn" style="display:block; text-decoration:none; text-align:center; max-width: 200px; margin-right: auto;">פרטים וכרטיסים</a>` : ''}
-                            </div>
+                    <div class="party-row">
+                        <div class="party-row-img-wrap">
+                            <img src="${p.image || 'https://via.placeholder.com/140'}" class="party-row-img">
+                        </div>
+                        <div class="party-row-content">
+                            <div class="party-row-date">${p.date || 'בקרוב'}</div>
+                            <div class="party-row-title">${p.title}</div>
+                            <div class="party-row-desc">${p.desc || p.freeText || ''}</div>
+                            ${p.link ? `<a href="${p.link}" target="_blank" class="party-row-btn">פרטים נוספים</a>` : ''}
                         </div>
                     </div>`;
             }
         });
-        if (!container.innerHTML) container.innerHTML = `<div style="text-align:center; opacity:0.5; padding: 40px;">אין אירועים רשומים כרגע.</div>`;
     }
 });
 
 async function sendGreeting(event) {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
     if(!n || !c) return;
-    const btn = event.target; btn.innerText = "שולח..."; btn.disabled = true;
     try {
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
         });
-        btn.innerText = "נשלח!"; document.getElementById('msg-content').value = "";
-        setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000);
-    } catch(e) { btn.innerText = "שגיאה"; setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000); }
+        document.getElementById('msg-content').value = "";
+        event.target.innerText = "נשלח בהצלחה!";
+        setTimeout(() => { event.target.innerText = "שלח ד\"ש לשדרן"; }, 3000);
+    } catch(e) {}
 }
 </script>
 </body>
