@@ -780,15 +780,21 @@ function setStreamMode(online){
 function fetchNow(){
   var manual=gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
   if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);}
-  fetch('/api/nowplaying',{cache:'no-cache'})
+  // בדיקה ישירה לשרת caster.fm ללא API
+  fetch('https://morcast.caster.fm:13763/status-json.xsl',{cache:'no-cache'})
     .then(function(r){return r.json();})
-    .then(function(d){
-      setStreamMode(!!d.online);
-      if(d.online){
+    .then(function(data){
+      var sources = data && data.icestats && data.icestats.source;
+      var src = Array.isArray(sources)
+        ? (sources.find(function(s){return s.listenurl&&s.listenurl.includes('/y4k1D');}) || sources[0])
+        : sources;
+      var online = !!src;
+      setStreamMode(online);
+      if(online){
         applyOnAir(
-          d.dj||d.title||'בשידור',
-          d.title||'—',
-          d.genre||'—',
+          src.server_name||src.title||'בשידור',
+          src.title||src.song||'—',
+          src.genre||'—',
           ''
         );
       } else {
@@ -802,7 +808,6 @@ function fetchNow(){
       document.getElementById('now-dj2').textContent='פלייליסט גיבוי';
     });
 }
-
 function reload(){
   sch=gd('rdx_sch',sch);team=gd('rdx_team',team);
   news=gd('rdx_news',news);parties=gd('rdx_parties',parties);cfg=gd('rdx_cfg',cfg);
