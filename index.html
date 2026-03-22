@@ -27,8 +27,8 @@ body {
 /* ── רקע Hero ── */
 .hero-bg {
     position: relative;
-    height: 85vh;
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(8,8,8,1)), 
+    height: 80vh;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(8,8,8,1)), 
                 url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
@@ -57,7 +57,6 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .logo-area { 
@@ -68,64 +67,74 @@ header {
     font-size: 22px; 
     color: #fff;
     text-decoration: none;
-    order: 1;
 }
 .logo-area .radio-prefix { color: #fff; margin-left: 5px; }
 .logo-area span.highlight { color: var(--primary); }
 
-.nav-links { 
-    display: flex; 
-    gap: 30px; 
-    list-style: none;
-    order: 2;
-}
-.nav-links a { 
-    color: rgba(255,255,255,0.7); 
-    text-decoration: none; 
-    font-weight: 300; 
-    transition: 0.3s; 
-    font-size: 15px;
-    letter-spacing: 0.5px;
-}
-.nav-links a:hover { color: #fff; text-shadow: 0 0 10px var(--primary); }
+.nav-links { display: flex; gap: 30px; list-style: none; }
+.nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 300; transition: 0.3s; }
+.nav-links a:hover { color: #fff; }
 
-/* ── טקסט מרכזי ── */
-.hero-content h1 { 
-    font-size: clamp(45px, 10vw, 90px); 
-    font-weight: 900; 
-    margin-bottom: 5px; 
-    letter-spacing: -2px;
-}
-.hero-content p { 
-    font-size: 19px; 
-    color: rgba(255,255,255,0.6); 
-    margin-bottom: 35px; 
-    max-width: 600px;
-}
-
-.play-live-btn {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: #fff;
-    padding: 14px 45px;
-    border-radius: 60px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
+/* ── נגן מותאם אישית (Custom Audio Player) ── */
+.custom-player {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 100px;
+    padding: 15px 30px;
+    max-width: 500px;
+    width: 100%;
+    display: flex;
     align-items: center;
-    gap: 15px;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    backdrop-filter: blur(10px);
+    gap: 20px;
 }
-.play-live-btn:hover { 
-    background: #fff; 
-    color: #000; 
-    transform: scale(1.08); 
-    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+
+.play-pause-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: 0.3s;
+    flex-shrink: 0;
 }
-.dot { width: 10px; height: 10px; background: #ff0000; border-radius: 50%; display: inline-block; animation: blink 1s infinite; box-shadow: 0 0 10px #ff0000; }
-@keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+.play-pause-btn:hover { background: var(--primary-dark); transform: scale(1.1); }
+
+.player-info {
+    text-align: right;
+    flex: 1;
+}
+.player-info .track-name {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.player-info .status {
+    font-size: 11px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.volume-slider {
+    width: 60px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
 
 /* ── כרטיס "מי בשידור" ── */
 .now-on-air-card {
@@ -137,7 +146,7 @@ header {
     padding: 25px;
     width: 90%;
     max-width: 650px;
-    margin: -80px auto 70px;
+    margin: -60px auto 70px;
     display: flex;
     align-items: center;
     gap: 25px;
@@ -145,76 +154,52 @@ header {
     z-index: 10;
     box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
-.dj-thumb-container { position: relative; width: 110px; height: 110px; }
-.dj-thumb {
-    width: 100%; height: 100%; border-radius: 15px; object-fit: cover;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: 0.5s ease;
-}
+.dj-thumb-container { position: relative; width: 100px; height: 100px; }
+.dj-thumb { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
 .air-info { flex: 1; text-align: right; }
-.air-info h3 { font-size: 12px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-.air-info .title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-.air-info .details { font-size: 15px; color: rgba(255,255,255,0.5); font-weight: 300; }
-.wave-icon { color: var(--primary); font-size: 28px; filter: drop-shadow(0 0 8px var(--primary)); }
+.air-info h3 { font-size: 12px; color: var(--primary); font-weight: 800; margin-bottom: 5px; }
+.air-info .title { font-size: 22px; font-weight: 800; color: #fff; }
+.air-info .details { font-size: 14px; color: rgba(255,255,255,0.5); }
 
-/* ── פריסה תחתית ── */
+/* ── פריסה ── */
 .main-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
-    gap: 35px;
+    gap: 30px;
     max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px 80px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
 }
 
-@media (max-width: 950px) {
-    .main-grid { grid-template-columns: 1fr; }
-    header { width: 95%; padding: 10px 20px; flex-direction: column; gap: 15px; }
-    .nav-links { gap: 15px; }
-}
+@media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
 .box-container {
     background: rgba(255,255,255,0.02);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 35px;
+    border-radius: 20px;
+    padding: 30px;
 }
-.box-title { font-size: 26px; font-weight: 900; margin-bottom: 30px; color: #fff; border-right: 5px solid var(--primary); padding-right: 18px; }
+.box-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 15px; }
 
-/* לוח שידורים */
-table { width: 100%; border-collapse: collapse; }
-th { text-align: right; color: rgba(255,255,255,0.3); font-size: 12px; padding-bottom: 15px; }
-td { padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-.t-time { font-weight: 800; color: var(--primary); width: 90px; font-size: 18px; }
-.t-prog { font-weight: 500; font-size: 16px; color: #eee; }
-.t-dj { color: rgba(255,255,255,0.4); font-size: 14px; }
-
-/* טופס דשים */
+/* דשים */
 .dash-form input, .dash-form textarea {
     width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-    padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 18px; font-family: inherit;
+    padding: 12px; border-radius: 10px; color: #fff; margin-bottom: 15px; font-family: inherit;
 }
-.btn-send {
-    background: var(--primary); color: #fff; border: none; width: 100%;
-    padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
-}
-.btn-send:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-send { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; }
 
-footer { padding: 60px 40px; text-align: center; color: rgba(255,255,255,0.2); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
+footer { padding: 40px; text-align: center; color: rgba(255,255,255,0.2); font-size: 12px; }
 
-#hidden-caster { display: none; }
+.blink { animation: blinker 1s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
 </style>
 </head>
 <body>
 
 <header>
-    <a href="#home" class="logo-area">
+    <a href="#" class="logo-area">
         <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
-        <div>
-            <span class="radio-prefix">רדיו</span>
-            מדברים <span class="highlight">בדס"מ</span>
-        </div>
+        <div><span class="radio-prefix">רדיו</span>מדברים <span class="highlight">בדס"מ</span></div>
     </a>
     <nav class="nav-links">
         <a href="#home">בית</a>
@@ -224,214 +209,196 @@ footer { padding: 60px 40px; text-align: center; color: rgba(255,255,255,0.2); f
 </header>
 
 <section class="hero-bg" id="home">
-    <div class="hero-content">
-        <h1>מדברים בדס"מ</h1>
-        <p>הקול של הקהילה. רשת חברתית בדסמית ראשונה מסוגה בשידור חי 24/7.</p>
-        <button class="play-live-btn" onclick="togglePlay()">
-            <span class="dot" id="live-dot"></span>
-            <span id="btn-text">האזינו לשידור חי</span>
+    <div class="hero-content" style="max-width: 700px; display: flex; flex-direction: column; align-items: center;">
+        <h1 style="font-size: clamp(40px, 8vw, 60px); font-weight: 900;">הקול של הקהילה</h1>
+        <p style="color: rgba(255,255,255,0.6); margin-bottom: 25px;">האזינו לשידורים החיים ולפלייליסט הקהילה בכל זמן.</p>
+        
+        <!-- כפתור שידור חי (Live Stream) -->
+        <button class="play-live-btn" style="background:transparent; border:1px solid var(--primary); color:var(--primary); padding:8px 25px; border-radius:30px; font-size:14px; margin-bottom:15px; cursor:pointer;" onclick="switchSource('live')">
+             <i class="fa-solid fa-tower-broadcast" style="margin-left:5px;"></i> עברו לשידור חי
         </button>
+
+        <!-- נגן המדיה המותאם אישית (המחליף של ה-Iframe) -->
+        <div class="custom-player" id="media-player">
+            <button class="play-pause-btn" id="play-btn" onclick="toggleAudio()">
+                <i class="fa-solid fa-play" id="play-icon"></i>
+            </button>
+            <div class="player-info">
+                <div class="status" id="player-status">AUTO DJ</div>
+                <div class="track-name" id="track-name">פלייליסט הקהילה</div>
+            </div>
+            <div class="volume-control">
+                <i class="fa-solid fa-volume-high" style="font-size: 14px; color: rgba(255,255,255,0.4);"></i>
+                <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1" oninput="changeVolume(this.value)">
+            </div>
+        </div>
+        <p style="font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 10px;">* הנגן משדר מדיה מאוחסנת כשהשידור החי אינו פעיל</p>
     </div>
 </section>
 
 <div class="now-on-air-card">
     <div class="dj-thumb-container">
-        <!-- תמונה דינמית שתשתנה לפי הניהול או לפי סטטוס השידור -->
-        <img id="dj-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb" onerror="this.src='https://via.placeholder.com/150/111/fff?text=RADIO'">
+        <img id="dj-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb">
     </div>
     <div class="air-info">
-        <h3 id="air-status-label">מתחבר...</h3>
-        <div class="title" id="display-dj">טוען נתונים...</div>
-        <div class="details">
-            <span id="display-track">אנא המתן...</span>
-        </div>
+        <h3 id="air-status-label">סטטוס שידור</h3>
+        <div class="title" id="display-dj">טוען...</div>
+        <div class="details" id="display-track">מכין את המוזיקה...</div>
     </div>
-    <div class="wave-icon">
-        <i class="fa-solid fa-tower-broadcast"></i>
-    </div>
+    <div style="font-size: 30px; color: var(--primary);"><i class="fa-solid fa-tower-broadcast"></i></div>
 </div>
+
+<!-- אלמנט אודיו נסתר -->
+<audio id="main-audio"></audio>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
         <h2 class="box-title">לוח שידורים</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>זמן</th>
-                    <th>תוכנית</th>
-                    <th>שדרן</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="t-time">22:00</td>
-                    <td class="t-prog">מדברים בדסמ - ראשי</td>
-                    <td class="t-dj">צוות הרדיו</td>
-                </tr>
-                <tr>
-                    <td class="t-time">00:00</td>
-                    <td class="t-prog">אפטר פארטי</td>
-                    <td class="t-dj">DJ Set</td>
-                </tr>
-                <tr>
-                    <td class="t-time">02:00</td>
-                    <td class="t-prog">שידורי לילה</td>
-                    <td class="t-dj">Auto DJ</td>
-                </tr>
-            </tbody>
-        </table>
+        <p style="color: rgba(255,255,255,0.4); font-size: 14px;">שידורים חיים מ-22:00 בלילה. בשאר הזמן מוזיקה ברצף.</p>
+        <div style="margin-top: 20px;">
+            <div style="display:flex; justify-content:space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span>ערב - שידורי שדרנים</span>
+                <span style="color:var(--primary); font-weight:800;">LIVE</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding: 12px 0;">
+                <span>יום - פלייליסט הקהילה</span>
+                <span style="color:rgba(255,255,255,0.3)">AUTO</span>
+            </div>
+        </div>
     </div>
 
     <div class="box-container" id="dashim">
         <h2 class="box-title">הקדשות ודשים</h2>
         <div class="dash-form">
-            <input type="text" id="sender-name" placeholder="השם שלך / כינוי">
-            <input type="text" id="sender-target" placeholder="למי ההקדשה?">
-            <textarea id="sender-msg" rows="4" placeholder="כתוב כאן את המסר שלך לשדרן..."></textarea>
-            <button class="btn-send" onclick="sendToDj()">שלח מסר לשידור</button>
+            <input type="text" id="sender-name" placeholder="השם שלך">
+            <textarea id="sender-msg" rows="3" placeholder="הודעה לשדרן..."></textarea>
+            <button class="btn-send" onclick="sendToDj()">שלח הודעה</button>
         </div>
     </div>
 </div>
 
-<!-- נגן Caster מוסתר לצורך הזרמת אודיו -->
-<div id="hidden-caster">
-    <div data-type="newStreamPlayer" data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482" data-theme="dark" data-color="e74c3c" data-rendered="false" class="cstrEmbed"></div>
-    <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
-</div>
-
 <footer>
-    <div style="margin-bottom: 20px;">
-        <i class="fa-brands fa-instagram" style="margin: 0 10px; font-size: 20px; cursor: pointer;"></i>
-        <i class="fa-brands fa-facebook" style="margin: 0 10px; font-size: 20px; cursor: pointer;"></i>
-        <i class="fa-brands fa-telegram" style="margin: 0 10px; font-size: 20px; cursor: pointer;"></i>
-    </div>
-    &copy; 2024 רדיו מדברים בדסמ | הקול של הקהילה בשידור חי
+    &copy; 2024 רדיו מדברים בדסמ | חוויית האזנה נקייה
 </footer>
 
 <script>
+// הגדרות מקורות שמע
+const SOURCES = {
+    playlist: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29mp3j.cc.mp3",
+    live: "https://shaincast.caster.fm:18126/listen.mp3"
+};
+
+let currentSource = 'playlist';
 let isPlaying = false;
-const DEFAULT_IMG = "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop";
+const mainAudio = document.getElementById('main-audio');
+const playBtn = document.getElementById('play-btn');
+const playIcon = document.getElementById('play-icon');
+const playerStatus = document.getElementById('player-status');
+const trackNameDisplay = document.getElementById('track-name');
 
-function togglePlay() {
-    const btnText = document.getElementById('btn-text');
-    const playBtn = document.querySelector('.play-live-btn');
-    const dot = document.getElementById('live-dot');
+// אתחול מקור ראשוני
+mainAudio.src = SOURCES.playlist;
 
+function toggleAudio() {
     if (!isPlaying) {
-        isPlaying = true;
-        btnText.innerText = 'השהה שידור';
-        playBtn.style.background = "rgba(231, 76, 60, 0.2)";
-        playBtn.style.borderColor = "var(--primary)";
-        dot.style.background = "#fff"; // שינוי צבע הנקודה כשהוא פועל
-        
-        // כאן ניתן להפעיל את הנגן המוסתר אם יש צורך בלוגיקה מורכבת יותר
-        console.log("Audio Playing...");
+        mainAudio.play().then(() => {
+            isPlaying = true;
+            playIcon.className = "fa-solid fa-pause";
+            if(currentSource === 'live') playerStatus.classList.add('blink');
+        }).catch(e => alert("נא ללחוץ שוב להפעלה"));
     } else {
+        mainAudio.pause();
         isPlaying = false;
-        btnText.innerText = 'האזינו לשידור חי';
-        playBtn.style.background = "rgba(255,255,255,0.05)";
-        playBtn.style.borderColor = "rgba(255,255,255,0.3)";
-        dot.style.background = "#ff0000";
-        location.reload(); // רענון פשוט לעצירת הסטרים במקרה של הטמעה חיצונית
+        playIcon.className = "fa-solid fa-play";
+        playerStatus.classList.remove('blink');
     }
 }
 
-async function checkRadioStatus() {
+function switchSource(type) {
+    currentSource = type;
+    mainAudio.pause();
+    mainAudio.src = SOURCES[type];
+    
+    if(type === 'live') {
+        playerStatus.innerText = "LIVE STREAM";
+        trackNameDisplay.innerText = "שידור חי מהאולפן";
+        playerStatus.style.color = "var(--primary)";
+    } else {
+        playerStatus.innerText = "AUTO DJ";
+        trackNameDisplay.innerText = "פלייליסט הקהילה";
+        playerStatus.style.color = "var(--primary)";
+    }
+    
+    isPlaying = false;
+    toggleAudio();
+}
+
+function changeVolume(val) {
+    mainAudio.volume = val;
+}
+
+// עדכון סטטוס מ-Caster
+async function updateCasterStatus() {
     const targetUrl = `https://api.caster.fm/query.php?publicToken=60e730b1-7eca-48ab-92da-977474cf4482&t=${Date.now()}`;
-    const statusLabel = document.getElementById('air-status-label');
-    const djDisplay = document.getElementById('display-dj');
-    const trackDisplay = document.getElementById('display-track');
-
     try {
-        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
-        const result = await response.json();
-        const data = JSON.parse(result.contents);
+        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+        const json = await res.json();
+        const data = JSON.parse(json.contents);
         
-        const isOnline = (data.status === 'online' || data.is_online === true);
-        
-        if (isOnline) {
-            statusLabel.innerText = "LIVE ON AIR";
-            statusLabel.style.color = "var(--primary)";
-            djDisplay.innerText = data.dj_name || 'שדרן בשידור';
-            trackDisplay.innerText = data.song_title || 'מנגנים עכשיו...';
+        const label = document.getElementById('air-status-label');
+        const dj = document.getElementById('display-dj');
+        const track = document.getElementById('display-track');
+
+        if(data.status === 'online') {
+            label.innerText = "LIVE ON AIR";
+            dj.innerText = data.dj_name || "שדרן בשידור";
+            track.innerText = data.song_title || "מנגנים עכשיו";
+            label.style.color = "var(--primary)";
         } else {
-            statusLabel.innerText = "OFF AIR";
-            statusLabel.style.color = "rgba(255,255,255,0.3)";
-            djDisplay.innerText = 'AUTO DJ';
-            trackDisplay.innerText = 'פלייליסט קהילה 24/7';
-            // אם לא בשידור, נחזיר לתמונת ברירת מחדל אלא אם ה-Firebase אומר אחרת
-            if(!window.customDjImage) {
-                document.getElementById('dj-img').src = DEFAULT_IMG;
-            }
+            label.innerText = "OFF AIR";
+            dj.innerText = "AUTO DJ";
+            track.innerText = "מוזיקה ברצף";
+            label.style.color = "rgba(255,255,255,0.3)";
         }
-    } catch (err) {
-        statusLabel.innerText = "AUTO DJ";
-        djDisplay.innerText = "מצב לא מקוון";
-        trackDisplay.innerText = "מוזיקה ברצף";
-    }
+    } catch(e) { console.log("Status sync fail"); }
 }
 
-// בדיקה כל 30 שניות
-setInterval(checkRadioStatus, 30000);
-checkRadioStatus();
+setInterval(updateCasterStatus, 30000);
+updateCasterStatus();
 </script>
 
-<!-- Firebase Logic -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-(function(){
-    const config = {
-        apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-        authDomain: "radio-163cd.firebaseapp.com",
-        projectId: "radio-163cd",
-        appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
-    };
+const firebaseConfig = {
+    apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+    authDomain: "radio-163cd.firebaseapp.com",
+    projectId: "radio-163cd",
+    appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    const init = () => {
-        if (typeof firebase === 'undefined') return;
-        if (!firebase.apps.length) firebase.initializeApp(config);
-        const db = firebase.firestore();
+db.collection('settings').doc('dj_info').onSnapshot(doc => {
+    if(doc.exists && doc.data().image) {
+        document.getElementById('dj-img').src = doc.data().image;
+    }
+});
 
-        // מאזין לשינויים בתמונת השדרן ב-Firestore
-        db.collection('settings').doc('dj_info').onSnapshot(doc => {
-            if (doc.exists && doc.data().image) {
-                window.customDjImage = doc.data().image;
-                document.getElementById('dj-img').src = doc.data().image;
-            }
-        }, err => console.error("Firestore sync error:", err));
-
-        // לוגיקה לשליחת דשים
-        window.sendToDj = function() {
-            const name = document.getElementById('sender-name').value.trim();
-            const target = document.getElementById('sender-target').value.trim();
-            const msg = document.getElementById('sender-msg').value.trim();
-            
-            if (!name || !msg) return alert('נא למלא שם והודעה');
-
-            db.collection('greetings').add({
-                sender: name,
-                target: target,
-                text: msg,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                alert('המסר נשלח בהצלחה ויוצג לשדרן!');
-                document.getElementById('sender-name').value = '';
-                document.getElementById('sender-target').value = '';
-                document.getElementById('sender-msg').value = '';
-            }).catch(() => {
-                alert('שגיאה בשליחה. נסה שוב מאוחר יותר.');
-            });
-        };
-    };
-
-    const wait = setInterval(() => {
-        if (typeof firebase !== 'undefined') {
-            clearInterval(wait);
-            init();
-        }
-    }, 500);
-})();
+function sendToDj() {
+    const name = document.getElementById('sender-name').value;
+    const msg = document.getElementById('sender-msg').value;
+    if(!name || !msg) return alert("מלא פרטים");
+    db.collection('greetings').add({
+        sender: name,
+        text: msg,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert("המסר נשלח לשדרן!");
+        document.getElementById('sender-msg').value = "";
+    });
+}
 </script>
+
 </body>
 </html>
