@@ -248,14 +248,28 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label><i class="fa-solid fa-upload"></i> העלאת תמונת שדרן מהמחשב</label>
-                <input type="file" id="dj-file-input" accept="image/*" onchange="handleImageUpload()">
-                <div class="preview-area">
-                    <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
-                    <div>
-                        <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
-                        <div id="file-status" style="font-size: 12px; color: var(--text-dim);">טרם נבחר קובץ</div>
+            <div class="grid">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-upload"></i> תמונת שדרן פעיל</label>
+                    <input type="file" id="dj-file-input" accept="image/*" onchange="handleImageUpload('dj')">
+                    <div class="preview-area">
+                        <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
+                        <div>
+                            <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
+                            <div id="dj-file-status" style="font-size: 12px; color: var(--text-dim);">טרם נבחר קובץ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-cloud-moon"></i> תמונת פלייליסט (Offline)</label>
+                    <input type="file" id="offline-file-input" accept="image/*" onchange="handleImageUpload('offline')">
+                    <div class="preview-area">
+                        <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=OFF">
+                        <div>
+                            <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
+                            <div id="offline-file-status" style="font-size: 12px; color: var(--text-dim);">תמונת ברירת מחדל</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -331,7 +345,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let base64Image = ""; 
+    let djBase64 = ""; 
+    let offlineBase64 = "";
 
     // Sync from Firestore
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
@@ -342,7 +357,12 @@
             
             if(data.image) {
                 document.getElementById('dj-img-preview').src = data.image;
-                base64Image = data.image;
+                djBase64 = data.image;
+            }
+
+            if(data.offlineImage) {
+                document.getElementById('offline-img-preview').src = data.offlineImage;
+                offlineBase64 = data.offlineImage;
             }
             
             const statusBadge = document.getElementById('current-status');
@@ -358,19 +378,22 @@
         }
     });
 
-    // Image Upload Handling with Resize to prevent Firestore limit issues
-    function handleImageUpload() {
-        const file = document.getElementById('dj-file-input').files[0];
+    // Image Upload Handling with Resize
+    function handleImageUpload(type) {
+        const inputId = type === 'dj' ? 'dj-file-input' : 'offline-file-input';
+        const previewId = type === 'dj' ? 'dj-img-preview' : 'offline-img-preview';
+        const statusId = type === 'dj' ? 'dj-file-status' : 'offline-file-status';
+        
+        const file = document.getElementById(inputId).files[0];
         if (!file) return;
 
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
-                // Resize image to max 300px width/height to keep Base64 small
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 300;
-                const MAX_HEIGHT = 300;
+                const MAX_WIDTH = 400;
+                const MAX_HEIGHT = 400;
                 let width = img.width;
                 let height = img.height;
 
@@ -390,9 +413,13 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                base64Image = canvas.toDataURL('image/jpeg', 0.7); // 70% quality jpeg
-                document.getElementById('dj-img-preview').src = base64Image;
-                document.getElementById('file-status').innerText = "תמונה עובדה ומוכנה";
+                const result = canvas.toDataURL('image/jpeg', 0.7);
+                
+                if(type === 'dj') djBase64 = result;
+                else offlineBase64 = result;
+
+                document.getElementById(previewId).src = result;
+                document.getElementById(statusId).innerText = "תמונה נטענה";
             };
             img.src = e.target.result;
         };
@@ -433,13 +460,13 @@
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
-                image: base64Image,
+                image: djBase64,
+                offlineImage: offlineBase64, // שמירת תמונת האופליין
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
-            alert("השידור עודכן בהצלחה! האתר יתעדכן תוך מספר שניות.");
+            alert("השידור עודכן בהצלחה!");
         } catch (e) {
             alert("שגיאה בעדכון: " + e.message);
-            console.error(e);
         }
     }
 
@@ -449,9 +476,10 @@
             await db.collection('settings').doc('dj_info').update({
                 youtubeId: "",
                 name: "",
+                offlineImage: offlineBase64, // מבטיח שתמונת האופליין נשמרת גם בניקוי
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert("השידור הופסק.");
+            alert("השידור הופסק. האתר מציג כעת את תמונת ה-Offline.");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
