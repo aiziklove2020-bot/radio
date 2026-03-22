@@ -413,7 +413,7 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                const result = canvas.toDataURL('image/jpeg', 0.7);
+                const result = canvas.toDataURL('image/jpeg', 0.8); // מעט יותר איכות
                 
                 if(type === 'dj') djBase64 = result;
                 else offlineBase64 = result;
@@ -457,13 +457,14 @@
         }
 
         try {
+            // שימוש ב-Set ללא merge כדי להבטיח דריסה מלאה של המידע הישן
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
                 image: djBase64,
-                offlineImage: offlineBase64, // שמירת תמונת האופליין
+                offlineImage: offlineBase64,
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
+            });
             alert("השידור עודכן בהצלחה!");
         } catch (e) {
             alert("שגיאה בעדכון: " + e.message);
@@ -473,10 +474,12 @@
     async function clearLive() {
         if(!confirm("להפסיק את השידור ולחזור למוזיקה ברצף?")) return;
         try {
-            await db.collection('settings').doc('dj_info').update({
+            // בניקוי אנחנו שומרים על תמונת האופליין ומאפסים את השאר
+            await db.collection('settings').doc('dj_info').set({
                 youtubeId: "",
                 name: "",
-                offlineImage: offlineBase64, // מבטיח שתמונת האופליין נשמרת גם בניקוי
+                image: djBase64, // שומרים את התמונה האחרונה של הדיג'יי למקרה שיחזור
+                offlineImage: offlineBase64,
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
             alert("השידור הופסק. האתר מציג כעת את תמונת ה-Offline.");
