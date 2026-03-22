@@ -341,7 +341,10 @@ function switchToBackup() {
     liveDot.className = "live-dot offline";
     statusText.innerText = "מוזיקה ברצף";
     document.getElementById('dj-name-display').innerText = "מוזיקה ברצף";
-    audioEngine.src = "https://stream.zeno.fm/0r0xa792kwzuv"; 
+    
+    // כאן תוכל להכניס לינק לפלייליסט MP3 שלך אם יש כזה. 
+    // כרגע שמתי לינק לסטרים צ'ילאאוט ניטרלי יותר
+    audioEngine.src = "https://icecast.walmradio.com:8000/jazz"; 
     audioEngine.load();
 }
 
@@ -397,7 +400,6 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         document.getElementById('current-day-label').innerText = daysHeb[new Date().getDay()];
         const container = document.getElementById('schedule-content');
         
-        // תיקון השגיאה: מוודא שהנתונים הם מערך לפני שימוש ב-map
         const todaySchedule = s[today];
         if (Array.isArray(todaySchedule)) {
             container.innerHTML = todaySchedule.map(item => item.title ? `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${item.title}</b><br><small>${item.host || ''}</small></div></div>` : '').join('') || "מוזיקה ברצף";
