@@ -363,6 +363,7 @@
             if(data.offlineImage) {
                 document.getElementById('offline-img-preview').src = data.offlineImage;
                 offlineBase64 = data.offlineImage;
+                document.getElementById('offline-file-status').innerText = "תמונה קיימת במערכת";
             }
             
             const statusBadge = document.getElementById('current-status');
@@ -413,13 +414,13 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                const result = canvas.toDataURL('image/jpeg', 0.8); // מעט יותר איכות
+                const result = canvas.toDataURL('image/jpeg', 0.8);
                 
                 if(type === 'dj') djBase64 = result;
                 else offlineBase64 = result;
 
                 document.getElementById(previewId).src = result;
-                document.getElementById(statusId).innerText = "תמונה נטענה";
+                document.getElementById(statusId).innerText = "תמונה נטענה - לחץ על עדכן לשמירה";
             };
             img.src = e.target.result;
         };
@@ -457,12 +458,11 @@
         }
 
         try {
-            // שימוש ב-Set ללא merge כדי להבטיח דריסה מלאה של המידע הישן
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
                 image: djBase64,
-                offlineImage: offlineBase64,
+                offlineImage: offlineBase64, // תמיד שולח את תמונת האופליין שיש בזיכרון
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
             alert("השידור עודכן בהצלחה!");
@@ -474,15 +474,14 @@
     async function clearLive() {
         if(!confirm("להפסיק את השידור ולחזור למוזיקה ברצף?")) return;
         try {
-            // בניקוי אנחנו שומרים על תמונת האופליין ומאפסים את השאר
             await db.collection('settings').doc('dj_info').set({
                 youtubeId: "",
                 name: "",
-                image: djBase64, // שומרים את התמונה האחרונה של הדיג'יי למקרה שיחזור
-                offlineImage: offlineBase64,
+                image: djBase64,
+                offlineImage: offlineBase64, // מבטיח שתמונת האופליין לא תתאפס בניקוי
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert("השידור הופסק. האתר מציג כעת את תמונת ה-Offline.");
+            alert("השידור הופסק. האתר אמור להציג כעת את תמונת ה-Offline.");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
