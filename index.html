@@ -33,7 +33,7 @@
         /* Hero & Header */
         .hero-bg {
             position: relative;
-            height: 45vh;
+            height: 40vh;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(8,8,8,1)), 
                         url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
@@ -117,7 +117,6 @@
             align-items: center;
             justify-content: center;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
         }
         .play-trigger.is-playing { animation: pulse-red 2s infinite; background: #fff; color: var(--primary); }
 
@@ -142,9 +141,8 @@
         .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
         .live-dot.offline { background: #555; }
         .live-dot.active { animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.3; } }
 
-        /* Now On Air DJ Card */
+        /* DJ Card */
         .now-on-air-card {
             background: rgba(25, 25, 25, 0.8);
             backdrop-filter: blur(30px);
@@ -163,26 +161,42 @@
         }
         .dj-thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
 
-        /* Sections Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr; 
-            gap: 15px;
-            max-width: 1100px;
+        /* Main Content - Flex for Desktop, Stack for Mobile */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
             margin: 0 auto 30px;
             padding: 0 15px;
+        }
+
+        @media (min-width: 768px) {
+            .content-container { flex-direction: row; }
+            .dashim-section { flex: 1.5; }
+            .schedule-section { flex: 1; }
         }
 
         .box-container {
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 15px;
+            padding: 20px;
         }
 
-        .free-text-schedule { font-size: 15px; line-height: 1.5; white-space: pre-wrap; color: rgba(255, 255, 255, 0.8); }
+        .schedule-section {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.01);
+        }
 
-        /* Party List Rows */
+        .free-text-schedule { 
+            font-size: 13px; 
+            line-height: 1.4; 
+            white-space: pre-wrap; 
+            color: rgba(255, 255, 255, 0.7); 
+        }
+
+        /* Party Rows */
         .party-list {
             display: flex;
             flex-direction: column;
@@ -203,40 +217,15 @@
             cursor: pointer;
         }
 
-        .party-row:hover {
-            background: rgba(45, 45, 45, 0.6);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .party-row-img-wrap {
-            width: 110px;
-            min-width: 110px;
-            height: 100%;
-            background: #000;
-        }
-
-        .party-row-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .party-row-content {
-            padding: 10px 15px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: right;
-            overflow: hidden;
-        }
-
+        .party-row:hover { background: rgba(45, 45, 45, 0.6); border-color: var(--primary); }
+        .party-row-img-wrap { width: 110px; min-width: 110px; height: 100%; }
+        .party-row-img { width: 100%; height: 100%; object-fit: cover; }
+        .party-row-content { padding: 10px 15px; flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: right; overflow: hidden; }
         .party-row-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 2px; }
         .party-row-date { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
         .party-row-desc { font-size: 12px; opacity: 0.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Pop-up Modal - Slim Version */
+        /* SLIM POPUP (as requested) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -253,54 +242,44 @@
             background: #121212;
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            max-width: 400px; /* צומצם לרוחב קטן יותר */
+            max-width: 380px; /* צר ואלגנטי */
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            animation: modalIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: modalIn 0.3s ease-out;
         }
 
-        @keyframes modalIn {
-            from { transform: scale(0.9) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
+        @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .modal-close {
             position: absolute;
-            top: 12px; right: 12px;
+            top: 10px; right: 10px;
             width: 30px; height: 30px;
             background: rgba(0,0,0,0.6);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10; color: #fff; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; z-index: 10; color: #fff;
         }
 
-        .modal-image { width: 100%; height: auto; max-height: 250px; object-fit: cover; display: block; border-bottom: 2px solid var(--primary); }
-        .modal-body { padding: 18px; text-align: right; }
-        .modal-title { font-size: 22px; font-weight: 900; margin-bottom: 4px; color: var(--primary); }
-        .modal-date { font-size: 13px; font-weight: 700; opacity: 0.7; margin-bottom: 12px; display: block; color: #fff; }
-        .modal-desc { line-height: 1.5; opacity: 0.85; white-space: pre-wrap; margin-bottom: 20px; font-size: 14px; }
+        .modal-image { width: 100%; height: auto; max-height: 220px; object-fit: cover; border-bottom: 2px solid var(--primary); }
+        .modal-body { padding: 20px; text-align: right; }
+        .modal-title { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 5px; }
+        .modal-date { font-size: 13px; font-weight: 700; opacity: 0.7; margin-bottom: 12px; display: block; }
+        .modal-desc { line-height: 1.5; font-size: 14px; opacity: 0.85; white-space: pre-wrap; margin-bottom: 20px; }
         .modal-link {
-            display: block; width: 100%; text-align: center;
-            background: var(--primary); color: #fff; text-decoration: none;
-            padding: 12px; border-radius: 12px; font-weight: 800;
-            transition: 0.2s;
-            font-size: 15px;
+            display: block; width: 100%; text-align: center; background: var(--primary); color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px;
         }
-        .modal-link:active { transform: scale(0.96); }
 
-        /* Forms Styling */
+        /* Forms */
         input, textarea {
-            width:100%; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:10px; font-size:14px; text-align: right; outline: none;
+            width:100%; padding:14px; margin-bottom:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:12px; font-size:16px; text-align: right; outline: none; font-family: 'Heebo';
         }
-        .submit-btn {
-            width:100%; padding:12px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size: 15px;
-        }
+        .submit-btn { width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:900; cursor:pointer; font-size: 16px; }
 
         @media (max-width: 450px) {
-            .modal-content { max-width: 100%; margin: 10px; }
+            .modal-content { margin: 10px; }
         }
     </style>
 </head>
@@ -341,21 +320,23 @@
     </div>
 </div>
 
-<div class="main-grid">
-    <div class="box-container" id="dashim">
-        <h3 style="margin-bottom: 12px; font-weight: 900; color: var(--primary);">שלח ד"ש</h3>
+<div class="content-container">
+    <div class="box-container dashim-section" id="dashim">
+        <h3 style="margin-bottom: 15px; font-weight: 900; color: var(--primary); font-size: 20px;">שלח ד"ש לשדרן</h3>
         <input type="text" id="msg-name" placeholder="השם שלך">
-        <textarea id="msg-content" placeholder="ההודעה שלך..." style="height:80px;"></textarea>
-        <button class="submit-btn" onclick="sendGreeting(event)">שלח ד"ש לשדרן</button>
+        <textarea id="msg-content" placeholder="ההודעה שלך..." style="height:110px;"></textarea>
+        <button class="submit-btn" onclick="sendGreeting(event)">שלח הודעה</button>
     </div>
     
-    <div class="box-container" id="schedule">
-        <h3 style="margin-bottom: 12px; font-weight: 900; color: var(--primary);">לוח שידורים: <span id="current-day-label"></span></h3>
+    <div class="box-container schedule-section" id="schedule">
+        <h3 style="margin-bottom: 10px; font-weight: 900; color: var(--primary); font-size: 16px;">
+            <i class="fa-regular fa-calendar-days"></i> לוח שידורים: <span id="current-day-label"></span>
+        </h3>
         <div id="schedule-content" class="free-text-schedule">טוען...</div>
     </div>
 </div>
 
-<div id="parties" style="padding: 0 15px; max-width: 900px; margin: 20px auto 10px; text-align: right;">
+<div id="parties" style="padding: 0 15px; max-width: 900px; margin: 10px auto 10px; text-align: right;">
     <h3 style="font-weight: 900; color: var(--primary);">מסיבות ואירועים</h3>
 </div>
 <div class="party-list" id="party-container"></div>
@@ -448,7 +429,6 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
 
 // Party Modal Logic
 let currentParties = {};
-
 function openParty(id) {
     const p = currentParties[id];
     if(!p) return;
@@ -462,23 +442,16 @@ function openParty(id) {
     document.body.style.overflow = "hidden";
 }
 
-function closeModal() { 
-    document.getElementById('party-modal').style.display = "none"; 
-    document.body.style.overflow = "auto";
-}
-
+function closeModal() { document.getElementById('party-modal').style.display = "none"; document.body.style.overflow = "auto"; }
 window.onclick = function(e) { if(e.target.id === 'party-modal') closeModal(); }
 
-// Sync Parties - Sorted by ID (to keep Thursday 1 before Friday 2)
+// Sync Parties - Sorted
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         currentParties = doc.data();
         const container = document.getElementById('party-container');
         container.innerHTML = "";
-        
-        // Sort keys numerically
         const sortedKeys = Object.keys(currentParties).sort((a, b) => parseInt(a) - parseInt(b));
-        
         sortedKeys.forEach(key => {
             const p = currentParties[key];
             if(p && p.title) {
@@ -486,9 +459,7 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
                 card.className = "party-row";
                 card.onclick = () => openParty(key);
                 card.innerHTML = `
-                    <div class="party-row-img-wrap">
-                        <img src="${p.image || 'https://images.unsplash.com/photo-1514525253344-a8130a2a4b85?q=80&w=300'}" class="party-row-img">
-                    </div>
+                    <div class="party-row-img-wrap"><img src="${p.image || 'https://images.unsplash.com/photo-1514525253344-a8130a2a4b85?q=80&w=300'}" class="party-row-img"></div>
                     <div class="party-row-content">
                         <div class="party-row-date">${p.date || 'אירוע קרוב'}</div>
                         <div class="party-row-title">${p.title}</div>
@@ -504,16 +475,18 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
 async function sendGreeting(event) {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
     if(!n || !c) return;
-    const originalText = event.target.innerText;
+    const btn = event.target;
+    btn.disabled = true;
+    btn.innerText = "שולח...";
     try {
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
         });
         document.getElementById('msg-content').value = "";
-        event.target.innerText = "נשלח בהצלחה!";
-        setTimeout(() => { event.target.innerText = originalText; }, 3000);
-    } catch(e) {}
+        btn.innerText = "נשלח!";
+        setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000);
+    } catch(e) { btn.innerText = "שגיאה"; btn.disabled = false; }
 }
 </script>
 </body>
