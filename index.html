@@ -128,6 +128,7 @@
             justify-content: center;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            outline: none;
         }
         .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
 
@@ -231,7 +232,6 @@
             border-radius: 15px;
             overflow: hidden;
         }
-        .party-img { width: 100%; height: 160px; object-fit: cover; background: #111; }
         .party-content { padding: 12px; text-align: right; }
 
         input, textarea {
@@ -314,7 +314,7 @@
 </div>
 <div class="party-grid" id="party-container"></div>
 
-<audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
+<audio id="audio-engine" preload="auto" crossorigin="anonymous"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -330,6 +330,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let isPlaying = false;
+let currentStreamUrl = "";
 const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
 const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text'), liveDot = document.getElementById('live-status-dot');
@@ -345,40 +346,55 @@ function updateUI() {
     }
 }
 
+async function startPlayback() {
+    try {
+        if (!currentStreamUrl) {
+            const doc = await db.collection('settings').doc('dj_info').get();
+            if (doc.exists) currentStreamUrl = doc.data().streamUrl;
+        }
+        
+        if (currentStreamUrl) {
+            audioEngine.src = currentStreamUrl;
+            audioEngine.load();
+            const playPromise = audioEngine.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    updateUI();
+                }).catch(error => {
+                    console.error("Playback failed:", error);
+                    isPlaying = false;
+                    updateUI();
+                });
+            }
+        }
+    } catch (e) {
+        console.error("Error starting playback:", e);
+    }
+}
+
 playBtn.addEventListener('click', function() {
     if (isPlaying) {
         audioEngine.pause();
+        audioEngine.src = ""; // Clear source to stop buffer
         isPlaying = false;
+        updateUI();
     } else {
-        if(audioEngine.src) {
-            audioEngine.play();
-            isPlaying = true;
-        } else {
-            // הוספת מנגנון טעינה במידה וה-URL עדיין לא נטען
-            db.collection('settings').doc('dj_info').get().then(doc => {
-                if(doc.exists && doc.data().streamUrl) {
-                    audioEngine.src = doc.data().streamUrl;
-                    audioEngine.play();
-                    isPlaying = true;
-                    updateUI();
-                }
-            });
-        }
+        startPlayback();
     }
-    updateUI();
 });
 
 // Sync DJ & Stream Info
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        const stream = d.streamUrl || "";
+        currentStreamUrl = d.streamUrl || "";
         const name = d.name || "";
         
         document.getElementById('marquee-text').innerText = d.scrollingText || "ברוכים הבאים לרדיו מדברים בדס\"מ";
         
         if(name && name !== "") {
-            audioEngine.src = stream;
             statusText.innerText = name;
             document.getElementById('dj-name-display').innerText = name;
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
@@ -392,7 +408,12 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
             if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
             liveText.innerText = "OFFLINE";
             liveDot.className = "live-dot offline";
-            audioEngine.src = stream; 
+        }
+        
+        // If already playing and stream changes, update source
+        if(isPlaying && audioEngine.src !== currentStreamUrl) {
+            audioEngine.src = currentStreamUrl;
+            audioEngine.play();
         }
     }
 });
@@ -422,8 +443,6 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         } else {
             container.innerHTML = `<div style="text-align:center; padding: 20px; opacity: 0.5;">אין שידורים מתוכננים להיום.<br>מוזיקה מעולה ברצף 24/7!</div>`;
         }
-    } else {
-        container.innerHTML = "אין מידע זמין.";
     }
 });
 
