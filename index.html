@@ -416,6 +416,20 @@ footer{
   .hero-section{padding:90px 14px 40px;}
 }
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+  authDomain: "radio-163cd.firebaseapp.com",
+  projectId: "radio-163cd",
+  storageBucket: "radio-163cd.firebasestorage.app",
+  messagingSenderId: "949996900677",
+  appId: "1:949996900677:web:3606c6941fd1aead99ee2c"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -696,7 +710,7 @@ function applyOnAir(dj,show,genre,photo){
   document.getElementById('now-genre').textContent=genre||'—';
   var els=[document.getElementById('now-photo'),document.getElementById('now-photo-small')];
   for(var i=0;i<els.length;i++){
-    if(photo&&(photo.indexOf('http')===0||photo.indexOf('data:')===0)){
+    if(photo&&photo.indexOf('http')===0){
       els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.textContent=\'🎧\'">';
     } else if(photo&&photo.length<=2){els[i].textContent=photo;}
   }
@@ -800,15 +814,21 @@ function setStreamMode(online){
 }
 
 function fetchNow(){
-  var manual=gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
-  if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);}
+  // שלוף מי בשידור מ-Firebase (מוצג לכולם)
+  db.collection('radio').doc('onair').get().then(function(doc){
+    if(doc.exists){
+      var d = doc.data();
+      if(d.dj||d.show){
+        applyOnAir(d.dj||'', d.show||'', d.genre||'', d.photo||'');
+      }
+    }
+  }).catch(function(){});
+
+  // בדוק אם השידור החי פעיל
   fetch('/api/nowplaying',{cache:'no-cache'})
     .then(function(r){ if(!r.ok) throw new Error('no api'); return r.json(); })
     .then(function(d){
       setStreamMode(!!d.online);
-      if(d.online){
-        applyOnAir(d.dj||d.title||'בשידור', d.title||'—', d.genre||'—', '');
-      }
     })
     .catch(function(){
       fetch('https://morcast.caster.fm:13763/status-json.xsl',{cache:'no-cache'})
@@ -819,17 +839,8 @@ function fetchNow(){
             ? (sources.find(function(s){return s.listenurl&&s.listenurl.includes('/y4k1D');}) || sources[0])
             : sources;
           setStreamMode(!!src);
-          if(src){
-            applyOnAir(
-              src.server_name||src.title||'בשידור',
-              src.title||src.song||'—',
-              src.genre||'—', ''
-            );
-          }
         })
-        .catch(function(){
-          // CORS חסום — פלייליסט כבר פעיל
-        });
+        .catch(function(){});
     });
 }
 function reload(){

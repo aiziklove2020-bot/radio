@@ -85,6 +85,20 @@ body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-heigh
 
 @media(max-width:700px){.adm-sidebar{display:none;}.f2{grid-template-columns:1fr;}}
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+  authDomain: "radio-163cd.firebaseapp.com",
+  projectId: "radio-163cd",
+  storageBucket: "radio-163cd.firebasestorage.app",
+  messagingSenderId: "949996900677",
+  appId: "1:949996900677:web:3606c6941fd1aead99ee2c"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
 </head>
 <body>
 
@@ -403,15 +417,25 @@ function saveOnAir() {
   onair.dj    = document.getElementById('oa-dj').value.trim();
   onair.show  = document.getElementById('oa-show').value.trim();
   onair.genre = document.getElementById('oa-genre').value.trim();
-  // photo נשמר ישירות דרך handlePhotoUpload
   sd('rdx_onair', onair);
+  // שמור ב-Firebase כדי שכולם יראו
+  db.collection('radio').doc('onair').set({
+    dj:    onair.dj,
+    show:  onair.show,
+    genre: onair.genre,
+    photo: onair.photo || ''
+  }).then(function(){
+    toast('✅ מי בשידור עודכן לכולם!');
+  }).catch(function(e){
+    toast('⚠️ שגיאה: ' + e.message);
+  });
   renderOnAirPreview();
-  toast('✅ מי בשידור עודכן!');
 }
 
 function clearOnAir() {
   onair = {dj:'', show:'', genre:'', photo:''};
   sd('rdx_onair', onair);
+  db.collection('radio').doc('onair').set({dj:'',show:'',genre:'',photo:''});
   loadOnAirForm();
   toast('🗑️ נוקה');
 }
