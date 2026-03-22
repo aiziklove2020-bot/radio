@@ -330,8 +330,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// כתובת סטרים לגיבוי אם Firebase ריק
-const DEFAULT_STREAM = "https://icecast.walmradio.com:8000/chill"; 
+// כתובת סטרים לגיבוי יציב (פרוטוקול HTTPS חובה)
+const DEFAULT_STREAM = "https://stream.zeno.fm/0r0xa792kwzuv"; 
 
 let isPlaying = false;
 let currentStreamUrl = "";
@@ -350,6 +350,15 @@ function updateUI() {
     }
 }
 
+// פונקציית עזר לתיקון כתובות לא מאובטחות
+function fixUrl(url) {
+    if (!url) return DEFAULT_STREAM;
+    if (url.startsWith('http://')) {
+        return url.replace('http://', 'https://');
+    }
+    return url;
+}
+
 async function togglePlay() {
     if (isPlaying) {
         audioEngine.pause();
@@ -357,17 +366,15 @@ async function togglePlay() {
         isPlaying = false;
         updateUI();
     } else {
-        // פידבק מיידי למשתמש
         statusText.innerText = "מתחבר...";
         
         try {
-            // אם אין כתובת מה-Firebase, ננסה למשוך שוב או נשתמש בגיבוי
-            if (!currentStreamUrl) {
-                const doc = await db.collection('settings').doc('dj_info').get();
-                currentStreamUrl = doc.exists ? doc.data().streamUrl : DEFAULT_STREAM;
-            }
+            // רענון כתובת מה-Firebase רגע לפני הנגינה
+            const doc = await db.collection('settings').doc('dj_info').get();
+            let targetUrl = doc.exists && doc.data().streamUrl ? doc.data().streamUrl : DEFAULT_STREAM;
             
-            audioEngine.src = currentStreamUrl || DEFAULT_STREAM;
+            currentStreamUrl = fixUrl(targetUrl);
+            audioEngine.src = currentStreamUrl;
             audioEngine.load();
             
             const startPlay = await audioEngine.play();
@@ -377,8 +384,22 @@ async function togglePlay() {
         } catch (err) {
             console.error("Playback error:", err);
             statusText.innerText = "שגיאה בחיבור";
-            isPlaying = false;
-            updateUI();
+            // ניסיון אחרון עם הגיבוי
+            if (audioEngine.src !== DEFAULT_STREAM) {
+                console.log("Retrying with default stream...");
+                audioEngine.src = DEFAULT_STREAM;
+                audioEngine.play().then(() => {
+                    isPlaying = true;
+                    updateUI();
+                    statusText.innerText = "גיבוי פעיל";
+                }).catch(() => {
+                    isPlaying = false;
+                    updateUI();
+                });
+            } else {
+                isPlaying = false;
+                updateUI();
+            }
         }
     }
 }
@@ -389,12 +410,12 @@ playBtn.addEventListener('click', togglePlay);
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        currentStreamUrl = d.streamUrl || DEFAULT_STREAM;
+        let newUrl = fixUrl(d.streamUrl || DEFAULT_STREAM);
         const name = d.name || "";
         
         document.getElementById('marquee-text').innerText = d.scrollingText || "ברוכים הבאים לרדיו מדברים בדס\"מ";
         
-        if(name && name !== "") {
+        if(name && name.trim() !== "") {
             statusText.innerText = isPlaying ? name : "מוכן לשידור";
             document.getElementById('dj-name-display').innerText = name;
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
@@ -409,10 +430,14 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
             liveDot.className = "live-dot offline";
         }
         
-        // עדכון סטרים בזמן אמת אם השתנה בזמן נגינה
-        if(isPlaying && audioEngine.src !== currentStreamUrl) {
+        // אם הכתובת השתנתה תוך כדי נגינה (החלפת שדרן)
+        if(isPlaying && currentStreamUrl !== newUrl) {
+            currentStreamUrl = newUrl;
+            audioEngine.pause();
             audioEngine.src = currentStreamUrl;
-            audioEngine.play().catch(() => {});
+            audioEngine.play().catch(e => console.error("Auto-switch error", e));
+        } else {
+            currentStreamUrl = newUrl;
         }
     }
 }, err => {
