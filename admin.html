@@ -408,7 +408,7 @@
     function switchDay(day) {
         currentDay = day;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.trim() === dayNames[day]);
+        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(`'${day}'`));
         if(activeBtn) activeBtn.classList.add('active');
         
         document.querySelectorAll('.active-day-text').forEach(el => el.innerText = dayNames[day]);
@@ -416,7 +416,6 @@
     }
 
     async function loadAllSchedule() {
-        // האזנה לשינויים בזמן אמת כדי להבטיח סנכרון מלא
         db.collection('settings').doc('schedule').onSnapshot(doc => {
             if (doc.exists) {
                 fullSchedule = doc.data();
@@ -426,32 +425,29 @@
     }
 
     function loadDayData() {
-        // ניקוי לפני טעינת יום חדש כדי למנוע שאריות
         clearInputs();
-        if (fullSchedule[currentDay]) {
-            fillInputs(fullSchedule[currentDay]);
+        // האתר מצפה למערך. אם זה אובייקט עם מפתחות מספריים, נמיר אותו למערך
+        let data = fullSchedule[currentDay];
+        if (data) {
+            // אם המידע נשמר כאובייקט עם אינדקסים, נמלא לפי האינדקס
+            timeSlots.forEach((_, i) => {
+                const progInput = document.getElementById(`prog-${i}`);
+                const hostInput = document.getElementById(`host-${i}`);
+                const slotData = Array.isArray(data) ? data[i] : data[i];
+                if (progInput && hostInput && slotData) {
+                    progInput.value = slotData.title || "";
+                    hostInput.value = slotData.host || "";
+                }
+            });
         }
-    }
-
-    function fillInputs(data) {
-        timeSlots.forEach((_, i) => {
-            const progInput = document.getElementById(`prog-${i}`);
-            const hostInput = document.getElementById(`host-${i}`);
-            if (progInput && hostInput) {
-                progInput.value = data[i]?.title || "";
-                hostInput.value = data[i]?.host || "";
-            }
-        });
     }
 
     function clearInputs() {
         timeSlots.forEach((_, i) => {
             const progInput = document.getElementById(`prog-${i}`);
             const hostInput = document.getElementById(`host-${i}`);
-            if (progInput && hostInput) {
-                progInput.value = "";
-                hostInput.value = "";
-            }
+            if (progInput) progInput.value = "";
+            if (hostInput) hostInput.value = "";
         });
     }
 
@@ -467,24 +463,24 @@
     }
 
     async function saveSchedule() {
-        const dayData = {};
+        // יצירת מערך (Array) במקום אובייקט עם מפתחות, כדי שהאתר יזהה זאת כראוי
+        const dayArray = [];
         timeSlots.forEach((_, i) => {
-            dayData[i] = {
+            dayArray.push({
                 title: document.getElementById(`prog-${i}`).value.trim(),
                 host: document.getElementById(`host-${i}`).value.trim()
-            };
+            });
         });
 
-        // עדכון האובייקט המקומי לפני השליחה
-        fullSchedule[currentDay] = dayData;
+        fullSchedule[currentDay] = dayArray;
 
         try {
-            // שמירה של כל האובייקט (כל השבוע) כדי לוודא ששום יום אחר לא נמחק
-            await db.collection('settings').doc('schedule').set(fullSchedule, { merge: true });
-            alert(`לוח השידורים ליום ${dayNames[currentDay]} סונכרן ונשמר בהצלחה!`);
+            // שמירת כל הלוח באובייקט אחד שבו כל יום הוא מערך
+            await db.collection('settings').doc('schedule').set(fullSchedule);
+            alert(`לוח השידורים ליום ${dayNames[currentDay]} סונכרן בהצלחה!`);
         } catch (e) {
             console.error("Error saving schedule: ", e);
-            alert("שגיאה בסנכרון מול השרת: " + e.message);
+            alert("שגיאה בסנכרון: " + e.message);
         }
     }
 
@@ -569,7 +565,6 @@
         alert("המסיבות עודכנו!");
     }
 
-    // הפעלה ראשונית
     renderSlots();
 </script>
 
