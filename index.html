@@ -2,7 +2,6 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- מניעת זום אוטומטי במכשירים ניידים תוך שמירה על העיצוב המודרני -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>רדיו מדברים בדסמ | הקול של הקהילה</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&display=swap" rel="stylesheet">
@@ -26,7 +25,6 @@
             overflow-x: hidden;
         }
 
-        /* ── Hero Background ── */
         .hero-bg {
             position: relative;
             height: 85vh;
@@ -43,7 +41,6 @@
             padding-top: 100px;
         }
 
-        /* ── Centered Header ── */
         header {
             position: absolute;
             top: 15px;
@@ -92,18 +89,6 @@
         }
         .nav-links a:hover { opacity: 1; color: var(--primary); }
 
-        /* ── Hidden Engines ── */
-        .hidden-engines {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        /* ── Custom Styled Player UI ── */
         .player-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -132,7 +117,6 @@
             justify-content: center;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
         }
         .play-trigger:hover { transform: scale(1.08); background: var(--primary-dark); }
         .play-trigger:disabled { opacity: 0.5; cursor: wait; }
@@ -173,7 +157,6 @@
             display: block;
         }
 
-        /* ── On Air Card ── */
         .now-on-air-card {
             background: rgba(25, 25, 25, 0.6);
             backdrop-filter: blur(30px);
@@ -208,7 +191,23 @@
             padding: 35px;
         }
 
-        /* ── Parties Section ── */
+        /* Schedule Styles */
+        .schedule-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+        .schedule-time { color: var(--primary); font-weight: bold; width: 100px; }
+        .schedule-info { flex: 1; text-align: right; }
+        .schedule-host { opacity: 0.6; font-size: 12px; }
+
+        /* Parties Section */
         .parties-section {
             max-width: 1200px;
             margin: 0 auto 80px;
@@ -228,18 +227,8 @@
             display: flex;
             flex-direction: column;
         }
-        .party-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        .party-content {
-            padding: 20px;
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
+        .party-img { width: 100%; height: 180px; object-fit: cover; }
+        .party-content { padding: 20px; text-align: right; flex: 1; display: flex; flex-direction: column; }
         .party-date { color: var(--primary); font-size: 14px; font-weight: bold; margin-bottom: 5px; }
         .party-link-btn {
             margin-top: auto;
@@ -254,12 +243,10 @@
             transition: 0.3s;
             display: none;
         }
-        .party-link-btn:hover { background: var(--primary-dark); }
 
         @media (max-width: 768px) {
             .main-grid, .party-grid { grid-template-columns: 1fr; }
             .now-on-air-card { flex-direction: column; text-align: center; }
-            header { top: 10px; width: 95%; padding: 10px; }
         }
     </style>
 </head>
@@ -296,7 +283,7 @@
         </button>
     </div>
 
-    <div class="hidden-engines">
+    <div style="position: absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
         <div id="youtube-engine"></div>
         <iframe id="backup-engine" style="display:none;" allow="autoplay"></iframe>
     </div>
@@ -320,9 +307,10 @@
     </div>
     
     <div class="box-container" id="schedule">
-        <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">לוח שידורים</h2>
-        <p>כשאנחנו לא בשידור חי, תוכלו ליהנות ממוזיקה שנבחרה עבורכם מתוך רדיו מדברים בדסמ.</p>
-        <div id="schedule-content" style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
+        <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 5px;">לוח שידורים</h2>
+        <div style="color: var(--primary); font-size: 13px; font-weight: bold; margin-bottom: 15px;" id="current-day-label">יום...</div>
+        <div id="schedule-content" class="schedule-list">
+            <p style="opacity:0.5">טוען לוח שידורים...</p>
         </div>
     </div>
 </div>
@@ -330,7 +318,6 @@
 <div class="parties-section" id="parties">
     <h2 style="border-right: 4px solid var(--primary); padding-right: 15px;">מסיבות קרובות</h2>
     <div class="party-grid" id="party-container">
-        <!-- Party 1 -->
         <div class="party-card">
             <img src="https://via.placeholder.com/600x400" class="party-img" id="party1-img">
             <div class="party-content">
@@ -340,7 +327,6 @@
                 <a href="#" target="_blank" class="party-link-btn" id="party1-link-btn">לפרטים נוספים ורכישה</a>
             </div>
         </div>
-        <!-- Party 2 -->
         <div class="party-card">
             <img src="https://via.placeholder.com/600x400" class="party-img" id="party2-img">
             <div class="party-content">
@@ -373,20 +359,21 @@ const liveDot = document.getElementById('live-status-dot');
 const backupFrame = document.getElementById('backup-engine');
 const djNameDisplay = document.getElementById('dj-name-display');
 
+// --- Firebase Init ---
+const firebaseConfig = {
+    apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+    authDomain: "radio-163cd.firebaseapp.com",
+    projectId: "radio-163cd",
+    appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // --- YouTube API ---
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube-engine', {
         height: '1', width: '1', videoId: '',
-        playerVars: { 
-            'autoplay': 0, 
-            'controls': 0, 
-            'disablekb': 1, 
-            'fs': 0, 
-            'iv_load_policy': 3, 
-            'modestbranding': 1, 
-            'rel': 0,
-            'showinfo': 0
-        },
+        playerVars: { 'autoplay': 0, 'controls': 0 },
         events: {
             'onReady': onYtReady,
             'onStateChange': onYtStateChange,
@@ -405,16 +392,25 @@ function onYtReady() {
     }
 }
 
+function onYtStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) { isPlaying = true; updateUI(true); }
+    else { isPlaying = false; updateUI(false); }
+}
+
+function updateUI(playing) {
+    btnIcon.className = playing ? "fa-solid fa-pause" : "fa-solid fa-play";
+    if (playing) playBtn.classList.add('is-playing');
+    else playBtn.classList.remove('is-playing');
+}
+
 function updateRadioState(youtubeId) {
     if(youtubeId && youtubeId.trim() !== "") {
-        // מצב שידור חי
         currentMode = 'youtube';
         liveText.innerText = "שידור חי LIVE";
         liveDot.className = "live-dot";
-        statusText.innerText = currentDjName || "שדרן בשידור";
-        djNameDisplay.innerText = currentDjName || "שדרן בשידור";
+        statusText.innerText = currentDjName || "בשידור חי";
+        djNameDisplay.innerText = currentDjName || "בשידור חי";
     } else {
-        // מצב פלייליסט / מוזיקה ברצף
         switchToBackup();
     }
 }
@@ -425,23 +421,7 @@ function switchToBackup() {
     liveDot.className = "live-dot offline";
     statusText.innerText = "מוזיקה ברצף";
     djNameDisplay.innerText = "מוזיקה ברצף";
-    if(ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
-}
-
-function onYtStateChange(event) {
-    if (event.data == YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        updateUI(true);
-    } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
-        isPlaying = false;
-        updateUI(false);
-    }
-}
-
-function updateUI(playing) {
-    btnIcon.className = playing ? "fa-solid fa-pause" : "fa-solid fa-play";
-    if (playing) playBtn.classList.add('is-playing');
-    else playBtn.classList.remove('is-playing');
+    if(ytPlayer && isYtReady) ytPlayer.stopVideo();
 }
 
 playBtn.addEventListener('click', () => {
@@ -451,122 +431,100 @@ playBtn.addEventListener('click', () => {
     } else {
         isPlaying = !isPlaying;
         updateUI(isPlaying);
-        if(!isPlaying) {
-            backupFrame.src = "";
-            backupFrame.style.display = "none";
-        } else {
-            backupFrame.style.display = "block";
-            // כאן ניתן להכניס לינק לסטרים גיבוי/MP3
-            backupFrame.src = "https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321&autoplay=1";
-        }
+        backupFrame.src = isPlaying ? "https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321&autoplay=1" : "";
+        backupFrame.style.display = isPlaying ? "block" : "none";
     }
 });
 
-// --- Firebase ---
-const firebaseConfig = {
-    apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-    authDomain: "radio-163cd.firebaseapp.com",
-    projectId: "radio-163cd",
-    appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// האזנה לשינויים בסטטוס השדרן
+// --- Listen for Changes ---
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
-        currentDjName = data.name || "";
+        currentDjName = data.name;
         if(data.image) document.getElementById('dj-image-display').src = data.image;
-        
-        if(data.youtubeId && data.youtubeId.trim() !== "") {
+        if(data.youtubeId) {
             if (isYtReady) {
                 ytPlayer.cueVideoById(data.youtubeId);
                 updateRadioState(data.youtubeId);
-            } else {
-                pendingYtId = data.youtubeId;
-            }
-        } else {
-            updateRadioState(null);
-        }
-    } else {
-        updateRadioState(null);
+            } else { pendingYtId = data.youtubeId; }
+        } else { updateRadioState(null); }
     }
 });
 
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
-        if(data.party1) {
-            document.getElementById('party1-title').innerText = data.party1.title || "מסיבה בקרוב";
-            document.getElementById('party1-date').innerText = data.party1.date || "";
-            document.getElementById('party1-desc').innerText = data.party1.desc || "";
-            if(data.party1.img) document.getElementById('party1-img').src = data.party1.img;
-            const btn1 = document.getElementById('party1-link-btn');
-            if(data.party1.link) { btn1.href = data.party1.link; btn1.style.display = 'block'; }
-            else { btn1.style.display = 'none'; }
-        }
-        if(data.party2) {
-            document.getElementById('party2-title').innerText = data.party2.title || "מסיבה בקרוב";
-            document.getElementById('party2-date').innerText = data.party2.date || "";
-            document.getElementById('party2-desc').innerText = data.party2.desc || "";
-            if(data.party2.img) document.getElementById('party2-img').src = data.party2.img;
-            const btn2 = document.getElementById('party2-link-btn');
-            if(data.party2.link) { btn2.href = data.party2.link; btn2.style.display = 'block'; }
-            else { btn2.style.display = 'none'; }
-        }
+        ['party1', 'party2'].forEach(p => {
+            if(data[p]) {
+                document.getElementById(`${p}-title`).innerText = data[p].title || "מסיבה בקרוב";
+                document.getElementById(`${p}-date`).innerText = data[p].date || "";
+                document.getElementById(`${p}-desc`).innerText = data[p].desc || "";
+                if(data[p].img) document.getElementById(`${p}-img`).src = data[p].img;
+                const btn = document.getElementById(`${p}-link-btn`);
+                if(data[p].link) { btn.href = data[p].link; btn.style.display = 'block'; }
+                else btn.style.display = 'none';
+            }
+        });
+    }
+});
+
+// --- Schedule Logic ---
+const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+const times = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00", "22:00 - 00:00", "00:00 - 08:00"];
+
+db.collection('settings').doc('schedule').onSnapshot(doc => {
+    if(doc.exists) {
+        const schedule = doc.data();
+        const todayIndex = new Date().getDay();
+        const todayKey = daysEng[todayIndex];
+        
+        document.getElementById('current-day-label').innerText = "יום " + daysHeb[todayIndex];
+        
+        const container = document.getElementById('schedule-content');
+        container.innerHTML = "";
+        
+        const todayData = schedule[todayKey] || [];
+        
+        times.forEach((time, index) => {
+            const slot = todayData[index] || { title: "", host: "" };
+            const div = document.createElement('div');
+            div.className = "schedule-item";
+            div.innerHTML = `
+                <div class="schedule-time">${time}</div>
+                <div class="schedule-info">
+                    <div style="font-weight:700">${slot.title || "מוזיקה ברצף"}</div>
+                    <div class="schedule-host">${slot.host ? 'עם ' + slot.host : 'רדיו מדברים בדסמ'}</div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
     }
 });
 
 async function sendGreeting() {
     const name = document.getElementById('msg-name').value.trim();
     const content = document.getElementById('msg-content').value.trim();
+    if(!name || !content) return alert("נא למלא שם והודעה");
+
     const btn = document.getElementById('send-btn');
-
-    if(!name || !content) {
-        alert("נא למלא שם והודעה");
-        return;
-    }
-
-    const TELEGRAM_BOT_TOKEN = "8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY"; 
-    const TELEGRAM_CHAT_ID = "-5069698792";
-
-    btn.disabled = true;
-    btn.innerText = "שולח...";
-
-    const messageText = `🎙️ *ד"ש חדש מהאתר!*\n\n👤 *שם המוסר:* ${name}\n💬 *הודעה לשדרן:* ${content}`;
+    btn.disabled = true; btn.innerText = "שולח...";
 
     try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: messageText,
+                chat_id: "-5069698792",
+                text: `🎙️ *ד"ש מהאתר!*\n👤 *מ:* ${name}\n💬 *הודעה:* ${content}`,
                 parse_mode: 'Markdown'
             })
         });
-
-        const result = await response.json();
-        if(result.ok) {
-            await db.collection('greetings').add({
-                sender: name,
-                text: content,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            document.getElementById('msg-name').value = "";
-            document.getElementById('msg-content').value = "";
-            alert("הד\"ש נשלח בהצלחה!");
-        } else {
-            throw new Error(result.description);
-        }
-    } catch (error) {
-        console.error("Telegram Error:", error);
-        alert("שגיאה בתקשורת עם טלגרם.");
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "שלח הודעה";
-    }
+        alert("הד\"ש נשלח!");
+        document.getElementById('msg-name').value = "";
+        document.getElementById('msg-content').value = "";
+    } catch (e) { alert("שגיאה בשליחה"); }
+    btn.disabled = false; btn.innerText = "שלח הודעה";
 }
 </script>
 </body>
