@@ -785,8 +785,9 @@ function fetchNow(){
       }
     })
     .catch(function(){
-      document.getElementById('now-dj').textContent='בשידור חי';
-      document.getElementById('now-dj2').textContent='בשידור חי';
+      setStreamMode(false);
+      document.getElementById('now-dj').textContent='פלייליסט גיבוי';
+      document.getElementById('now-dj2').textContent='פלייליסט גיבוי';
     });
 }
 
