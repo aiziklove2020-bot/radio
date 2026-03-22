@@ -67,11 +67,13 @@
             align-items: center; 
             gap: 8px; 
             font-weight: 900; 
-            font-size: clamp(18px, 4vw, 24px);
+            font-size: clamp(20px, 4.5vw, 28px);
             color: #fff;
             text-decoration: none;
+            letter-spacing: -0.5px;
         }
         .logo-area span.highlight { color: var(--primary); }
+        .logo-area .radio-prefix { opacity: 0.9; font-weight: 300; margin-left: 4px; }
 
         .nav-links { 
             display: flex; 
@@ -264,7 +266,7 @@
 <header>
     <a href="#" class="logo-area">
         <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
-        <div>מדברים <span class="highlight">בדס"מ</span></div>
+        <div><span class="radio-prefix">רדיו</span> מדברים <span class="highlight">בדס"מ</span></div>
     </a>
     <nav class="nav-links">
         <a href="#home">בית</a>
@@ -282,9 +284,9 @@
         <div class="track-info">
             <div class="live-indicator" id="live-indicator-box">
                 <div class="live-dot" id="live-status-dot"></div>
-                <span id="live-status-text">בודק שידור...</span>
+                <span id="live-status-text">בודק...</span>
             </div>
-            <span class="track-title" id="status-text">טוען נגן...</span>
+            <span class="track-title" id="status-text">טוען נתונים...</span>
         </div>
         
         <button class="play-trigger" id="master-play-btn" disabled>
@@ -292,7 +294,6 @@
         </button>
     </div>
 
-    <!-- נגן YouTube נסתר - משמש כמקור שמע בלבד -->
     <div class="hidden-engines">
         <div id="youtube-engine"></div>
         <iframe id="backup-engine" style="display:none;" allow="autoplay"></iframe>
@@ -303,8 +304,8 @@
     <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 12px; margin-bottom: 5px;">סטטוס שידור</div>
-        <h2 id="dj-name-display" style="font-size: 28px;">רדיו מדברים בדסמ</h2>
-        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">מחוברים למערכת השידור</p>
+        <h2 id="dj-name-display" style="font-size: 28px;">מוזיקה ברצף</h2>
+        <p id="song-name-display" style="color: rgba(255,255,255,0.5);">רדיו מדברים בדסמ</p>
     </div>
 </div>
 
@@ -318,7 +319,7 @@
     
     <div class="box-container" id="schedule">
         <h2 style="border-right: 4px solid var(--primary); padding-right: 15px; margin-bottom: 25px;">לוח שידורים</h2>
-        <p>כשאנחנו לא בשידור חי, תוכלו ליהנות ממוזיקה שנבחרה עבורכם מתוך מוזיקה ברצף שלנו.</p>
+        <p>כשאנחנו לא בשידור חי, תוכלו ליהנות ממוזיקה שנבחרה עבורכם מתוך רדיו מדברים בדסמ.</p>
         <div id="schedule-content" style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
         </div>
     </div>
@@ -360,6 +361,7 @@ let isYtReady = false;
 let isPlaying = false;
 let currentMode = 'none'; 
 let pendingYtId = null;
+let currentDjName = "";
 
 const playBtn = document.getElementById('master-play-btn');
 const btnIcon = document.getElementById('btn-icon');
@@ -367,6 +369,7 @@ const statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text');
 const liveDot = document.getElementById('live-status-dot');
 const backupFrame = document.getElementById('backup-engine');
+const djNameDisplay = document.getElementById('dj-name-display');
 
 // --- YouTube API ---
 function onYouTubeIframeAPIReady() {
@@ -395,27 +398,31 @@ function onYtReady() {
     playBtn.disabled = false;
     if (pendingYtId) {
         ytPlayer.cueVideoById(pendingYtId);
-        checkLiveStatus(pendingYtId);
+        updateRadioState(pendingYtId);
         pendingYtId = null;
     }
 }
 
-function checkLiveStatus(id) {
-    if(!id) {
+function updateRadioState(youtubeId) {
+    if(youtubeId && youtubeId.trim() !== "") {
+        // מצב שידור חי
+        currentMode = 'youtube';
+        liveText.innerText = "שידור חי LIVE";
+        liveDot.className = "live-dot";
+        statusText.innerText = currentDjName || "שדרן בשידור";
+        djNameDisplay.innerText = currentDjName || "שדרן בשידור";
+    } else {
+        // מצב פלייליסט / מוזיקה ברצף
         switchToBackup();
-        return;
     }
-    currentMode = 'youtube';
-    liveText.innerText = "LIVE STREAMING";
-    liveDot.className = "live-dot";
-    statusText.innerText = "שידור חי זמין";
 }
 
 function switchToBackup() {
     currentMode = 'backup';
-    liveText.innerText = "מוזיקה ברצף";
+    liveText.innerText = "OFFLINE";
     liveDot.className = "live-dot offline";
-    statusText.innerText = "מנגן מוזיקה ברצף";
+    statusText.innerText = "מוזיקה ברצף";
+    djNameDisplay.innerText = "מוזיקה ברצף";
     if(ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
 }
 
@@ -462,20 +469,25 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// האזנה לשינויים בסטטוס השדרן
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
+        currentDjName = data.name || "";
         if(data.image) document.getElementById('dj-image-display').src = data.image;
-        if(data.youtubeId) {
+        
+        if(data.youtubeId && data.youtubeId.trim() !== "") {
             if (isYtReady) {
                 ytPlayer.cueVideoById(data.youtubeId);
-                checkLiveStatus(data.youtubeId);
+                updateRadioState(data.youtubeId);
             } else {
                 pendingYtId = data.youtubeId;
             }
         } else {
-            switchToBackup();
+            updateRadioState(null);
         }
+    } else {
+        updateRadioState(null);
     }
 });
 
