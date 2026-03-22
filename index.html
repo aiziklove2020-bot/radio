@@ -48,7 +48,6 @@
             z-index: 1;
         }
 
-        /* תיקון ה-Header למרכז */
         header {
             position: absolute;
             top: 20px;
@@ -63,7 +62,7 @@
             border-radius: 25px;
             padding: 15px 20px;
             display: flex;
-            flex-direction: column; /* הצבה של לוגו מעל תפריט */
+            flex-direction: column; 
             align-items: center;
             justify-content: center;
             gap: 12px;
@@ -291,7 +290,6 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-// לוגיקה טכנית בלבד ללא שינוי עיצוב
 let ytPlayer, isYtReady = false, isPlaying = false, currentMode = 'none', pendingYtId = null;
 const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
 const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
@@ -311,8 +309,15 @@ function onYouTubeIframeAPIReady() {
         height: '1', width: '1', videoId: '',
         playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
         events: {
-            'onReady': () => { isYtReady = true; playBtn.disabled = false; if(pendingYtId) loadYoutube(pendingYtId); },
-            'onStateChange': (e) => { isPlaying = (e.data == YT.PlayerState.PLAYING); updateUI(); }
+            'onReady': () => { 
+                isYtReady = true; 
+                playBtn.disabled = false; 
+                if(pendingYtId) loadYoutube(pendingYtId); 
+            },
+            'onStateChange': (e) => { 
+                isPlaying = (e.data == YT.PlayerState.PLAYING); 
+                updateUI(); 
+            }
         }
     });
 }
@@ -336,17 +341,34 @@ function switchToBackup() {
     liveDot.className = "live-dot offline";
     statusText.innerText = "מוזיקה ברצף";
     document.getElementById('dj-name-display').innerText = "מוזיקה ברצף";
-    audioEngine.src = "https://archive.org/download/backup-engine/1.mp3";
+    audioEngine.src = "https://stream.zeno.fm/0r0xa792kwzuv"; 
+    audioEngine.load();
 }
 
 playBtn.addEventListener('click', () => {
     if (currentMode === 'youtube') {
-        isPlaying ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
+        if (isPlaying) {
+            ytPlayer.pauseVideo();
+        } else {
+            ytPlayer.playVideo();
+        }
     } else {
-        if (isPlaying) { audioEngine.pause(); isPlaying = false; }
-        else { audioEngine.play(); isPlaying = true; }
-        updateUI();
+        if (isPlaying) {
+            audioEngine.pause();
+            isPlaying = false;
+        } else {
+            const playPromise = audioEngine.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    updateUI();
+                }).catch(error => {
+                    console.log("Playback error:", error);
+                });
+            }
+        }
     }
+    updateUI();
 });
 
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
@@ -355,10 +377,16 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
         statusText.innerText = d.name || "בשידור";
         document.getElementById('dj-name-display').innerText = d.name || "בשידור";
         if(d.image) document.getElementById('dj-image-display').src = d.image;
-        if(d.youtubeId) loadYoutube(d.youtubeId); else switchToBackup();
-    } else switchToBackup();
+        if(d.youtubeId && d.youtubeId.length > 5) {
+            loadYoutube(d.youtubeId);
+        } else {
+            switchToBackup();
+        }
+    } else {
+        switchToBackup();
+    }
     playBtn.disabled = false;
-});
+}, error => console.error("DJ info snapshot error:", error));
 
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
@@ -368,9 +396,16 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
         const today = daysEng[new Date().getDay()];
         document.getElementById('current-day-label').innerText = daysHeb[new Date().getDay()];
         const container = document.getElementById('schedule-content');
-        container.innerHTML = (s[today] || []).map(item => item.title ? `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${item.title}</b><br><small>${item.host || ''}</small></div></div>` : '').join('') || "מוזיקה ברצף";
+        
+        // תיקון השגיאה: מוודא שהנתונים הם מערך לפני שימוש ב-map
+        const todaySchedule = s[today];
+        if (Array.isArray(todaySchedule)) {
+            container.innerHTML = todaySchedule.map(item => item.title ? `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${item.title}</b><br><small>${item.host || ''}</small></div></div>` : '').join('') || "מוזיקה ברצף";
+        } else {
+            container.innerHTML = "מוזיקה ברצף";
+        }
     }
-});
+}, error => console.error("Schedule snapshot error:", error));
 
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
@@ -383,7 +418,7 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
             }
         });
     }
-});
+}, error => console.error("Parties snapshot error:", error));
 
 async function sendGreeting() {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
@@ -394,12 +429,15 @@ async function sendGreeting() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
         });
-        alert("נשלח!");
+        alert("נשלח בהצלחה!");
         document.getElementById('msg-content').value = "";
     } catch(e) {}
 }
 
-setTimeout(() => { if(currentMode === 'none') switchToBackup(); playBtn.disabled = false; }, 5000);
+setTimeout(() => { 
+    if(currentMode === 'none') switchToBackup(); 
+    playBtn.disabled = false; 
+}, 5000);
 </script>
 </body>
 </html>
