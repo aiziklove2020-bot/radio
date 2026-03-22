@@ -191,7 +191,6 @@
             padding: 35px;
         }
 
-        /* Schedule Styles */
         .schedule-list {
             list-style: none;
             margin-top: 20px;
@@ -207,7 +206,6 @@
         .schedule-info { flex: 1; text-align: right; }
         .schedule-host { opacity: 0.6; font-size: 12px; }
 
-        /* Parties Section */
         .parties-section {
             max-width: 1200px;
             margin: 0 auto 80px;
@@ -283,9 +281,11 @@
         </button>
     </div>
 
+    <!-- Hidden Engines -->
     <div style="position: absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
         <div id="youtube-engine"></div>
-        <iframe id="backup-engine" style="display:none;" allow="autoplay"></iframe>
+        <!-- נגן אודיו לנייד עבור פלייליסטים -->
+        <audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
     </div>
 </section>
 
@@ -318,6 +318,7 @@
 <div class="parties-section" id="parties">
     <h2 style="border-right: 4px solid var(--primary); padding-right: 15px;">מסיבות קרובות</h2>
     <div class="party-grid" id="party-container">
+        <!-- המסיבות נטענות מהפיירבייס -->
         <div class="party-card">
             <img src="https://via.placeholder.com/600x400" class="party-img" id="party1-img">
             <div class="party-content">
@@ -356,8 +357,11 @@ const btnIcon = document.getElementById('btn-icon');
 const statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text');
 const liveDot = document.getElementById('live-status-dot');
-const backupFrame = document.getElementById('backup-engine');
+const audioEngine = document.getElementById('audio-engine');
 const djNameDisplay = document.getElementById('dj-name-display');
+
+// קישור לסטרים מוזיקה (MP3) - עדיף להחליף בסטרים רדיו חי או קובץ MP3 ישיר
+const BACKUP_STREAM_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
 
 // --- Firebase Init ---
 const firebaseConfig = {
@@ -373,7 +377,7 @@ const db = firebase.firestore();
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube-engine', {
         height: '1', width: '1', videoId: '',
-        playerVars: { 'autoplay': 0, 'controls': 0 },
+        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
         events: {
             'onReady': onYtReady,
             'onStateChange': onYtStateChange,
@@ -389,6 +393,8 @@ function onYtReady() {
         ytPlayer.cueVideoById(pendingYtId);
         updateRadioState(pendingYtId);
         pendingYtId = null;
+    } else {
+        updateRadioState(null);
     }
 }
 
@@ -410,6 +416,7 @@ function updateRadioState(youtubeId) {
         liveDot.className = "live-dot";
         statusText.innerText = currentDjName || "בשידור חי";
         djNameDisplay.innerText = currentDjName || "בשידור חי";
+        audioEngine.pause();
     } else {
         switchToBackup();
     }
@@ -422,17 +429,32 @@ function switchToBackup() {
     statusText.innerText = "מוזיקה ברצף";
     djNameDisplay.innerText = "מוזיקה ברצף";
     if(ytPlayer && isYtReady) ytPlayer.stopVideo();
+    // הכנת הסאונד
+    if(!audioEngine.src) audioEngine.src = BACKUP_STREAM_URL;
 }
 
 playBtn.addEventListener('click', () => {
     if (currentMode === 'youtube') {
-        if (isPlaying) ytPlayer.pauseVideo();
-        else ytPlayer.playVideo();
+        if (isPlaying) {
+            ytPlayer.pauseVideo();
+        } else {
+            ytPlayer.playVideo();
+        }
     } else {
-        isPlaying = !isPlaying;
-        updateUI(isPlaying);
-        backupFrame.src = isPlaying ? "https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321&autoplay=1" : "";
-        backupFrame.style.display = isPlaying ? "block" : "none";
+        // מצב פלייליסט/גיבוי
+        if (isPlaying) {
+            audioEngine.pause();
+            isPlaying = false;
+            updateUI(false);
+        } else {
+            audioEngine.play().then(() => {
+                isPlaying = true;
+                updateUI(true);
+            }).catch(e => {
+                console.error("Audio playback error:", e);
+                // במקרה של שגיאה בנייד, בדרך כלל צריך לחיצה נוספת
+            });
+        }
     }
 });
 
@@ -505,7 +527,7 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
 async function sendGreeting() {
     const name = document.getElementById('msg-name').value.trim();
     const content = document.getElementById('msg-content').value.trim();
-    if(!name || !content) return alert("נא למלא שם והודעה");
+    if(!name || !content) return;
 
     const btn = document.getElementById('send-btn');
     btn.disabled = true; btn.innerText = "שולח...";
@@ -520,10 +542,9 @@ async function sendGreeting() {
                 parse_mode: 'Markdown'
             })
         });
-        alert("הד\"ש נשלח!");
         document.getElementById('msg-name').value = "";
         document.getElementById('msg-content').value = "";
-    } catch (e) { alert("שגיאה בשליחה"); }
+    } catch (e) { console.error(e); }
     btn.disabled = false; btn.innerText = "שלח הודעה";
 }
 </script>
