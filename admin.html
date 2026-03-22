@@ -355,9 +355,11 @@
             document.getElementById('dj-name').value = data.name || "";
             document.getElementById('yt-id').value = data.youtubeId || "";
             
+            // Note: image is what the frontend currently displays
             if(data.image) {
-                document.getElementById('dj-img-preview').src = data.image;
-                djBase64 = data.image;
+                // If there's no live broadcast, image field in DB likely holds the offline image
+                // We keep track of dj image separately if possible, or just update preview
+                document.getElementById('dj-img-preview').src = data.youtubeId ? data.image : (djBase64 || "https://via.placeholder.com/80?text=DJ");
             }
 
             if(data.offlineImage) {
@@ -461,8 +463,8 @@
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
-                image: djBase64,
-                offlineImage: offlineBase64, // תמיד שולח את תמונת האופליין שיש בזיכרון
+                image: djBase64, // תמונת השדרן נכנסת לשדה הראשי
+                offlineImage: offlineBase64,
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
             alert("השידור עודכן בהצלחה!");
@@ -474,14 +476,15 @@
     async function clearLive() {
         if(!confirm("להפסיק את השידור ולחזור למוזיקה ברצף?")) return;
         try {
+            // התיקון הקריטי: מעתיקים את offlineImage לתוך image כדי שהאתר יתעדכן
             await db.collection('settings').doc('dj_info').set({
                 youtubeId: "",
                 name: "",
-                image: djBase64,
-                offlineImage: offlineBase64, // מבטיח שתמונת האופליין לא תתאפס בניקוי
+                image: offlineBase64, // כאן אנחנו מחליפים את תמונת השדרן בתמונת האופליין
+                offlineImage: offlineBase64, 
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert("השידור הופסק. האתר אמור להציג כעת את תמונת ה-Offline.");
+            alert("השידור הופסק. תמונת ה-Offline נשלחה לאתר.");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
