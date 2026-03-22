@@ -731,6 +731,8 @@ var liveEmbedBox = document.getElementById('live-embed-box');
 var fbIndex = 0;
 var fbPlaying = false;
 var streamWasOnline = null;
+// הפעל פלייליסט מיד בטעינה — ייעצר אם השידור החי פעיל
+setTimeout(function(){ setStreamMode(false); }, 500);
 
 function fbPlay(index){
   if(index !== undefined) fbIndex = index;
@@ -800,32 +802,34 @@ function setStreamMode(online){
 function fetchNow(){
   var manual=gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
   if(manual.dj||manual.show){applyOnAir(manual.dj,manual.show,manual.genre,manual.photo);}
-  // בדיקה ישירה לשרת caster.fm ללא API
-  fetch('https://morcast.caster.fm:13763/status-json.xsl',{cache:'no-cache'})
-    .then(function(r){return r.json();})
-    .then(function(data){
-      var sources = data && data.icestats && data.icestats.source;
-      var src = Array.isArray(sources)
-        ? (sources.find(function(s){return s.listenurl&&s.listenurl.includes('/y4k1D');}) || sources[0])
-        : sources;
-      var online = !!src;
-      setStreamMode(online);
-      if(online){
-        applyOnAir(
-          src.server_name||src.title||'בשידור',
-          src.title||src.song||'—',
-          src.genre||'—',
-          ''
-        );
-      } else {
-        document.getElementById('now-dj').textContent='לא בשידור';
-        document.getElementById('now-dj2').textContent='לא בשידור';
+  fetch('/api/nowplaying',{cache:'no-cache'})
+    .then(function(r){ if(!r.ok) throw new Error('no api'); return r.json(); })
+    .then(function(d){
+      setStreamMode(!!d.online);
+      if(d.online){
+        applyOnAir(d.dj||d.title||'בשידור', d.title||'—', d.genre||'—', '');
       }
     })
     .catch(function(){
-      setStreamMode(false);
-      document.getElementById('now-dj').textContent='פלייליסט';
-      document.getElementById('now-dj2').textContent='פלייליסט';
+      fetch('https://morcast.caster.fm:13763/status-json.xsl',{cache:'no-cache'})
+        .then(function(r){return r.json();})
+        .then(function(data){
+          var sources = data && data.icestats && data.icestats.source;
+          var src = Array.isArray(sources)
+            ? (sources.find(function(s){return s.listenurl&&s.listenurl.includes('/y4k1D');}) || sources[0])
+            : sources;
+          setStreamMode(!!src);
+          if(src){
+            applyOnAir(
+              src.server_name||src.title||'בשידור',
+              src.title||src.song||'—',
+              src.genre||'—', ''
+            );
+          }
+        })
+        .catch(function(){
+          // CORS חסום — פלייליסט כבר פעיל
+        });
     });
 }
 function reload(){
@@ -835,6 +839,9 @@ function reload(){
 }
 reload();fetchNow();
 setInterval(fetchNow,30000);setInterval(reload,8000);
+
+// הפעל פלייליסט מיד — ייעצר אם השידור החי מאושר
+setTimeout(function(){ setStreamMode(false); }, 800);
 
 // הפעל מוזיקה ברגע שהמשתמש לוחץ כל דבר בדף (עוקף חסימת autoplay)
 var fbUserInteracted = false;
