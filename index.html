@@ -247,7 +247,7 @@ header {
     </div>
 </div>
 
-<audio id="audio-engine" preload="auto" crossorigin="anonymous"></audio>
+<audio id="audio-engine" preload="none"></audio>
 
 <div class="main-grid">
     <div class="box-container" id="schedule">
@@ -291,40 +291,40 @@ const volSlider = document.getElementById('vol-slider');
 let isPlaying = false;
 let isLive = false;
 
-// פונקציה לטעינת המקור הנכון
-function loadMediaSource() {
-    const target = isLive ? CONFIG.live : CONFIG.playlist;
-    if(audio.src !== target) {
+// פונקציה שמכריחה את האודיו להיטען ולנגן
+async function forcePlay() {
+    try {
+        const target = isLive ? CONFIG.live : CONFIG.playlist;
+        
+        // בכל פעם שמתחילים, נותנים למקור "דחיפה" חדשה למנוע קיפאון
         audio.src = target;
         audio.load();
+        
+        await audio.play();
+        isPlaying = true;
+        btnIcon.className = "fa-solid fa-pause";
+        statusTag.innerText = isLive ? "שידור חי" : "מנגן כעת";
+    } catch (err) {
+        console.error("Playback failed:", err);
+        statusTag.innerText = "שגיאה בחיבור";
     }
 }
 
-// לוגיקת לחיצה - מטפלת בהפעלת הסקריפט
 playBtn.addEventListener('click', () => {
     if (!isPlaying) {
-        // אם אין מקור, נטען
-        if(!audio.src) loadMediaSource();
-        
-        audio.play().then(() => {
-            isPlaying = true;
-            btnIcon.className = "fa-solid fa-pause";
-        }).catch(err => {
-            console.error("Playback failed, retrying load...", err);
-            audio.load();
-            audio.play().then(() => {
-                isPlaying = true;
-                btnIcon.className = "fa-solid fa-pause";
-            });
-        });
+        forcePlay();
     } else {
         audio.pause();
+        audio.src = ""; // מנקה את ה-buffer בשידורים חיים
         isPlaying = false;
         btnIcon.className = "fa-solid fa-play";
+        statusTag.innerText = "מושהה";
     }
 });
 
-volSlider.addEventListener('input', (e) => audio.volume = e.target.value);
+volSlider.addEventListener('input', (e) => {
+    audio.volume = e.target.value;
+});
 
 async function checkServerStatus() {
     const api = `https://api.caster.fm/query.php?publicToken=60e730b1-7eca-48ab-92da-977474cf4482&t=${Date.now()}`;
@@ -333,18 +333,16 @@ async function checkServerStatus() {
         const json = await res.json();
         const data = JSON.parse(json.contents);
         
-        const statusChanged = (isLive !== (data.status === 'online'));
+        const oldLiveState = isLive;
         isLive = (data.status === 'online');
 
         if(isLive) {
-            statusTag.innerText = "שידור חי";
             trackLabel.innerText = data.dj_name || "שדרן באוויר";
             document.getElementById('air-badge').innerText = "LIVE ON AIR";
             document.getElementById('live-indicator').style.display = 'block';
             document.getElementById('dj-name-display').innerText = data.dj_name || "שדרן אורח";
             document.getElementById('song-name-display').innerText = data.song_title || "מנגנים עכשיו";
         } else {
-            statusTag.innerText = "רדיו מדברים בדסמ";
             trackLabel.innerText = "פלייליסט הקהילה";
             document.getElementById('air-badge').innerText = "שידור אוטומטי";
             document.getElementById('live-indicator').style.display = 'none';
@@ -352,13 +350,12 @@ async function checkServerStatus() {
             document.getElementById('song-name-display').innerText = "מוזיקה ברצף 24/7";
         }
 
-        // אם המצב השתנה בזמן נגינה - נחליף מקור בזמן אמת
-        if(statusChanged && isPlaying) {
-            loadMediaSource();
-            audio.play();
+        // אם המצב השתנה בזמן שהמאזין שומע - עוברים למקור החדש
+        if(oldLiveState !== isLive && isPlaying) {
+            forcePlay();
         }
     } catch(e) {
-        if(!audio.src) loadMediaSource();
+        console.warn("Status check failed, staying on current mode.");
     }
 }
 
@@ -366,14 +363,9 @@ async function checkServerStatus() {
 checkServerStatus();
 setInterval(checkServerStatus, 15000);
 
-// טיפול בשגיאות
-audio.addEventListener('error', () => {
-    console.error("Audio error detected");
-    if(isPlaying) {
-        audio.src = CONFIG.playlist; // חזרה לפלייליסט במקרה של קריסת שידור חי
-        audio.load();
-        audio.play();
-    }
+// טיפול בשגיאות זרימה
+audio.addEventListener('stalled', () => {
+    if(isPlaying) forcePlay();
 });
 </script>
 
