@@ -12,7 +12,7 @@
             --primary-hover: #ff6b81;
             --secondary: #2f3542;
             --success: #2ed573;
-            --warning: #ffa502;
+            --danger: #eb4d4b;
             --bg: #0f1116;
             --card: #1c1e26;
             --input-bg: #262933;
@@ -32,7 +32,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -67,10 +67,8 @@
             padding: 30px;
             border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
+            margin-bottom: 25px;
         }
-
-        .card:hover { transform: translateY(-5px); }
 
         .card-full { grid-column: 1 / -1; }
 
@@ -97,27 +95,21 @@
             color: var(--text-dim);
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 15px;
             background: var(--input-bg);
             border: 1px solid var(--border);
             color: white;
             border-radius: 12px;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 15px;
             transition: 0.3s;
         }
 
-        input[type="file"] {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        input:focus, textarea:focus {
+        input:focus {
             outline: none;
             border-color: var(--primary);
-            background: #2d313d;
         }
 
         .btn-group { 
@@ -127,13 +119,11 @@
         }
 
         button {
-            flex: 1;
-            padding: 15px;
+            padding: 12px 20px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -145,7 +135,73 @@
         .btn-save:hover { background: var(--primary-hover); transform: scale(1.02); }
 
         .btn-clear { background: var(--secondary); color: white; }
-        .btn-clear:hover { background: #3f4552; }
+        .btn-danger-outline { 
+            background: transparent; 
+            color: var(--danger); 
+            border: 1px solid var(--danger); 
+            font-size: 13px;
+            padding: 8px 15px;
+        }
+        .btn-danger-outline:hover { background: var(--danger); color: white; }
+
+        /* Schedule Specific Styles */
+        .schedule-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: var(--input-bg);
+            color: var(--text-dim);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .schedule-header {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 50px;
+            gap: 15px;
+            padding: 10px;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 50px;
+            gap: 15px;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .schedule-row:hover { background: rgba(255,255,255,0.06); }
+
+        .time-label { font-weight: bold; color: var(--primary); font-size: 14px; }
+
+        .btn-icon-delete {
+            background: rgba(235, 77, 75, 0.1);
+            color: var(--danger);
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 10px;
+        }
+        .btn-icon-delete:hover { background: var(--danger); color: white; }
 
         .status-wrapper {
             display: flex;
@@ -165,25 +221,10 @@
             border-radius: 50px;
             font-size: 13px;
             font-weight: 800;
-            text-transform: uppercase;
         }
 
         .status-live { background: rgba(46, 213, 115, 0.2); color: var(--success); }
         .status-offline { background: rgba(164, 176, 190, 0.2); color: var(--text-dim); }
-
-        .pulse {
-            width: 8px;
-            height: 8px;
-            background: currentColor;
-            border-radius: 50%;
-            animation: pulse-animation 1.5s infinite;
-        }
-
-        @keyframes pulse-animation {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(46, 213, 115, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 213, 115, 0); }
-        }
 
         .preview-area {
             display: flex;
@@ -192,27 +233,22 @@
             background: #262933;
             padding: 15px;
             border-radius: 15px;
-            margin-top: 10px;
         }
 
         .preview-img {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
-            border-radius: 12px;
-            background: #111;
-            border: 2px solid var(--border);
-        }
-
-        .party-box {
-            background: #262933;
-            padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
             border: 1px solid var(--border);
         }
 
         @media (max-width: 850px) {
             .grid { grid-template-columns: 1fr; }
+            .schedule-header { display: none; }
+            .schedule-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .time-label { grid-column: 1 / -1; }
+            .btn-icon-delete { grid-column: 2; justify-self: end; }
         }
     </style>
 </head>
@@ -221,115 +257,103 @@
 <div class="container">
     <header>
         <h1>STUDIO CONTROL</h1>
-        <p>לוח הבקרה של רדיו מדברים בדס"מ</p>
+        <p>מערכת ניהול תוכן - רדיו מדברים בדס"מ</p>
     </header>
 
-    <div class="grid">
-        <!-- Live Broadcast Management -->
-        <div class="card card-full">
-            <h2><i class="fa-solid fa-tower-broadcast"></i> ניהול שידור חי</h2>
-            
-            <div class="status-wrapper">
-                <span style="font-weight: 500;">סטטוס מערכת נוכחי:</span>
-                <div id="current-status" class="status-badge status-offline">
-                    <div class="pulse"></div>
-                    <span id="status-text">טוען...</span>
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-user-tag"></i> שם השדרן</label>
-                    <input type="text" id="dj-name" placeholder="מי עולה לשידור?">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-brands fa-youtube"></i> YouTube Video ID</label>
-                    <input type="text" id="yt-id" placeholder="לדוגמה: dQw4w9WgXcQ">
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-upload"></i> תמונת שדרן פעיל</label>
-                    <input type="file" id="dj-file-input" accept="image/*" onchange="handleImageUpload('dj')">
-                    <div class="preview-area">
-                        <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
-                        <div>
-                            <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
-                            <div id="dj-file-status" style="font-size: 12px; color: var(--text-dim);">טרם נבחר קובץ</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa-solid fa-cloud-moon"></i> תמונת פלייליסט (Offline)</label>
-                    <input type="file" id="offline-file-input" accept="image/*" onchange="handleImageUpload('offline')">
-                    <div class="preview-area">
-                        <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=OFF">
-                        <div>
-                            <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
-                            <div id="offline-file-status" style="font-size: 12px; color: var(--text-dim);">תמונת ברירת מחדל</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn-save" onclick="updateLive()">
-                    <i class="fa-solid fa-paper-plane"></i> עדכן ועלה לאוויר
-                </button>
-                <button class="btn-clear" onclick="clearLive()">
-                    <i class="fa-solid fa-stop"></i> הפסק שידור וחזור לפלייליסט
-                </button>
+    <!-- LIVE CONTROL -->
+    <div class="card card-full">
+        <h2><i class="fa-solid fa-tower-broadcast"></i> ניהול שידור חי</h2>
+        <div class="status-wrapper">
+            <span>סטטוס מערכת:</span>
+            <div id="current-status" class="status-badge status-offline">
+                <span id="status-text">טוען...</span>
             </div>
         </div>
-
-        <!-- Party 1 -->
-        <div class="card">
-            <h2><i class="fa-solid fa-star"></i> מסיבה קרובה 1</h2>
-            <div class="party-box">
-                <div class="form-group">
-                    <input type="text" id="p1-title" placeholder="כותרת האירוע">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p1-date" placeholder="תאריך (לדוגמה: 25.03 | 22:00)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p1-img" placeholder="קישור לתמונה (URL)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p1-link" placeholder="קישור לכרטיסים">
-                </div>
-                <textarea id="p1-desc" placeholder="תיאור קצר על המסיבה..." rows="3"></textarea>
+        <div class="grid">
+            <div class="form-group">
+                <label>שם השדרן</label>
+                <input type="text" id="dj-name" placeholder="מי בשידור?">
+            </div>
+            <div class="form-group">
+                <label>YouTube ID</label>
+                <input type="text" id="yt-id" placeholder="למשל: dQw4w9WgXcQ">
             </div>
         </div>
-
-        <!-- Party 2 -->
-        <div class="card">
-            <h2><i class="fa-solid fa-calendar-check"></i> מסיבה קרובה 2</h2>
-            <div class="party-box">
-                <div class="form-group">
-                    <input type="text" id="p2-title" placeholder="כותרת האירוע">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p2-date" placeholder="תאריך">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p2-img" placeholder="קישור לתמונה (URL)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="p2-link" placeholder="קישור לכרטיסים">
-                </div>
-                <textarea id="p2-desc" placeholder="תיאור קצר..." rows="3"></textarea>
+        <div class="grid" style="margin-bottom: 20px;">
+            <div class="preview-area">
+                <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=DJ">
+                <input type="file" id="dj-file-input" style="display:none" onchange="handleImageUpload('dj')">
+                <button onclick="document.getElementById('dj-file-input').click()" style="font-size: 12px; background: var(--secondary); flex: none;">החלף תמונת שדרן</button>
+            </div>
+            <div class="preview-area">
+                <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=OFF">
+                <input type="file" id="offline-file-input" style="display:none" onchange="handleImageUpload('offline')">
+                <button onclick="document.getElementById('offline-file-input').click()" style="font-size: 12px; background: var(--secondary); flex: none;">החלף תמונת Offline</button>
             </div>
         </div>
-
-        <div class="card card-full" style="text-align: center; padding: 20px;">
-            <button class="btn-save" style="max-width: 400px; margin: 0 auto;" onclick="updateParties()">
-                <i class="fa-solid fa-floppy-disk"></i> שמור את כל השינויים במסיבות
-            </button>
+        <div class="btn-group">
+            <button class="btn-save" style="flex:2" onclick="updateLive()"><i class="fa-solid fa-play"></i> עדכן וצא לשידור</button>
+            <button class="btn-clear" style="flex:1" onclick="clearLive()"><i class="fa-solid fa-stop"></i> הפסק שידור</button>
         </div>
     </div>
+
+    <!-- WEEKLY SCHEDULE -->
+    <div class="card card-full">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+            <h2 style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי</h2>
+            <button class="btn-danger-outline" onclick="clearEntireDay()">
+                <i class="fa-solid fa-trash-can"></i> נקה את כל יום <span class="active-day-text">ראשון</span>
+            </button>
+        </div>
+        
+        <div class="schedule-tabs" id="day-tabs">
+            <button class="tab-btn active" onclick="switchDay('sunday')">ראשון</button>
+            <button class="tab-btn" onclick="switchDay('monday')">שני</button>
+            <button class="tab-btn" onclick="switchDay('tuesday')">שלישי</button>
+            <button class="tab-btn" onclick="switchDay('wednesday')">רביעי</button>
+            <button class="tab-btn" onclick="switchDay('thursday')">חמישי</button>
+            <button class="tab-btn" onclick="switchDay('friday')">שישי</button>
+            <button class="tab-btn" onclick="switchDay('saturday')">שבת</button>
+        </div>
+
+        <div id="schedule-editor">
+            <div class="schedule-header">
+                <div>שעה</div>
+                <div>שם התוכנית</div>
+                <div>שדרן/ית</div>
+                <div></div>
+            </div>
+            <div id="time-slots-container">
+                <!-- Dynamic slots will be injected here -->
+            </div>
+        </div>
+
+        <button class="btn-save" style="margin-top: 25px; width: 100%;" onclick="saveSchedule()">
+            <i class="fa-solid fa-floppy-disk"></i> שמור שינויים ליום <span class="active-day-text">ראשון</span>
+        </button>
+    </div>
+
+    <!-- PARTIES -->
+    <div class="grid">
+        <div class="card">
+            <h2><i class="fa-solid fa-star"></i> מסיבה 1</h2>
+            <input type="text" id="p1-title" placeholder="כותרת" class="form-group">
+            <input type="text" id="p1-date" placeholder="תאריך" class="form-group">
+            <input type="text" id="p1-img" placeholder="לינק לתמונה" class="form-group">
+            <input type="text" id="p1-link" placeholder="לינק לכרטיסים" class="form-group">
+            <textarea id="p1-desc" placeholder="תיאור" rows="2" style="width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:12px; color:white; padding:12px;"></textarea>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-calendar-check"></i> מסיבה 2</h2>
+            <input type="text" id="p2-title" placeholder="כותרת" class="form-group">
+            <input type="text" id="p2-date" placeholder="תאריך" class="form-group">
+            <input type="text" id="p2-img" placeholder="לינק לתמונה" class="form-group">
+            <input type="text" id="p2-link" placeholder="לינק לכרטיסים" class="form-group">
+            <textarea id="p2-desc" placeholder="תיאור" rows="2" style="width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:12px; color:white; padding:12px;"></textarea>
+        </div>
+    </div>
+    <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני מסיבות</button>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -347,105 +371,124 @@
 
     let djBase64 = ""; 
     let offlineBase64 = "";
+    let currentDay = "sunday";
+    let fullSchedule = {};
 
-    // Sync from Firestore
+    const timeSlots = [
+        "08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", 
+        "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00", 
+        "20:00 - 22:00", "22:00 - 00:00", "00:00 - 08:00"
+    ];
+
+    const dayNames = {
+        sunday: "ראשון", monday: "שני", tuesday: "שלישי", 
+        wednesday: "רביעי", thursday: "חמישי", friday: "שישי", saturday: "שבת"
+    };
+
+    function renderSlots() {
+        const container = document.getElementById('time-slots-container');
+        container.innerHTML = '';
+        timeSlots.forEach((slot, index) => {
+            const div = document.createElement('div');
+            div.className = 'schedule-row';
+            div.innerHTML = `
+                <div class="time-label">${slot}</div>
+                <input type="text" id="prog-${index}" placeholder="שם התוכנית">
+                <input type="text" id="host-${index}" placeholder="שדרן">
+                <button class="btn-icon-delete" onclick="clearSlot(${index})" title="מחק משבצת זו">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+            container.appendChild(div);
+        });
+        loadAllSchedule();
+    }
+
+    function switchDay(day) {
+        currentDay = day;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        document.querySelectorAll('.active-day-text').forEach(el => el.innerText = dayNames[day]);
+        loadDayData();
+    }
+
+    async function loadAllSchedule() {
+        const doc = await db.collection('settings').doc('schedule').get();
+        if (doc.exists) {
+            fullSchedule = doc.data();
+            loadDayData();
+        }
+    }
+
+    function loadDayData() {
+        if (fullSchedule[currentDay]) {
+            fillInputs(fullSchedule[currentDay]);
+        } else {
+            clearInputs();
+        }
+    }
+
+    function fillInputs(data) {
+        timeSlots.forEach((_, i) => {
+            document.getElementById(`prog-${i}`).value = data[i]?.title || "";
+            document.getElementById(`host-${i}`).value = data[i]?.host || "";
+        });
+    }
+
+    function clearInputs() {
+        timeSlots.forEach((_, i) => {
+            document.getElementById(`prog-${i}`).value = "";
+            document.getElementById(`host-${i}`).value = "";
+        });
+    }
+
+    function clearSlot(index) {
+        document.getElementById(`prog-${index}`).value = "";
+        document.getElementById(`host-${index}`).value = "";
+    }
+
+    function clearEntireDay() {
+        if(confirm(`האם אתה בטוח שברצונך למחוק את כל השידורים של יום ${dayNames[currentDay]}?`)) {
+            clearInputs();
+        }
+    }
+
+    async function saveSchedule() {
+        const dayData = {};
+        timeSlots.forEach((_, i) => {
+            dayData[i] = {
+                title: document.getElementById(`prog-${i}`).value,
+                host: document.getElementById(`host-${i}`).value
+            };
+        });
+
+        fullSchedule[currentDay] = dayData;
+
+        try {
+            await db.collection('settings').doc('schedule').set(fullSchedule);
+            alert(`לוח השידורים ליום ${dayNames[currentDay]} נשמר בהצלחה!`);
+        } catch (e) {
+            alert("שגיאה בשמירה: " + e.message);
+        }
+    }
+
+    // --- Live & Parties logic (Same as before) ---
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
             document.getElementById('dj-name').value = data.name || "";
             document.getElementById('yt-id').value = data.youtubeId || "";
-            
-            // Note: image is what the frontend currently displays
-            if(data.image) {
-                // If there's no live broadcast, image field in DB likely holds the offline image
-                // We keep track of dj image separately if possible, or just update preview
-                document.getElementById('dj-img-preview').src = data.youtubeId ? data.image : (djBase64 || "https://via.placeholder.com/80?text=DJ");
-            }
-
-            if(data.offlineImage) {
-                document.getElementById('offline-img-preview').src = data.offlineImage;
-                offlineBase64 = data.offlineImage;
-                document.getElementById('offline-file-status').innerText = "תמונה קיימת במערכת";
-            }
+            if(data.image) document.getElementById('dj-img-preview').src = data.image;
+            if(data.offlineImage) document.getElementById('offline-img-preview').src = data.offlineImage;
             
             const statusBadge = document.getElementById('current-status');
             const statusText = document.getElementById('status-text');
-            
-            if(data.youtubeId && data.youtubeId.trim() !== "") {
+            if(data.youtubeId) {
                 statusText.innerText = "בשידור חי: " + (data.name || "שדרן");
                 statusBadge.className = "status-badge status-live";
             } else {
-                statusText.innerText = "פלייליסט (OFFLINE)";
+                statusText.innerText = "OFFLINE - פלייליסט";
                 statusBadge.className = "status-badge status-offline";
-            }
-        }
-    });
-
-    // Image Upload Handling with Resize
-    function handleImageUpload(type) {
-        const inputId = type === 'dj' ? 'dj-file-input' : 'offline-file-input';
-        const previewId = type === 'dj' ? 'dj-img-preview' : 'offline-img-preview';
-        const statusId = type === 'dj' ? 'dj-file-status' : 'offline-file-status';
-        
-        const file = document.getElementById(inputId).files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 400;
-                const MAX_HEIGHT = 400;
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                const result = canvas.toDataURL('image/jpeg', 0.8);
-                
-                if(type === 'dj') djBase64 = result;
-                else offlineBase64 = result;
-
-                document.getElementById(previewId).src = result;
-                document.getElementById(statusId).innerText = "תמונה נטענה - לחץ על עדכן לשמירה";
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // Party info sync
-    db.collection('settings').doc('parties_info').onSnapshot(doc => {
-        if(doc.exists) {
-            const data = doc.data();
-            if(data.party1) {
-                document.getElementById('p1-title').value = data.party1.title || "";
-                document.getElementById('p1-date').value = data.party1.date || "";
-                document.getElementById('p1-img').value = data.party1.img || "";
-                document.getElementById('p1-link').value = data.party1.link || "";
-                document.getElementById('p1-desc').value = data.party1.desc || "";
-            }
-            if(data.party2) {
-                document.getElementById('p2-title').value = data.party2.title || "";
-                document.getElementById('p2-date').value = data.party2.date || "";
-                document.getElementById('p2-img').value = data.party2.img || "";
-                document.getElementById('p2-link').value = data.party2.link || "";
-                document.getElementById('p2-desc').value = data.party2.desc || "";
             }
         }
     });
@@ -453,41 +496,40 @@
     async function updateLive() {
         const name = document.getElementById('dj-name').value;
         const ytId = document.getElementById('yt-id').value;
-
-        if(!ytId) {
-            alert("נא להזין YouTube ID כדי לעלות לשידור");
-            return;
-        }
-
-        try {
-            await db.collection('settings').doc('dj_info').set({
-                name: name,
-                youtubeId: ytId,
-                image: djBase64, // תמונת השדרן נכנסת לשדה הראשי
-                offlineImage: offlineBase64,
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert("השידור עודכן בהצלחה!");
-        } catch (e) {
-            alert("שגיאה בעדכון: " + e.message);
-        }
+        if(!ytId) return alert("חובה להזין ID של יוטיוב");
+        await db.collection('settings').doc('dj_info').update({
+            name, youtubeId: ytId, image: djBase64 || document.getElementById('dj-img-preview').src,
+            offlineImage: offlineBase64 || document.getElementById('offline-img-preview').src,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("שידור חי עודכן!");
     }
 
     async function clearLive() {
-        if(!confirm("להפסיק את השידור ולחזור למוזיקה ברצף?")) return;
-        try {
-            // התיקון הקריטי: מעתיקים את offlineImage לתוך image כדי שהאתר יתעדכן
-            await db.collection('settings').doc('dj_info').set({
-                youtubeId: "",
-                name: "",
-                image: offlineBase64, // כאן אנחנו מחליפים את תמונת השדרן בתמונת האופליין
-                offlineImage: offlineBase64, 
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert("השידור הופסק. תמונת ה-Offline נשלחה לאתר.");
-        } catch (e) {
-            alert("שגיאה: " + e.message);
-        }
+        const offImg = document.getElementById('offline-img-preview').src;
+        await db.collection('settings').doc('dj_info').update({
+            youtubeId: "", name: "", image: offImg,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("השידור הופסק");
+    }
+
+    function handleImageUpload(type) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 400; canvas.height = 400;
+                canvas.getContext('2d').drawImage(img, 0, 0, 400, 400);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                if(type==='dj') { djBase64 = dataUrl; document.getElementById('dj-img-preview').src = dataUrl; }
+                else { offlineBase64 = dataUrl; document.getElementById('offline-img-preview').src = dataUrl; }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     async function updateParties() {
@@ -507,14 +549,11 @@
                 desc: document.getElementById('p2-desc').value
             }
         };
-
-        try {
-            await db.collection('settings').doc('parties_info').set(partyData);
-            alert("המסיבות עודכנו בהצלחה!");
-        } catch (e) {
-            alert("שגיאה בעדכון מסיבות: " + e.message);
-        }
+        await db.collection('settings').doc('parties_info').set(partyData);
+        alert("המסיבות עודכנו!");
     }
+
+    renderSlots();
 </script>
 
 </body>
