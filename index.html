@@ -60,12 +60,12 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 15px;
-            padding: 12px 15px;
+            padding: 10px 15px;
             display: flex;
             flex-direction: column; 
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 5px;
             z-index: 1000;
         }
 
@@ -85,7 +85,7 @@
             gap: 15px; 
             list-style: none; 
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 8px;
+            padding-top: 5px;
             width: 100%;
             justify-content: center;
         }
@@ -95,9 +95,7 @@
             font-weight: 500; 
             font-size: 14px; 
             opacity: 0.7;
-            transition: 0.3s;
         }
-        .nav-links a:hover { opacity: 1; color: var(--primary); }
 
         .player-container {
             background: rgba(255, 255, 255, 0.05);
@@ -130,7 +128,6 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
         }
-        .play-trigger:active { transform: scale(0.9); }
         .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
 
         @keyframes pulse-red {
@@ -144,11 +141,11 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             color: var(--primary);
             background: rgba(231, 76, 60, 0.1);
-            padding: 2px 8px;
+            padding: 1px 6px;
             border-radius: 4px;
             margin-bottom: 2px;
         }
@@ -174,7 +171,7 @@
             position: relative;
             z-index: 10;
         }
-        .dj-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); background: #222; }
+        .dj-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
 
         .main-grid {
             display: grid;
@@ -195,10 +192,10 @@
         .schedule-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .schedule-time { color: var(--primary); font-weight: bold; width: 80px; font-size: 14px; }
+        .schedule-time { color: var(--primary); font-weight: bold; width: 70px; font-size: 14px; }
 
         .party-grid {
             display: grid;
@@ -213,47 +210,22 @@
             border: 1px solid var(--glass-border);
             border-radius: 15px;
             overflow: hidden;
-            transition: 0.3s;
         }
-        .party-card:hover { background: rgba(255,255,255,0.05); }
-        .party-img { width: 100%; height: 160px; object-fit: cover; background: #222; }
+        .party-img { width: 100%; height: 160px; object-fit: cover; background: #111; }
         .party-content { padding: 12px; text-align: right; }
 
-        h2 { font-size: 20px; margin-bottom: 15px; }
-
         input, textarea {
-            width:100%; 
-            padding:12px; 
-            margin-bottom:8px; 
-            background:#1a1a1a; 
-            border:1px solid rgba(255,255,255,0.05); 
-            color:#fff; 
-            border-radius:8px; 
-            font-size:14px;
-            text-align: right;
+            width:100%; padding:12px; margin-bottom:8px; background:#222; border:none; color:#fff; border-radius:8px; font-size:14px; text-align: right;
         }
-        input:focus, textarea:focus { outline: 1px solid var(--primary); }
-
-        .send-btn {
-            width:100%; 
-            padding:12px; 
-            background:var(--primary); 
-            color:#fff; 
-            border:none; 
-            cursor:pointer; 
-            border-radius:8px; 
-            font-weight:bold; 
-            margin-top:5px;
-            transition: 0.3s;
+        .submit-btn {
+            width:100%; padding:12px; background:var(--primary); color:#fff; border:none; cursor:pointer; border-radius:8px; font-weight:bold; margin-top:5px;
         }
-        .send-btn:disabled { opacity: 0.5; }
 
         @media (max-width: 768px) {
             .main-grid, .party-grid { grid-template-columns: 1fr; gap: 10px; }
             .player-container { min-width: 90%; }
             .hero-bg { height: 50vh; padding-top: 100px; }
             .now-on-air-card { margin-top: -20px; margin-bottom: 25px; }
-            .party-img { height: 180px; }
         }
         #youtube-engine { position: absolute; top: -9999px; left: -9999px; visibility: hidden; pointer-events: none; }
     </style>
@@ -292,7 +264,7 @@
 </section>
 
 <div class="now-on-air-card">
-    <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200" class="dj-thumb" onerror="this.src='https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200'">
+    <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 11px;">בשידור כרגע</div>
         <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים</h2>
@@ -304,8 +276,8 @@
     <div class="box-container" id="dashim">
         <h2 style="border-right: 3px solid var(--primary); padding-right: 10px;">שלח ד"ש</h2>
         <input type="text" id="msg-name" placeholder="שם המוסר">
-        <textarea id="msg-content" placeholder="הודעה לשדרן..." rows="3"></textarea>
-        <button class="send-btn" onclick="sendGreeting(event)">שלח הודעה</button>
+        <textarea id="msg-content" placeholder="הודעה לשדרן..." style="height:80px; resize: none;"></textarea>
+        <button class="submit-btn" onclick="sendGreeting(event)">שלח הודעה</button>
     </div>
     
     <div class="box-container" id="schedule">
@@ -350,15 +322,8 @@ function onYouTubeIframeAPIReady() {
             'onStateChange': (e) => { 
                 isPlaying = (e.data == YT.PlayerState.PLAYING);
                 updateUI();
-                if (e.data == YT.PlayerState.ENDED) {
-                    if (isPlaying) switchToBackup();
-                }
             },
-            'onError': () => {
-                console.log("YT Error, fallback to audio");
-                switchToBackup();
-                if(isPlaying) audioEngine.play();
-            }
+            'onError': () => switchToBackup()
         }
     });
 }
@@ -376,9 +341,9 @@ function updateUI() {
 
 function switchToBackup() {
     currentMode = 'backup';
-    statusText.innerText = "פלייליסט 24/7";
-    document.getElementById('dj-name-display').innerText = "רדיו מדברים";
-    document.getElementById('sub-status').innerText = "מוזיקה ברצף";
+    statusText.innerText = "מוזיקה ברצף (גיבוי)";
+    document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
+    document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
     liveText.innerText = "OFFLINE";
     liveDot.className = "live-dot offline";
     if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
@@ -398,7 +363,6 @@ playBtn.addEventListener('click', function() {
             }
         } else {
             if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-            audioEngine.load();
             audioEngine.play();
         }
         isPlaying = true;
@@ -406,38 +370,25 @@ playBtn.addEventListener('click', function() {
     updateUI();
 });
 
-// מאזין לשינויים ב-Firebase
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        const newYtId = d.youtubeId ? d.youtubeId.trim() : "";
-        const modeChanged = (newYtId !== youtubeId);
-        youtubeId = newYtId;
-
+        youtubeId = d.youtubeId ? d.youtubeId.trim() : "";
         if(youtubeId.length > 5) {
             currentMode = 'youtube';
             statusText.innerText = d.name || "בשידור חי";
             document.getElementById('dj-name-display').innerText = d.name || "רדיו מדברים";
-            document.getElementById('sub-status').innerText = "עכשיו בשידור חי מהסטודיו";
+            document.getElementById('sub-status').innerText = "שידור חי כרגע";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
             liveText.innerText = "LIVE";
             liveDot.className = "live-dot active";
-            
-            if(isPlaying && modeChanged && isYtReady) {
-                audioEngine.pause();
-                ytPlayer.loadVideoById(youtubeId);
-            }
+            if(isYtReady) ytPlayer.cueVideoById(youtubeId);
         } else {
             switchToBackup();
-            if (isPlaying && modeChanged) {
-                if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-                audioEngine.play();
-            }
         }
     }
 });
 
-// לוח שידורים
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const now = new Date();
@@ -447,15 +398,10 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
     if(doc.exists) {
         const s = doc.data()[daysEng[now.getDay()]] || [];
         const container = document.getElementById('schedule-content');
-        container.innerHTML = s.length ? s.map(i => `
-            <div class="schedule-item">
-                <div class="schedule-time">${i.time || 'שידור'}</div>
-                <div><b>${i.title}</b><br><small>${i.host || ''}</small></div>
-            </div>`).join('') : "מוזיקה ברצף לאורך כל היום";
+        container.innerHTML = s.length ? s.map(i => `<div class="schedule-item"><div class="schedule-time">שידור</div><div><b>${i.title}</b><br><small>${i.host || ''}</small></div></div>`).join('') : "מוזיקה ברצף";
     }
 });
 
-// מסיבות
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
@@ -463,15 +409,7 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
         container.innerHTML = "";
         ['party1', 'party2'].forEach(p => {
             if(data[p] && data[p].title) {
-                container.innerHTML += `
-                <div class="party-card">
-                    <img src="${data[p].img || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img">
-                    <div class="party-content">
-                        <div style="color:var(--primary); font-weight:bold; font-size:12px;">${data[p].date || ''}</div>
-                        <h3>${data[p].title}</h3>
-                        <p style="opacity:0.6; font-size:12px;">${data[p].desc || ''}</p>
-                    </div>
-                </div>`;
+                container.innerHTML += `<div class="party-card"><img src="${data[p].img || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img"><div class="party-content"><div style="color:var(--primary); font-weight:bold; font-size:12px;">${data[p].date || ''}</div><h3>${data[p].title}</h3><p style="opacity:0.6; font-size:12px;">${data[p].desc || ''}</p></div></div>`;
             }
         });
     }
@@ -480,25 +418,19 @@ db.collection('settings').doc('parties_info').onSnapshot(doc => {
 async function sendGreeting(event) {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
     if(!n || !c) return;
-    const btn = event.target; 
-    btn.innerText = "שולח..."; 
-    btn.disabled = true;
+    const btn = event.target; btn.innerText = "שולח..."; btn.disabled = true;
     try {
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש חדש!\nמאת: ${n}\nהודעה: ${c}` })
+            body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
         });
-        btn.innerText = "נשלח בהצלחה!"; 
-        document.getElementById('msg-content').value = "";
+        btn.innerText = "נשלח!"; document.getElementById('msg-content').value = "";
         setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000);
-    } catch(e) { 
-        btn.innerText = "שגיאה בשליחה"; 
-        setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000); 
-    }
+    } catch(e) { btn.innerText = "שגיאה"; setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000); }
 }
 
-audioEngine.onplaying = () => { isPlaying = true; updateUI(); };
-audioEngine.onpause = () => { if(currentMode==='backup') { isPlaying = false; updateUI(); } };
+audioEngine.addEventListener('playing', () => { isPlaying = true; updateUI(); });
+audioEngine.addEventListener('pause', () => { if(currentMode === 'backup') { isPlaying = false; updateUI(); } });
 </script>
 </body>
 </html>
