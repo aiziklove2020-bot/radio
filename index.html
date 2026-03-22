@@ -28,857 +28,306 @@ body{
   max-width:1100px;width:100%;
   background:rgba(20,20,20,0.96);
   backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:20px;
-  padding:12px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:24px;
+  padding:12px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
 }
-.nav-brand{display:flex;align-items:center;gap:14px;}
-.nav-brand-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:#ff0000;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(255,0,0,0.35);
-  font-size:18px;color:#fff;flex-shrink:0;
+.nav .logo{
+  font-size:20px;font-weight:900;
+  letter-spacing:-0.5px;color:#fff;text-decoration:none;
 }
-.nav-brand-text{text-align:right;}
-.nav-brand-text h1{font-size:20px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.5px;}
-.nav-brand-text p{font-size:9px;color:#ff0000;text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-top:1px;}
-.nav-links{display:flex;gap:32px;list-style:none;}
-.nav-links a{font-size:14px;font-weight:700;color:#888;text-decoration:none;transition:color .2s;}
-.nav-links a:hover{color:#ff0000;}
-.nav-links a.act{color:#fff;border-bottom:2px solid #ff0000;padding-bottom:2px;}
-
-/* ── HERO ── */
-.hero-section{
-  position:relative;
-  min-height:100vh;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:100px 16px 60px;
-  background:
-    linear-gradient(to bottom,rgba(10,10,10,0.85) 0%,rgba(10,10,10,1) 100%),
-    url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-}
-.hero-grid{
-  max-width:1100px;margin:0 auto;width:100%;
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
-}
-
-/* Content side */
-.hero-content{text-align:right;}
-.live-badge{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:8px 18px;border-radius:30px;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  color:#ccc;text-transform:uppercase;
-  margin-bottom:24px;
-}
-.status-dot{
-  width:9px;height:9px;border-radius:50%;
-  background:#ff0000;box-shadow:0 0 14px #ff0000;
-  animation:pulse 2s infinite;flex-shrink:0;
-}
-@keyframes pulse{0%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}100%{opacity:1;transform:scale(1)}}
-.hero-title{
-  font-size:clamp(46px,6.5vw,82px);
-  font-weight:900;line-height:1.05;
-  letter-spacing:-2px;margin-bottom:20px;
-}
-.hero-title .accent{
-  color:#ff0000;
-  text-shadow:0 0 28px rgba(255,0,0,0.4);
-}
-.hero-desc{
-  font-size:18px;color:#777;font-weight:500;
-  max-width:440px;margin-left:auto;
-  line-height:1.65;margin-bottom:32px;
-}
-.btn-cta{
-  display:inline-block;
-  padding:16px 36px;background:#ff0000;color:#fff;
-  border-radius:14px;font-family:'Heebo',sans-serif;
-  font-size:16px;font-weight:700;text-decoration:none;
-  box-shadow:0 12px 40px rgba(255,0,0,0.25);
-  transition:all .25s;cursor:pointer;border:none;
-}
-.btn-cta:hover{background:#cc0000;box-shadow:0 16px 50px rgba(255,0,0,0.4);transform:translateY(-2px);}
-
-/* Player card side */
-.player-card{
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(30px);
-  border:1px solid rgba(255,255,255,0.13);
-  border-radius:40px;
-  padding:36px;
-  box-shadow:0 40px 100px -20px rgba(0,0,0,0.9);
-}
-.player-card-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px;
-  padding-bottom:20px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-}
-.player-card-header .lbl{
-  display:flex;align-items:center;gap:8px;
-  font-size:10px;text-transform:uppercase;letter-spacing:3px;
-  font-weight:700;color:#555;
-}
-.player-card-header .lbl i{color:#ff0000;font-size:11px;}
-.connected-badge{
-  display:flex;align-items:center;gap:7px;
-  padding:5px 12px;border-radius:8px;
-  background:rgba(34,197,94,0.1);
-  font-size:10px;color:#22c55e;font-weight:700;
+.nav .logo span{color:#e74c3c;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{
+  color:#aaa;text-decoration:none;font-size:14px;
+  font-weight:600;transition:0.3s;
   text-transform:uppercase;letter-spacing:1px;
 }
-.connected-badge::before{
-  content:'';width:6px;height:6px;border-radius:50%;
-  background:#22c55e;animation:pulse 2s infinite;
-}
-.player-embed-box{
-  background:rgba(0,0,0,0.6);
-  padding:28px;border-radius:24px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:inset 0 2px 20px rgba(0,0,0,0.5);
+.nav-links a:hover{color:#fff;}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100vh;
   display:flex;align-items:center;justify-content:center;
-  min-height:110px;
-  margin-bottom:24px;
-}
-.player-embed-box iframe{border-radius:12px;}
-.player-footer{
-  text-align:center;
-  font-size:9px;color:#333;
-  text-transform:uppercase;letter-spacing:5px;
-  font-weight:700;margin-top:20px;
+  padding:120px 24px 80px;
+  background:radial-gradient(circle at 50% -20%, #221111 0%, #0a0a0a 70%);
 }
 
-/* NOW ON AIR */
-.now-wrap{
-  max-width:1100px;margin:0 auto;
-  padding:0 16px 0;
-  position:relative;z-index:1;
-}
 .now-card{
-  background:rgba(18,14,14,0.95);
-  border:1px solid rgba(255,0,0,0.15);
-  border-radius:16px;
-  display:grid;grid-template-columns:100px 1fr 200px;
-  overflow:hidden;
-  box-shadow:0 8px 40px rgba(0,0,0,0.4);
-}
-.now-photo{
-  width:100px;height:106px;background:#1a0a0a;
-  display:flex;align-items:center;justify-content:center;
-  font-size:36px;overflow:hidden;flex-shrink:0;
-}
-.now-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4);}
-.now-meta{padding:16px 20px;text-align:right;}
-.now-row{font-size:14px;color:#bbb;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
-.now-row:last-child{border-bottom:none;}
-.now-row .lbl{color:#444;margin-left:6px;}
-.now-row .val{color:#fff;font-weight:600;}
-.now-right{
-  background:rgba(10,6,6,0.9);
-  border-right:1px solid rgba(255,0,0,0.12);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:16px;gap:10px;
-}
-.now-right h3{font-size:17px;font-weight:300;color:#ddd;text-align:center;}
-.on-air-row{
-  display:flex;align-items:center;gap:8px;
-  color:#ff0000;font-weight:700;font-size:12px;letter-spacing:2px;
-}
-.on-air-row::before{
-  content:'';display:inline-block;width:8px;height:8px;border-radius:50%;
-  background:#ff0000;box-shadow:0 0 8px #ff0000;animation:pulse 1.2s infinite;
-}
-.waves{display:flex;align-items:flex-end;gap:2px;height:16px;}
-.waves span{display:block;width:3px;border-radius:2px;background:#ff0000;animation:wv .9s ease-in-out infinite;}
-.waves span:nth-child(1){height:5px;animation-delay:0s}
-.waves span:nth-child(2){height:13px;animation-delay:.1s}
-.waves span:nth-child(3){height:8px;animation-delay:.2s}
-.waves span:nth-child(4){height:16px;animation-delay:.3s}
-.waves span:nth-child(5){height:9px;animation-delay:.15s}
-.waves span:nth-child(6){height:5px;animation-delay:.05s}
-@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
-
-/* ── SHOUTOUTS ── */
-.section{max-width:860px;margin:0 auto;padding:64px 16px;}
-.section-title{
-  font-size:28px;font-weight:900;color:#fff;
-  margin-bottom:28px;text-align:right;
-  padding-right:16px;
-  border-right:4px solid #ff0000;
-  line-height:1;
-}
-.glass-card{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.09);
-  border-radius:24px;padding:28px;
-}
-.fld{margin-bottom:14px;}
-.fld input,.fld textarea{
-  width:100%;
-  background:rgba(0,0,0,0.4);
-  border:1px solid rgba(255,255,255,0.09);
-  border-radius:12px;padding:14px 16px;
-  font-family:'Heebo',sans-serif;font-size:15px;
-  color:#fff;text-align:right;direction:rtl;
-  outline:none;transition:border-color .2s;
-}
-.fld input::placeholder,.fld textarea::placeholder{color:#333;}
-.fld input:focus,.fld textarea:focus{border-color:rgba(255,0,0,.5);}
-.fld textarea{resize:vertical;min-height:110px;}
-.btn-send{
-  width:100%;background:#ff0000;color:#fff;border:none;
-  border-radius:12px;padding:15px;
-  font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;
-  cursor:pointer;transition:all .2s;
-  box-shadow:0 8px 30px rgba(255,0,0,0.25);
-}
-.btn-send:hover{background:#cc0000;box-shadow:0 12px 40px rgba(255,0,0,0.4);}
-
-/* TWO COL */
-.two-col{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start;}
-
-/* Schedule */
-.sch-table{width:100%;border-collapse:collapse;text-align:right;}
-.sch-table thead th{
-  font-size:10px;color:#444;text-transform:uppercase;
-  letter-spacing:2px;padding:8px 10px 12px;
-  border-bottom:1px solid rgba(255,255,255,0.05);font-weight:700;
-}
-.sch-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;}
-.sch-table tbody tr:hover{background:rgba(255,0,0,0.04);}
-.sch-table tbody td{padding:14px 10px;font-size:14px;color:#aaa;}
-.sch-table tbody td.tc{color:#ff0000;font-weight:700;font-size:13px;width:64px;}
-.sch-table tbody td.td{font-weight:700;color:#fff;}
-.tg{
-  display:inline-block;padding:3px 10px;
-  background:rgba(255,0,0,0.1);color:#ff4444;
-  border-radius:20px;font-size:11px;font-weight:700;
-}
-
-/* News */
-.news-item{
+  position:relative;z-index:10;
+  width:100%;max-width:480px;
   background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
-  border-right:3px solid #ff0000;
-  border-radius:10px;padding:14px;margin-bottom:10px;
+  backdrop-filter:blur(30px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:48px;
+  padding:56px 40px;
+  text-align:center;
+  box-shadow:0 40px 100px rgba(0,0,0,0.6);
 }
-.news-date{font-size:10px;color:#333;margin-bottom:4px;letter-spacing:1px;}
-.news-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
-.news-body{font-size:13px;color:#555;line-height:1.6;}
 
-/* Team */
-.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px;}
-.team-card{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:16px;padding:22px 12px;
-  text-align:center;transition:all .3s;
+.avatar-wrap{
+  position:relative;
+  width:220px;height:220px;
+  margin:0 auto 40px;
 }
-.team-card:hover{border-color:rgba(255,0,0,.3);transform:translateY(-4px);box-shadow:0 8px 28px rgba(255,0,0,0.1);}
-.team-av{
-  width:62px;height:62px;border-radius:50%;
-  background:#1a0a0a;margin:0 auto 12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;border:1px solid rgba(255,0,0,0.2);overflow:hidden;
+.avatar{
+  width:100%;height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #1a1a1a;
+  box-shadow:0 0 60px rgba(231,76,60,0.2);
+  background:#000;
 }
-.team-av img{width:100%;height:100%;object-fit:cover;}
-.team-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
-.team-role{font-size:10px;color:#ff4444;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+.status-tag{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  background:#e74c3c;color:#fff;
+  font-size:11px;font-weight:900;
+  padding:6px 16px;border-radius:20px;
+  letter-spacing:1px;box-shadow:0 4px 15px rgba(231,76,60,0.4);
+}
 
-/* Parties */
-.parties-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
-.party-card{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:16px;padding:22px;text-align:right;transition:all .3s;
-}
-.party-card:hover{border-color:rgba(255,0,0,.3);transform:translateY(-4px);box-shadow:0 8px 28px rgba(255,0,0,0.1);}
-.party-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;}
-.party-desc{font-size:13px;color:#555;line-height:1.5;margin-bottom:16px;}
-.party-btn{
-  width:100%;padding:11px;background:transparent;
-  border:1px solid rgba(255,0,0,.3);color:#fff;
-  border-radius:10px;font-family:'Heebo',sans-serif;
-  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
-}
-.party-btn:hover{background:#ff0000;box-shadow:0 4px 20px rgba(255,0,0,.3);}
+.dj-name{font-size:32px;font-weight:900;margin-bottom:8px;letter-spacing:-1px;}
+.song-title{font-size:16px;color:#888;margin-bottom:40px;height:24px;overflow:hidden;}
 
-/* Divider */
-.divider{height:1px;background:linear-gradient(to right,transparent,rgba(255,0,0,0.2),transparent);margin:0 16px;}
+/* ── PLAYER CONTROLS ── */
+.controls{display:flex;align-items:center;justify-content:center;gap:32px;}
+.play-btn{
+  width:88px;height:88px;border-radius:50%;
+  background:#e74c3c;border:none;color:#fff;font-size:32px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow:0 15px 40px rgba(231,76,60,0.3);
+}
+.play-btn:hover{transform:scale(1.1);background:#ff4d3a;box-shadow:0 20px 50px rgba(231,76,60,0.4);}
 
-/* Footer */
-footer{
-  background:#050505;border-top:1px solid rgba(255,255,255,0.04);
-  padding:40px 16px;text-align:center;
-}
-.footer-icon{
-  width:48px;height:48px;border-radius:12px;
-  background:#ff0000;display:flex;align-items:center;justify-content:center;
-  margin:0 auto 12px;font-size:20px;
-  box-shadow:0 4px 20px rgba(255,0,0,0.3);
-}
-.footer-name{font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;}
-.footer-sub{font-size:9px;color:#ff0000;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:20px;}
-.footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:16px;}
-.footer-links a{font-size:12px;color:#333;text-decoration:none;text-transform:uppercase;letter-spacing:1.5px;transition:color .2s;}
-.footer-links a:hover{color:#ff0000;}
-.footer-copy{font-size:10px;color:#1a1a1a;text-transform:uppercase;letter-spacing:2px;}
-
-/* ── FALLBACK PLAYER ── */
-.fallback-player{
-  display:none;
-  background:rgba(0,0,0,0.6);
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,0.05);
-  padding:18px 20px;
-  margin-bottom:24px;
-}
+.fallback-player{display:none;margin-top:20px;text-align:center;}
 .fallback-player.visible{display:block;}
-.fallback-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-}
-.fallback-label{
-  font-size:10px;color:#4a9eff;text-transform:uppercase;
-  letter-spacing:2px;font-weight:700;
-  display:flex;align-items:center;gap:6px;
-}
-.fallback-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#4a9eff;animation:pulse 2s infinite;
-}
-.fallback-track{
-  font-size:13px;color:#fff;font-weight:600;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:200px;text-align:right;
-}
-.fallback-controls{
-  display:flex;align-items:center;gap:10px;margin-top:12px;
-}
-.fb-btn{
-  background:rgba(255,255,255,0.07);border:none;
-  color:#aaa;border-radius:8px;
-  width:34px;height:34px;cursor:pointer;
-  font-size:14px;display:flex;align-items:center;justify-content:center;
-  transition:all .2s;flex-shrink:0;
-}
-.fb-btn:hover{background:rgba(255,0,0,0.2);color:#fff;}
-.fb-progress{
-  flex:1;height:3px;background:rgba(255,255,255,0.1);
-  border-radius:3px;overflow:hidden;
-}
-.fb-progress-bar{
-  height:100%;background:#ff0000;width:0%;
-  transition:width 1s linear;border-radius:3px;
-}
+.fallback-player audio{width:100%;max-width:300px;filter:invert(1);}
 
-/* Toast */
-.toast{
-  position:fixed;bottom:22px;left:50%;
-  transform:translateX(-50%) translateY(80px);
-  background:#0e0a0a;border:1px solid rgba(255,0,0,0.3);
-  color:#fff;padding:11px 26px;border-radius:30px;
-  font-size:14px;font-weight:600;z-index:9999;
-  transition:transform .3s;pointer-events:none;
-  box-shadow:0 4px 24px rgba(255,0,0,0.15);
+.autoplay-hint{
+  font-size:12px;color:#e74c3c;margin-top:16px;
+  animation:pulse 2s infinite;display:none;
 }
-.toast.show{transform:translateX(-50%) translateY(0);}
+@keyframes pulse{0%{opacity:0.5;}50%{opacity:1;}100%{opacity:0.5;}}
 
-/* ── MOBILE ── */
-@media(max-width:860px){
-  .nav{padding:10px 16px;}
-  .nav-brand-text h1{font-size:16px;}
-  .nav-links{gap:16px;}
-  .nav-links a{font-size:12px;}
-  .hero-grid{grid-template-columns:1fr;gap:32px;}
-  .hero-content{order:2;}
-  .player-card{order:1;border-radius:24px;padding:22px;}
-  .hero-title{font-size:clamp(38px,10vw,64px);}
-  .hero-desc{font-size:16px;}
-  .now-card{grid-template-columns:80px 1fr;}
-  .now-photo{width:80px;height:86px;font-size:28px;}
-  .now-right{grid-column:1/-1;border-right:none;border-top:1px solid rgba(255,0,0,0.08);flex-direction:row;justify-content:center;padding:12px;gap:16px;}
-  .two-col{grid-template-columns:1fr;gap:32px;}
-  .team-grid{grid-template-columns:repeat(2,1fr);}
-  .parties-grid{grid-template-columns:1fr;}
-  .section{padding:44px 14px;}
+/* ── SECTIONS ── */
+.section{padding:80px 24px;max-width:1100px;margin:0 auto;}
+.section-title{font-size:36px;font-weight:900;margin-bottom:40px;text-align:center;}
+.section-title span{color:#e74c3c;}
+
+/* ── DASHIM (GREETINGS) ── */
+.dash-container{
+  max-width:600px;margin:0 auto;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:32px;padding:32px;
+  backdrop-filter:blur(10px);
 }
-@media(max-width:480px){
+.dash-field{
+  width:100%;background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;padding:16px;color:#fff;
+  font-family:inherit;font-size:16px;margin-bottom:16px;
+  outline:none;transition:0.3s;
+}
+.dash-field:focus{border-color:#e74c3c;}
+.dash-send{
+  width:100%;background:#e74c3c;color:#fff;border:none;
+  padding:16px;border-radius:16px;font-weight:800;
+  cursor:pointer;transition:0.3s;
+}
+.dash-send:hover{background:#ff4d3a;transform:translateY(-2px);}
+
+/* ── SCHEDULE ── */
+.schedule-list{
+  background:rgba(255,255,255,0.02);
+  border-radius:32px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.schedule-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 32px;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.schedule-item:last-child{border-bottom:none;}
+.schedule-item .time{color:#e74c3c;font-weight:800;font-size:18px;}
+.schedule-item .desc{font-weight:400;color:#ccc;}
+
+/* ── PARTIES ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:32px;}
+.card{background:#151515;border:1px solid rgba(255,255,255,0.05);border-radius:32px;padding:32px;transition:0.3s;}
+.card:hover{border-color:rgba(231,76,60,0.3);transform:translateY(-10px);}
+.card h3{margin-bottom:12px;color:#e74c3c;}
+.card p{color:#888;line-height:1.6;}
+
+footer{padding:60px 24px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#555;font-size:14px;}
+
+@media (max-width:768px){
   .nav-links{display:none;}
-  .hero-section{padding:90px 14px 40px;}
+  .now-card{padding:40px 24px;}
+  .dj-name{font-size:28px;}
+  .schedule-item{flex-direction:column;align-items:flex-start;gap:8px;}
 }
 </style>
-
 </head>
 <body>
-<div class="toast" id="toast"></div>
 
-<!-- NAV -->
 <div class="nav-wrap">
   <nav class="nav">
-    <div class="nav-brand">
-      <div class="nav-brand-icon"><i class="fa-solid fa-microphone-lines"></i></div>
-      <div class="nav-brand-text">
-        <h1 id="nav-name">רדיו מדברים בדסמ</h1>
-        <p>הקול של הקהילה</p>
-      </div>
+    <a href="#" class="logo">רדיו <span>מדברים בדסמ</span></a>
+    <div class="nav-links">
+      <a href="#dashim">דשים</a>
+      <a href="#schedule">לוח שידורים</a>
+      <a href="#parties">מסיבות</a>
     </div>
-    <ul class="nav-links">
-      <li><a href="#" class="act">בית</a></li>
-      <li><a href="#schedule">לוח שידורים</a></li>
-      <li><a href="#shoutouts">דשים</a></li>
-      <li><a href="#parties">מסיבות</a></li>
-    </ul>
   </nav>
 </div>
 
-<!-- HERO -->
-<header class="hero-section">
-  <div class="hero-grid">
-    <!-- Content -->
-    <div class="hero-content">
-      <div class="live-badge">
-        <span class="status-dot"></span>
-        שידור חי מהאולפן
-      </div>
-      <h2 class="hero-title">
-        רדיו<br>
-        <span class="accent" id="hero-t">מדברים בדסמ</span>
-      </h2>
-      <p class="hero-desc" id="hero-d">הקול של הקהילה. רשת חברתית בדסמית בשידור חי 24/7.</p>
-      <a class="btn-cta" href="#shoutouts">שלח ד"ש לשדרן</a>
+<section class="hero">
+  <div class="now-card">
+    <div class="avatar-wrap">
+      <img id="main-dj-image" src="https://via.placeholder.com/220" class="avatar" alt="DJ">
+      <div class="status-tag">LIVE</div>
+    </div>
+    
+    <h2 class="dj-name" id="dj-name">טוען...</h2>
+    <p class="song-title" id="song-title">מתחבר לסטרים...</p>
+    
+    <div class="controls">
+      <button class="play-btn" id="fb-play-btn" onclick="fbTogglePlay()">
+        <i class="fas fa-play" id="fb-play-icon"></i>
+      </button>
     </div>
 
-    <!-- Player Card -->
-    <div class="player-card">
-      <div class="player-card-header">
-        <div class="lbl">
-          <i class="fa-solid fa-tower-broadcast"></i>
-          Live Player
-        </div>
-        <div class="connected-badge">Connected</div>
-      </div>
-      <div class="player-embed-box" style="padding:16px;" id="live-embed-box">
-        <div data-type="newStreamPlayer"
-             data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482"
-             data-theme="dark"
-             data-color="ff0000"
-             data-channelId=""
-             data-rendered="false"
-             class="cstrEmbed"
-             style="width:100%">
-          <a href="https://www.caster.fm">Shoutcast Hosting</a>
-          <a href="https://www.caster.fm">Stream Hosting</a>
-          <a href="https://www.caster.fm">Radio Server Hosting</a>
-        </div>
-        <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
-      </div>
-
-      <!-- FALLBACK PLAYER (מופיע רק כשהסטרים כבוי) -->
-      <div class="fallback-player" id="fallback-player">
-        <div class="fallback-header">
-          <div class="fallback-label">
-            <span class="fallback-dot"></span>
-            פלייליסט
-          </div>
-          <div class="fallback-track" id="fb-track-name">טוען...</div>
-        </div>
-        <div class="fallback-controls">
-          <button class="fb-btn" id="fb-prev" title="הקודם">⏮</button>
-          <button class="fb-btn" id="fb-playpause" title="נגן/השהה">▶</button>
-          <button class="fb-btn" id="fb-next" title="הבא">⏭</button>
-          <div class="fb-progress"><div class="fb-progress-bar" id="fb-bar"></div></div>
-        </div>
-        <audio id="fb-audio" preload="none"></audio>
-      <div id="fb-autoplay-hint" style="display:none;text-align:center;margin-top:10px;font-size:12px;color:#4a9eff;">&#9654; לחץ על כפתור הניגון להתחיל</div>
-      </div>
-      <!-- Now playing info inside card -->
-      <div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.05);">
-        <div style="font-size:10px;color:#333;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;text-align:center;">עכשיו בשידור</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-          <div style="text-align:right;">
-            <div style="font-size:15px;font-weight:700;color:#fff;" id="now-dj">טוען...</div>
-            <div style="font-size:12px;color:#555;" id="now-show">—</div>
-          </div>
-          <div id="now-photo-small" onclick="document.getElementById('photo-upload').click()" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;cursor:pointer;border:1px dashed rgba(255,0,0,0.3);" title="לחץ להעלאת תמונה">🎧</div>
-<input type="file" id="photo-upload" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
-        </div>
-      </div>
-      <div class="player-footer">Live Station Player</div>
+    <div class="fallback-player" id="fallback-player">
+      <audio id="fb-audio" src="https://morcast.caster.fm:13763/y4k1D" crossorigin="anonymous"></audio>
+      <div class="autoplay-hint" id="fb-autoplay-hint">לחץ פליי לשמיעה</div>
     </div>
   </div>
-</header>
+</section>
 
-<!-- FULL NOW ON AIR BAR -->
-<div style="background:#0a0a0a;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
-  <div class="now-wrap" style="padding-top:16px;padding-bottom:16px;">
-    <div class="now-card">
-      <div class="now-photo" id="now-photo">🎧</div>
-      <div class="now-meta">
-        <div class="now-row"><span class="lbl">שדרן:</span><span class="val" id="now-dj2">טוען...</span></div>
-        <div class="now-row"><span class="lbl">תוכנית:</span><span class="val" id="now-show2">—</span></div>
-              </div>
-      <div class="now-right">
-        <h3>מי בשידור?</h3>
-        <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="on-air-row">NOW ON AIR</div>
-      </div>
+<!-- סעיף דשים -->
+<section id="dashim" class="section">
+  <h2 class="section-title">שלחו לנו <span>דשים</span></h2>
+  <div class="dash-container">
+    <input type="text" id="dash-name" class="dash-field" placeholder="השם שלכם">
+    <textarea id="dash-msg" class="dash-field" rows="3" placeholder="מה תרצו למסור?"></textarea>
+    <button class="dash-send" onclick="sendDash()">שלח דרישת שלום</button>
+  </div>
+</section>
+
+<!-- סעיף לוח שידורים -->
+<section id="schedule" class="section">
+  <h2 class="section-title">לוח <span>שידורים</span></h2>
+  <div class="schedule-list" id="schedule-container">
+    <div class="schedule-item">
+      <span class="time">22:00 - 00:00</span>
+      <span class="desc">שידור לילי מרכזי - מוזיקה ודיבורים</span>
+    </div>
+    <div class="schedule-item">
+      <span class="time">00:00 - 02:00</span>
+      <span class="desc">סט לילה חופשי</span>
     </div>
   </div>
-</div>
+</section>
 
-<!-- SCHEDULE + FORM -->
-<div class="section" id="schedule" style="max-width:1100px;">
-  <div class="two-col">
-    <div>
-      <div class="section-title">לוח שידורים</div>
-      <table class="sch-table">
-        <thead><tr><th>שעה</th><th>תוכנית</th><th>שדרן</th><th>סגנון</th></tr></thead>
-        <tbody id="pub-sch"></tbody>
-      </table>
-    </div>
-    <div id="shoutouts">
-      <div class="section-title">שלח ד"ש לשדרן</div>
-      <div class="glass-card">
-        <div class="fld"><input type="text" id="m-nick" placeholder="הכינוי שלך"/></div>
-        <div class="fld"><textarea id="m-txt" placeholder="מה תרצו להגיד באוויר?" rows="4"></textarea></div>
-        <div class="fld"><input type="text" id="m-song" placeholder="הקדשת שיר (אופציונלי)"/></div>
-        <button class="btn-send" onclick="sendMsg()">שלח עכשיו</button>
-      </div>
-      <div style="margin-top:28px;">
-        <div class="section-title" style="font-size:20px;margin-bottom:16px;">חדשות אחרונות</div>
-        <div id="pub-news"></div>
-      </div>
-    </div>
-  </div>
-</div>
+<section id="parties" class="section">
+  <h2 class="section-title">המסיבות <span>שלנו</span></h2>
+  <div class="grid" id="parties-list-home"></div>
+</section>
 
-<div class="divider"></div>
-
-<!-- TEAM -->
-<div class="section" id="team">
-  <div class="section-title">הצוות שלנו</div>
-  <div class="team-grid" id="pub-team"></div>
-</div>
-
-<div class="divider"></div>
-
-<!-- PARTIES -->
-<div class="section" id="parties">
-  <div class="section-title">מסיבות השבוע</div>
-  <div class="parties-grid" id="pub-parties"></div>
-</div>
-
-<!-- FOOTER -->
 <footer>
-  <div class="footer-icon"><i class="fa-solid fa-microphone-lines"></i></div>
-  <div class="footer-name" id="footer-name">רדיו מדברים בדסמ</div>
-  <div class="footer-sub">הקול של הקהילה</div>
-  <div class="footer-links">
-    <a href="#">בית</a>
-    <a href="#schedule">לוח שידורים</a>
-    <a href="#shoutouts">דשים</a>
-    <a href="#parties">מסיבות</a>
-    <a href="#">מדיניות פרטיות</a>
-    <a href="#">מחיקת חשבון</a>
-  </div>
-  <div class="footer-copy" id="footer-copy">© 2026 רדיו מדברים בדסמ — כל הזכויות שמורות</div>
+  &copy; 2024 רדיו מדברים בדסמ. כל הזכויות שמורות.
 </footer>
 
 <script>
-function gd(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
-function sd(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function uid(){return Date.now();}
-function today(){return new Date().toLocaleDateString('he-IL');}
-
-var sch     = gd('rdx_sch',[{id:1,t:'08:00',p:'בוקר טוב',d:'שדרן הבוקר',g:'דשים'},{id:2,t:'10:00',p:'מוזיקה חמה',d:'שדרן בוקר',g:'מוזיקה'},{id:3,t:'14:00',p:'צהריים ביחד',d:'שדרן צהריים',g:'שיחות'},{id:4,t:'18:00',p:'שעת שיא',d:'שדרן ערב',g:'עדכונים'}]);
-var team    = gd('rdx_team',[{id:1,n:'שדרן ראשי',r:'מנהל תחנה',a:'🎙️'},{id:2,n:'שדרן בוקר',r:'שדרן',a:'🎤'},{id:3,n:'שדרן ערב',r:'שדרן',a:'🎧'},{id:4,n:'עורך מוזיקה',r:'מוזיקאי',a:'🎵'}]);
-var news    = gd('rdx_news',[{id:1,ti:'ברוכים הבאים לרדיו!',bo:'הרדיו הרשמי של מדברים בדסמ פתוח. האזינו לנו 24/7!',dt:today()}]);
-var parties = gd('rdx_parties',[{id:1,name:'Midnight Fetish',desc:'חגיגת לייטקס ועור במועדון המרתף.'},{id:2,name:'The Rope Ritual',desc:'ערב המוקדש לאמנות השבורי והקשירות.'},{id:3,name:'Afternoon Bondage',desc:'מסיבת צהריים קלילה עם קוקטיילים.'}]);
-var cfg     = gd('rdx_cfg',{n:'מדברים בדסמ',d:'הקול של הקהילה. רשת חברתית בדסמית בשידור חי 24/7.'});
-
-function rSch(){
-  var el=document.getElementById('pub-sch');
-  if(!sch.length){el.innerHTML='<tr><td colspan="4" style="padding:20px;text-align:center;color:#222">אין שידורים</td></tr>';return;}
-  var h='';
-  for(var i=0;i<sch.length;i++){var s=sch[i];
-    h+='<tr><td class="tc">'+s.t+'</td><td>'+s.p+'</td><td class="td">'+s.d+'</td><td><span class="tg">'+s.g+'</span></td></tr>';
-  }
-  el.innerHTML=h;
-}
-function rTeam(){
-  var el=document.getElementById('pub-team');
-  if(!team.length){el.innerHTML='<p style="color:#222">אין אנשי צוות</p>';return;}
-  var h='';
-  for(var i=0;i<team.length;i++){var t=team[i];
-    var av=t.a.indexOf('http')===0?('<img src="'+t.a+'" onerror="this.parentElement.textContent=\'🎙️\'">'):t.a;
-    h+='<div class="team-card"><div class="team-av">'+av+'</div><div class="team-name">'+t.n+'</div><div class="team-role">'+t.r+'</div></div>';
-  }
-  el.innerHTML=h;
-}
-function rNews(){
-  var el=document.getElementById('pub-news');
-  var rev=news.slice().reverse();
-  if(!rev.length){el.innerHTML='<p style="color:#222;font-size:13px">אין דשים עדיין</p>';return;}
-  var h='';
-  for(var i=0;i<rev.length;i++){var n=rev[i];
-    h+='<div class="news-item"><div class="news-date">'+n.dt+'</div><div class="news-title">'+n.ti+'</div><div class="news-body">'+n.bo+'</div></div>';
-  }
-  el.innerHTML=h;
-}
-function rParties(){
-  var el=document.getElementById('pub-parties');
-  if(!parties.length){el.innerHTML='<p style="color:#222">אין אירועים</p>';return;}
-  var h='';
-  for(var i=0;i<parties.length;i++){var p=parties[i];
-    h+='<div class="party-card"><div class="party-name">'+p.name+'</div><div class="party-desc">'+p.desc+'</div><button class="party-btn">להרשמה לאירוע</button></div>';
-  }
-  el.innerHTML=h;
-}
-function applyCfg(){
-  document.getElementById('hero-t').textContent=cfg.n;
-  document.getElementById('hero-d').textContent=cfg.d;
-  document.getElementById('nav-name').textContent='רדיו '+cfg.n;
-  document.getElementById('footer-name').textContent='רדיו '+cfg.n;
-  document.title='רדיו '+cfg.n;
-}
-function uploadPhoto(input){
-  var file = input.files[0];
-  if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var base64 = e.target.result;
-    // שמור ב-localStorage
-    var onair = gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
-    onair.photo = base64;
-    sd('rdx_onair', onair);
-    // עדכן תמונות בדף מיד
-    var els = [document.getElementById('now-photo'), document.getElementById('now-photo-small')];
-    for(var i=0;i<els.length;i++){
-      if(els[i]) els[i].innerHTML = '<img src="'+base64+'" style="width:100%;height:100%;object-fit:cover;">';
-    }
-    showToast('📷 התמונה עודכנה!');
-  };
-  reader.readAsDataURL(file);
-}
-
-function sendMsg(){
-  var nick=document.getElementById('m-nick').value.trim();
-  var txt=document.getElementById('m-txt').value.trim();
-  var song=document.getElementById('m-song').value.trim();
-  if(!nick&&!txt){showToast('⚠️ מלא לפחות כינוי ומסר');return;}
-  var inbox=gd('rdx_inbox',[]);
-  inbox.push({id:uid(),nick:nick||'אנונימי',txt:txt,song:song,dt:today(),time:new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
-  sd('rdx_inbox',inbox);
-  document.getElementById('m-nick').value='';
-  document.getElementById('m-txt').value='';
-  document.getElementById('m-song').value='';
-  showToast('📨 המסר נשלח! תודה 💙');
-}
-function showToast(msg){
-  var el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  setTimeout(function(){el.classList.remove('show');},2600);
-}
-function applyOnAir(dj,show,genre,photo){
-  document.getElementById('now-dj').textContent=dj||'בשידור חי';
-  document.getElementById('now-dj2').textContent=dj||'בשידור חי';
-  document.getElementById('now-show').textContent=show||'—';
-  document.getElementById('now-show2').textContent=show||'—';
-  document.getElementById('now-genre').textContent=genre||'—';
-  var els=[document.getElementById('now-photo'),document.getElementById('now-photo-small')];
-  for(var i=0;i<els.length;i++){
-    if(photo&&(photo.indexOf('http')===0||photo.indexOf('data:')===0)){
-      els[i].innerHTML='<img src="'+photo+'" onerror="this.parentElement.textContent=\'🎧\'">';
-    } else if(photo&&photo.length<=2){els[i].textContent=photo;}
-  }
-}
-// =============================================
-// פלייליסט — ערוך כאן את השירים שלך
-// =============================================
-var FALLBACK_PLAYLIST = [
-  { title: "Metallica – The Unforgiven (Remastered)",        url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29%28mp3j.cc%29.mp3" },
-  { title: "Rammstein – Deutschland",                        url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Deutschland%28mp3j.cc%29.mp3" },
-  { title: "Rammstein – Engel",                              url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Engel%28mp3j.cc%29.mp3" },
-  { title: "Evanescence – Bring Me To Life (Remastered)",    url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Evanescence%20-%20Bring%20Me%20To%20Life%20%28Remastered%202023%29%20-%20Official%20Visualizer%28mp3j.cc%29.mp3" },
-  { title: "Slipknot – Spit It Out",                         url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Spit%20It%20Out.mp3" },
-  { title: "Måneskin – Beggin'",                             url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Ma%CC%8Aneskin%20-%20Beggin%27%20%28LyricsTesto%29%28mp3j.cc%29.mp3" },
-  { title: "IAMX – Happiness",                               url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/IAMX%20-%20Happiness%20%28Official%20Music%20Video%29.mp3" },
-  { title: "Everybody Loves An Outlaw – I See Red",          url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Everybody%20Loves%20An%20Outlaw%20-%20I%20See%20Red%20%28Official%20Lyric%20Video%29%28mp3j.cc%29.mp3" },
-  { title: "Ellie Goulding – Love Me Like You Do",           url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Ellie%20Goulding%20-%20Love%20Me%20Like%20You%20Do%20%28Official%20Video%29%28mp3j.cc%29.mp3" },
-  { title: "Kaoma – Lambada 2.0 (Afro House Remix)",         url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Kaoma%20-%20Lambada%202.0%20%28ENNEM%20Afro%20House%20Remix%29%28mp3j.cc%29.mp3" },
-  { title: "Aven Grey – Bella Ciao Rock (La Casa de Papel)", url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/Aven%20Grey%20%E2%80%93%20Bella%20Ciao%20Rock%20La%20Casa%20de%20Papel%20Inspired%20Cover.mp3" }
-];
-// =============================================
-
+// לוגיקת נגן
 var fbAudio = document.getElementById('fb-audio');
-var fbTrackName = document.getElementById('fb-track-name');
-var fbBar = document.getElementById('fb-bar');
-var fbPlayPause = document.getElementById('fb-playpause');
-var fbPrev = document.getElementById('fb-prev');
-var fbNext = document.getElementById('fb-next');
-var fallbackPlayer = document.getElementById('fallback-player');
-var liveEmbedBox = document.getElementById('live-embed-box');
-
-var fbIndex = 0;
 var fbPlaying = false;
-var streamWasOnline = null;
-// הפעל פלייליסט מיד בטעינה — ייעצר אם השידור החי פעיל
-setTimeout(function(){ setStreamMode(false); }, 500);
+var fallbackPlayer = document.getElementById('fallback-player');
 
-function fbPlay(index){
-  if(index !== undefined) fbIndex = index;
-  if(!FALLBACK_PLAYLIST.length) return;
-  var track = FALLBACK_PLAYLIST[fbIndex % FALLBACK_PLAYLIST.length];
-  fbAudio.src = track.url;
-  fbTrackName.textContent = track.title;
-  fbAudio.muted = true;
-  var p = fbAudio.play();
-  if(p !== undefined){
-    p.then(function(){
-      fbAudio.muted = false;
-      fbPlaying = true;
-      fbPlayPause.textContent = '⏸';
-      var hint = document.getElementById('fb-autoplay-hint');
-      if(hint) hint.style.display = 'none';
-    }).catch(function(){
-      fbAudio.muted = false;
-      fbPlaying = false;
-      fbPlayPause.textContent = '▶';
-      var hint = document.getElementById('fb-autoplay-hint');
-      if(hint) hint.style.display = 'block';
-      document.addEventListener('click', function tryPlay(){
-        fbAudio.muted = false;
-        fbAudio.play().then(function(){
-          fbPlaying = true;
-          fbPlayPause.textContent = '⏸';
-          if(hint) hint.style.display = 'none';
-        });
-        document.removeEventListener('click', tryPlay);
-      }, {once:true});
-    });
-  }
+function fbTogglePlay() { if(fbPlaying) fbPause(); else fbPlay(); }
+function fbPlay() {
+  fbAudio.play().then(() => {
+    fbPlaying = true;
+    document.getElementById('fb-play-icon').className = 'fas fa-pause';
+  }).catch(e => { document.getElementById('fb-autoplay-hint').style.display = 'block'; });
 }
-function fbToggle(){
-  if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='\u25B6'; }
-  else {
-    var p = fbAudio.play();
-    if(p !== undefined) p.then(function(){ fbPlaying=true; fbPlayPause.textContent='\u23F8'; var hint=document.getElementById('fb-autoplay-hint'); if(hint) hint.style.display='none'; });
-  }
-}
-fbAudio.addEventListener('ended', function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); });
-fbAudio.addEventListener('timeupdate', function(){
-  if(fbAudio.duration) fbBar.style.width=(fbAudio.currentTime/fbAudio.duration*100)+'%';
-});
-fbAudio.addEventListener('error', function(){
-  setTimeout(function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); }, 1000);
-});
-if(fbPlayPause) fbPlayPause.addEventListener('click', fbToggle);
-if(fbPrev) fbPrev.addEventListener('click', function(){ fbIndex=(fbIndex-1+FALLBACK_PLAYLIST.length)%FALLBACK_PLAYLIST.length; fbPlay(); });
-if(fbNext) fbNext.addEventListener('click', function(){ fbIndex=(fbIndex+1)%FALLBACK_PLAYLIST.length; fbPlay(); });
-
-function setStreamMode(online){
-  if(online === streamWasOnline) return;
-  streamWasOnline = online;
-  if(online){
-    liveEmbedBox.style.display='';
-    fallbackPlayer.classList.remove('visible');
-    if(fbPlaying){ fbAudio.pause(); fbPlaying=false; fbPlayPause.textContent='▶'; }
-  } else {
-    liveEmbedBox.style.display='none';
-    fallbackPlayer.classList.add('visible');
-    if(!fbPlaying) fbPlay();
-  }
+function fbPause() {
+  fbAudio.pause();
+  fbPlaying = false;
+  document.getElementById('fb-play-icon').className = 'fas fa-play';
 }
 
-function fetchNow(){
-  // שלוף מי בשידור מ-Firebase (מוצג לכולם)
-  if(!window.db){setTimeout(fetchNow,400);return;}
-  window.db.collection('radio').doc('onair').get().then(function(doc){
-    if(doc.exists){
-      var d = doc.data();
-      if(d.dj||d.show){
-        applyOnAir(d.dj||'', d.show||'', d.genre||'', d.photo||'');
-      }
+async function fetchNow() {
+  try {
+    const res = await fetch('/api/nowplaying');
+    const data = await res.json();
+    if(data.online) {
+      document.getElementById('dj-name').innerText = data.dj || 'שדרן רדיו';
+      document.getElementById('song-title').innerText = data.title || '';
+      fallbackPlayer.classList.add('visible');
+    } else {
+      document.getElementById('dj-name').innerText = 'רדיו לא פעיל';
+      document.getElementById('song-title').innerText = 'נחזור בקרוב...';
     }
-  }).catch(function(){});
-
-  // בדוק אם השידור החי פעיל
-  fetch('/api/nowplaying',{cache:'no-cache'})
-    .then(function(r){ if(!r.ok) throw new Error('no api'); return r.json(); })
-    .then(function(d){
-      setStreamMode(!!d.online);
-    })
-    .catch(function(){
-      fetch('https://morcast.caster.fm:13763/status-json.xsl',{cache:'no-cache'})
-        .then(function(r){return r.json();})
-        .then(function(data){
-          var sources = data && data.icestats && data.icestats.source;
-          var src = Array.isArray(sources)
-            ? (sources.find(function(s){return s.listenurl&&s.listenurl.includes('/y4k1D');}) || sources[0])
-            : sources;
-          setStreamMode(!!src);
-        })
-        .catch(function(){});
-    });
+  } catch(e) {}
 }
-function reload(){
-  sch=gd('rdx_sch',sch);team=gd('rdx_team',team);
-  news=gd('rdx_news',news);parties=gd('rdx_parties',parties);cfg=gd('rdx_cfg',cfg);
-  rSch();rTeam();rNews();rParties();applyCfg();
-}
-reload();fetchNow();
-setInterval(fetchNow,30000);setInterval(reload,8000);
 
-
-// הפעל מוזיקה ברגע שהמשתמש לוחץ כל דבר בדף (עוקף חסימת autoplay)
-var fbUserInteracted = false;
-function fbTryAutoplay(){
-  if(fbUserInteracted) return;
-  fbUserInteracted = true;
-  var hint = document.getElementById('fb-autoplay-hint');
-  if(hint) hint.style.display = 'none';
-  if(fallbackPlayer.classList.contains('visible') && !fbPlaying){
-    fbPlay();
+function reload() {
+  var p = JSON.parse(localStorage.getItem('rdx_parties')) || [];
+  var el = document.getElementById('parties-list-home');
+  if(!el) return;
+  if(!p.length) {
+    el.innerHTML = '<div class="card"><h3>בקרוב...</h3><p>אין מסיבות כרגע.</p></div>';
+    return;
   }
+  el.innerHTML = p.map(i => `<div class="card"><h3>${i.name}</h3><p>${i.desc}</p></div>`).join('');
 }
-document.addEventListener('click', fbTryAutoplay, {once:true});
-document.addEventListener('touchstart', fbTryAutoplay, {once:true});
+
+reload(); fetchNow();
+setInterval(fetchNow, 30000); setInterval(reload, 8000);
 </script>
+
+<!-- Firebase Integration -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 (function(){
-  var s1=document.createElement('script');
-  s1.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
-  s1.onload=function(){
-    var s2=document.createElement('script');
-    s2.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
-    s2.onload=function(){
-      try{
-        if(!firebase.apps.length){
-          firebase.initializeApp({
-            apiKey:"AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-            authDomain:"radio-163cd.firebaseapp.com",
-            projectId:"radio-163cd",
-            storageBucket:"radio-163cd.firebasestorage.app",
-            messagingSenderId:"949996900677",
-            appId:"1:949996900677:web:3606c6941fd1aead99ee2c"
-          });
-        }
-        window.db=firebase.firestore();
-      }catch(e){}
-    };
-    document.head.appendChild(s2);
+  const config = {
+    apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+    authDomain: "radio-163cd.firebaseapp.com",
+    projectId: "radio-163cd",
+    appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
   };
-  document.head.appendChild(s1);
+  if (!firebase.apps.length) firebase.initializeApp(config);
+  const db = firebase.firestore();
+  
+  // סנכרון תמונת שדרן
+  db.collection('settings').doc('dj_info').onSnapshot((doc) => {
+    if (doc.exists && doc.data().image) {
+      document.getElementById('main-dj-image').src = doc.data().image;
+    }
+  });
+
+  // פונקציית שליחת דשים
+  window.sendDash = function() {
+    const name = document.getElementById('dash-name').value.trim();
+    const msg = document.getElementById('dash-msg').value.trim();
+    if(!name || !msg) { alert('נא למלא שם והודעה'); return; }
+
+    db.collection('greetings').add({
+      sender: name,
+      text: msg,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      alert('דרישת השלום נשלחה בהצלחה!');
+      document.getElementById('dash-name').value = '';
+      document.getElementById('dash-msg').value = '';
+    });
+  };
 })();
 </script>
 </body>
