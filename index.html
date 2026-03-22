@@ -416,20 +416,7 @@ footer{
   .hero-section{padding:90px 14px 40px;}
 }
 </style>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-  authDomain: "radio-163cd.firebaseapp.com",
-  projectId: "radio-163cd",
-  storageBucket: "radio-163cd.firebasestorage.app",
-  messagingSenderId: "949996900677",
-  appId: "1:949996900677:web:3606c6941fd1aead99ee2c"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-</script>
+
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -815,7 +802,8 @@ function setStreamMode(online){
 
 function fetchNow(){
   // שלוף מי בשידור מ-Firebase (מוצג לכולם)
-  db.collection('radio').doc('onair').get().then(function(doc){
+  if(!window.db){setTimeout(fetchNow,400);return;}
+  window.db.collection('radio').doc('onair').get().then(function(doc){
     if(doc.exists){
       var d = doc.data();
       if(d.dj||d.show){
@@ -867,6 +855,33 @@ function fbTryAutoplay(){
 }
 document.addEventListener('click', fbTryAutoplay, {once:true});
 document.addEventListener('touchstart', fbTryAutoplay, {once:true});
+</script>
+<script>
+(function(){
+  var s1=document.createElement('script');
+  s1.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  s1.onload=function(){
+    var s2=document.createElement('script');
+    s2.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
+    s2.onload=function(){
+      try{
+        if(!firebase.apps.length){
+          firebase.initializeApp({
+            apiKey:"AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+            authDomain:"radio-163cd.firebaseapp.com",
+            projectId:"radio-163cd",
+            storageBucket:"radio-163cd.firebasestorage.app",
+            messagingSenderId:"949996900677",
+            appId:"1:949996900677:web:3606c6941fd1aead99ee2c"
+          });
+        }
+        window.db=firebase.firestore();
+      }catch(e){}
+    };
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+})();
 </script>
 </body>
 </html>
