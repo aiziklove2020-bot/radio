@@ -1,241 +1,438 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ניהול — רדיו מדברים בדסמ</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{--red:#c0392b;--red2:#e74c3c;--bg:#111;--bg2:#181818;--border:rgba(255,255,255,0.08);--muted:#888;}
-body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-height:100vh;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול רדיו | מדברים בדסמ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff4757;
+            --primary-hover: #ff6b81;
+            --secondary: #2f3542;
+            --success: #2ed573;
+            --warning: #ffa502;
+            --bg: #0f1116;
+            --card: #1c1e26;
+            --input-bg: #262933;
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --text-dim: #a4b0be;
+        }
 
-.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:360px;text-align:center;}
-.login-card .logo{font-size:48px;margin-bottom:16px;}
-.login-card h2{font-size:24px;margin-bottom:24px;font-weight:700;}
-.input-group{margin-bottom:16px;text-align:right;}
-.input-group label{display:block;margin-bottom:8px;font-size:14px;color:var(--muted);}
-input[type="text"], input[type="password"]{width:100%;background:#000;border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:#fff;font-family:inherit;transition:0.2s;}
-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 2px rgba(192,57,43,0.2);}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.file-input-wrapper {
-    margin-top: 10px;
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    width: 100%;
-}
-.file-input-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    cursor: pointer;
-}
-.btn-upload {
-    background: #333;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: 1px dashed var(--muted);
-    cursor: pointer;
-    display: block;
-    text-align: center;
-    transition: 0.3s;
-}
-.btn-upload:hover{background: #444; border-color: var(--red2);}
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
 
-.btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:8px;padding:14px;font-weight:700;cursor:pointer;margin-top:12px;transition:0.2s;}
-.btn:hover{background:var(--red2);transform:translateY(-2px);}
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-.admin-ui{display:none;padding:40px 20px;max-width:800px;margin:0 auto;}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;border-bottom:1px solid var(--border);padding-bottom:20px;}
-.section{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;}
-.section h3{margin-bottom:20px;font-size:18px;border-right:3px solid var(--red);padding-right:12px;}
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--red);color:#fff;padding:12px 24px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);display:none;z-index:1000;}
+        header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff4757, #ff6b81);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-#current-img-preview {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-    border: 3px solid var(--red);
-    background: #000;
-}
+        header p {
+            color: var(--text-dim);
+            font-size: 18px;
+        }
 
-.preview-box {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    margin-top: 20px;
-    background: rgba(0,0,0,0.2);
-    padding: 20px;
-    border-radius: 12px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
 
-@media(max-width:600px){
-    .preview-box { flex-direction: column; text-align: center; }
-}
-</style>
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card-full { grid-column: 1 / -1; }
+
+        h2 { 
+            font-size: 22px; 
+            margin-bottom: 25px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        h2 i { color: var(--primary); }
+
+        .form-group { margin-bottom: 20px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 10px; 
+            font-weight: 500; 
+            font-size: 15px; 
+            color: var(--text-dim);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #2d313d;
+        }
+
+        .btn-group { 
+            display: flex; 
+            gap: 12px; 
+            margin-top: 25px; 
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-save { background: var(--primary); color: white; }
+        .btn-save:hover { background: var(--primary-hover); transform: scale(1.02); }
+
+        .btn-clear { background: var(--secondary); color: white; }
+        .btn-clear:hover { background: #3f4552; }
+
+        .status-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-live { background: rgba(46, 213, 115, 0.2); color: var(--success); }
+        .status-offline { background: rgba(164, 176, 190, 0.2); color: var(--text-dim); }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: pulse-animation 1.5s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(46, 213, 115, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 213, 115, 0); }
+        }
+
+        .preview-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #262933;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #111;
+        }
+
+        .party-box {
+            background: #262933;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 850px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="login" class="login-screen">
-  <div class="login-card">
-    <div class="logo">📻</div>
-    <h2>כניסת מנהל</h2>
-    <div class="input-group">
-      <input type="password" id="pass" placeholder="סיסמה סודית..."/>
+<div class="container">
+    <header>
+        <h1>STUDIO CONTROL</h1>
+        <p>לוח הבקרה של רדיו מדברים בדס"מ</p>
+    </header>
+
+    <div class="grid">
+        <!-- כרטיס שידור חי -->
+        <div class="card card-full">
+            <h2><i class="fa-solid fa-tower-broadcast"></i> ניהול שידור חי</h2>
+            
+            <div class="status-wrapper">
+                <span style="font-weight: 500;">סטטוס מערכת נוכחי:</span>
+                <div id="current-status" class="status-badge status-offline">
+                    <div class="pulse"></div>
+                    <span id="status-text">טוען...</span>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user-tag"></i> שם השדרן</label>
+                    <input type="text" id="dj-name" placeholder="מי עולה לשידור?">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-youtube"></i> YouTube Video ID</label>
+                    <input type="text" id="yt-id" placeholder="לדוגמה: dQw4w9WgXcQ">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-image"></i> תמונת פרופיל שדרן (URL)</label>
+                <input type="text" id="dj-image" placeholder="הדבק קישור לתמונה">
+                <div class="preview-area">
+                    <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80">
+                    <div>
+                        <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
+                        <div style="font-size: 12px; color: var(--text-dim);">התמונה תתעדכן אוטומטית באתר</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-save" onclick="updateLive()">
+                    <i class="fa-solid fa-paper-plane"></i> עדכן ועלה לאוויר
+                </button>
+                <button class="btn-clear" onclick="clearLive()">
+                    <i class="fa-solid fa-stop"></i> הפסק שידור וחזור לפלייליסט
+                </button>
+            </div>
+        </div>
+
+        <!-- מסיבה 1 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-star"></i> מסיבה קרובה 1</h2>
+            <div class="party-box">
+                <div class="form-group">
+                    <input type="text" id="p1-title" placeholder="כותרת האירוע">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p1-date" placeholder="תאריך (לדוגמה: 25.03 | 22:00)">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p1-img" placeholder="קישור לתמונה">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p1-link" placeholder="קישור לכרטיסים">
+                </div>
+                <textarea id="p1-desc" placeholder="תיאור קצר על המסיבה..." rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- מסיבה 2 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-calendar-check"></i> מסיבה קרובה 2</h2>
+            <div class="party-box">
+                <div class="form-group">
+                    <input type="text" id="p2-title" placeholder="כותרת האירוע">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p2-date" placeholder="תאריך">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p2-img" placeholder="קישור לתמונה">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="p2-link" placeholder="קישור לכרטיסים">
+                </div>
+                <textarea id="p2-desc" placeholder="תיאור קצר..." rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="card card-full" style="text-align: center; padding: 20px;">
+            <button class="btn-save" style="max-width: 400px; margin: 0 auto;" onclick="updateParties()">
+                <i class="fa-solid fa-floppy-disk"></i> שמור את כל השינויים במסיבות
+            </button>
+        </div>
     </div>
-    <button class="btn" onclick="login()">התחבר</button>
-  </div>
 </div>
 
-<div id="admin" class="admin-ui">
-  <header>
-    <h1>לוח בקרה - רדיו</h1>
-    <button class="btn-del" onclick="location.reload()">התנתק</button>
-  </header>
-
-  <div class="section">
-    <h3>תמונת שדרן נוכחי</h3>
-    <div class="input-group">
-      <label>ניתן להעלות קובץ ישירות מהמחשב (מומלץ תמונה מרובעת)</label>
-      
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <div class="file-input-wrapper">
-          <div class="btn-upload">📁 לחץ כאן לבחירת תמונה מהמחשב</div>
-          <input type="file" id="file-picker" accept="image/*" onchange="handleFileUpload(event)">
-        </div>
-        <p style="text-align:center; color:var(--muted); font-size:12px;">או הדבק קישור ישיר:</p>
-        <input type="text" id="dj-image-url" placeholder="https://example.com/image.jpg">
-      </div>
-
-      <div class="preview-box">
-        <img id="current-img-preview" src="https://via.placeholder.com/150" alt="Preview">
-        <div style="flex:1;">
-            <p style="font-size:14px; color:#fff; margin-bottom:10px; font-weight:bold;">תצוגה מקדימה</p>
-            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">השינוי יתעדכן באתר המאזינים מיד לאחר השמירה.</p>
-            <button class="btn" id="save-btn" style="width:auto; padding:10px 40px; margin:0;" onclick="updateDJImage()">שמור ועדכן באתר</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <h3>ניהול סיסמה</h3>
-    <div class="input-group">
-      <label>סיסמת ניהול נוכחית</label>
-      <input type="text" id="cfg-p" placeholder="שנה סיסמה...">
-    </div>
-    <button class="btn" onclick="updatePass()" style="width:auto; padding:8px 24px;">שמור סיסמה</button>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<!-- Firebase Libraries -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-// Firebase Config - וודא שזה תואם לפרויקט שלך
-const firebaseConfig = {
-  apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-  authDomain: "radio-163cd.firebaseapp.com",
-  projectId: "radio-163cd",
-  storageBucket: "radio-163cd.appspot.com",
-  messagingSenderId: "367173200259",
-  appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
+        authDomain: "radio-163cd.firebaseapp.com",
+        projectId: "radio-163cd",
+        appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    // Listener for live state
+    db.collection('settings').doc('dj_info').onSnapshot(doc => {
+        if(doc.exists) {
+            const data = doc.data();
+            document.getElementById('dj-name').value = data.name || "";
+            document.getElementById('yt-id').value = data.youtubeId || "";
+            document.getElementById('dj-image').value = data.image || "";
+            if(data.image) document.getElementById('dj-img-preview').src = data.image;
+            
+            const statusBadge = document.getElementById('current-status');
+            const statusText = document.getElementById('status-text');
+            
+            if(data.youtubeId && data.youtubeId.trim() !== "") {
+                statusText.innerText = "בשידור חי: " + (data.name || "שדרן");
+                statusBadge.className = "status-badge status-live";
+            } else {
+                statusText.innerText = "פלייליסט (OFFLINE)";
+                statusBadge.className = "status-badge status-offline";
+            }
+        }
+    });
 
-function gd(k, d){ try{ return JSON.parse(localStorage.getItem(k)) || d; }catch(e){return d;} }
-function sd(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+    // Listener for parties
+    db.collection('settings').doc('parties_info').onSnapshot(doc => {
+        if(doc.exists) {
+            const data = doc.data();
+            if(data.party1) {
+                document.getElementById('p1-title').value = data.party1.title || "";
+                document.getElementById('p1-date').value = data.party1.date || "";
+                document.getElementById('p1-img').value = data.party1.img || "";
+                document.getElementById('p1-link').value = data.party1.link || "";
+                document.getElementById('p1-desc').value = data.party1.desc || "";
+            }
+            if(data.party2) {
+                document.getElementById('p2-title').value = data.party2.title || "";
+                document.getElementById('p2-date').value = data.party2.date || "";
+                document.getElementById('p2-img').value = data.party2.img || "";
+                document.getElementById('p2-link').value = data.party2.link || "";
+                document.getElementById('p2-desc').value = data.party2.desc || "";
+            }
+        }
+    });
 
-function toast(m){ 
-  var t = document.getElementById('toast'); 
-  t.innerText = m; t.style.display='block'; 
-  setTimeout(function(){t.style.display='none';}, 3000); 
-}
+    async function updateLive() {
+        const name = document.getElementById('dj-name').value;
+        const ytId = document.getElementById('yt-id').value;
+        const img = document.getElementById('dj-image').value;
 
-function login() {
-  var p = document.getElementById('pass').value;
-  var saved = gd('rdx_p', '1234');
-  if(p === saved) {
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('admin').style.display = 'block';
-    loadCurrentDJImage();
-  } else {
-    toast('❌ סיסמה שגויה');
-  }
-}
+        if(!ytId) {
+            alert("נא להזין YouTube ID כדי לעלות לשידור");
+            return;
+        }
 
-// ---- DJ IMAGE HANDLING ----
-
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // הגבלה ל-1MB לשיפור ביצועים ב-Firestore
-    if (file.size > 1000000) { 
-        return toast('⚠️ הקובץ גדול מדי. נא להעלות תמונה קטנה יותר.');
+        try {
+            await db.collection('settings').doc('dj_info').set({
+                name: name,
+                youtubeId: ytId,
+                image: img
+            }, { merge: true });
+            showToast("השידור עודכן ועלה לאוויר!");
+        } catch (e) {
+            alert("שגיאה: " + e.message);
+        }
     }
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const base64String = e.target.result;
-        document.getElementById('dj-image-url').value = base64String;
-        document.getElementById('current-img-preview').src = base64String;
-        toast('📸 התמונה מוכנה! לחץ על שמירה כדי לעדכן');
-    };
-    reader.readAsDataURL(file);
-}
-
-function loadCurrentDJImage() {
-    db.collection('settings').doc('dj_info').get().then((doc) => {
-        if (doc.exists && doc.data().image) {
-            document.getElementById('dj-image-url').value = doc.data().image;
-            document.getElementById('current-img-preview').src = doc.data().image;
+    async function clearLive() {
+        if(!confirm("להפסיק את השידור ולחזור למוזיקה ברצף?")) return;
+        try {
+            await db.collection('settings').doc('dj_info').update({
+                youtubeId: "",
+                name: ""
+            });
+            showToast("חזרנו למצב פלייליסט");
+        } catch (e) {
+            alert("שגיאה: " + e.message);
         }
-    }).catch(e => console.error(e));
-}
+    }
 
-function updateDJImage() {
-    const url = document.getElementById('dj-image-url').value.trim();
-    if(!url) return toast('⚠️ נא לבחור תמונה');
-    
-    const btn = document.getElementById('save-btn');
-    btn.innerText = 'מעדכן...';
-    btn.disabled = true;
+    async function updateParties() {
+        const partyData = {
+            party1: {
+                title: document.getElementById('p1-title').value,
+                date: document.getElementById('p1-date').value,
+                img: document.getElementById('p1-img').value,
+                link: document.getElementById('p1-link').value,
+                desc: document.getElementById('p1-desc').value
+            },
+            party2: {
+                title: document.getElementById('p2-title').value,
+                date: document.getElementById('p2-date').value,
+                img: document.getElementById('p2-img').value,
+                link: document.getElementById('p2-link').value,
+                desc: document.getElementById('p2-desc').value
+            }
+        };
 
-    db.collection('settings').doc('dj_info').set({
-        image: url,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        toast('✅ האתר עודכן בהצלחה!');
-    }).catch(e => {
-        console.error(e);
-        toast('❌ שגיאת תקשורת עם Firebase');
-    }).finally(() => {
-        btn.innerText = 'שמור ועדכן באתר';
-        btn.disabled = false;
-    });
-}
+        try {
+            await db.collection('settings').doc('parties_info').set(partyData);
+            showToast("המסיבות עודכנו בהצלחה!");
+        } catch (e) {
+            alert("שגיאה: " + e.message);
+        }
+    }
 
-function updatePass() {
-  var np = document.getElementById('cfg-p').value.trim();
-  if(!np) return;
-  sd('rdx_p', np);
-  document.getElementById('cfg-p').value='';
-  toast('🔐 סיסמה עודכנה!');
-}
+    function showToast(msg) {
+        alert(msg); // במערכת אמיתית נשתמש ב-Toast UI, כאן נשאיר פשוט
+    }
 </script>
+
 </body>
 </html>
