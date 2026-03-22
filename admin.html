@@ -109,6 +109,11 @@
             transition: 0.3s;
         }
 
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
@@ -196,6 +201,7 @@
             object-fit: cover;
             border-radius: 12px;
             background: #111;
+            border: 2px solid var(--border);
         }
 
         .party-box {
@@ -243,13 +249,13 @@
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-image"></i> תמונת פרופיל שדרן (URL)</label>
-                <input type="text" id="dj-image" placeholder="הדבק קישור לתמונה">
+                <label><i class="fa-solid fa-upload"></i> העלאת תמונת שדרן מהמחשב</label>
+                <input type="file" id="dj-file-input" accept="image/*" onchange="previewFile()">
                 <div class="preview-area">
-                    <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80">
+                    <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/80?text=DJ">
                     <div>
                         <div style="font-size: 14px; font-weight: bold;">תצוגה מקדימה</div>
-                        <div style="font-size: 12px; color: var(--text-dim);">התמונה תתעדכן אוטומטית באתר</div>
+                        <div id="file-status" style="font-size: 12px; color: var(--text-dim);">טרם נבחר קובץ</div>
                     </div>
                 </div>
             </div>
@@ -275,7 +281,7 @@
                     <input type="text" id="p1-date" placeholder="תאריך (לדוגמה: 25.03 | 22:00)">
                 </div>
                 <div class="form-group">
-                    <input type="text" id="p1-img" placeholder="קישור לתמונה">
+                    <input type="text" id="p1-img" placeholder="קישור לתמונה (URL)">
                 </div>
                 <div class="form-group">
                     <input type="text" id="p1-link" placeholder="קישור לכרטיסים">
@@ -295,7 +301,7 @@
                     <input type="text" id="p2-date" placeholder="תאריך">
                 </div>
                 <div class="form-group">
-                    <input type="text" id="p2-img" placeholder="קישור לתמונה">
+                    <input type="text" id="p2-img" placeholder="קישור לתמונה (URL)">
                 </div>
                 <div class="form-group">
                     <input type="text" id="p2-link" placeholder="קישור לכרטיסים">
@@ -325,14 +331,19 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    let base64Image = ""; // משתנה גלובלי לאחסון התמונה שהועלתה
+
     // Listener for live state
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
             document.getElementById('dj-name').value = data.name || "";
             document.getElementById('yt-id').value = data.youtubeId || "";
-            document.getElementById('dj-image').value = data.image || "";
-            if(data.image) document.getElementById('dj-img-preview').src = data.image;
+            
+            if(data.image) {
+                document.getElementById('dj-img-preview').src = data.image;
+                base64Image = data.image;
+            }
             
             const statusBadge = document.getElementById('current-status');
             const statusText = document.getElementById('status-text');
@@ -346,6 +357,22 @@
             }
         }
     });
+
+    // פונקציית תצוגה מקדימה והמרת קובץ ל-Base64
+    function previewFile() {
+        const file = document.getElementById('dj-file-input').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function() {
+            base64Image = reader.result;
+            document.getElementById('dj-img-preview').src = base64Image;
+            document.getElementById('file-status').innerText = "קובץ נטען בהצלחה";
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
 
     // Listener for parties
     db.collection('settings').doc('parties_info').onSnapshot(doc => {
@@ -371,7 +398,6 @@
     async function updateLive() {
         const name = document.getElementById('dj-name').value;
         const ytId = document.getElementById('yt-id').value;
-        const img = document.getElementById('dj-image').value;
 
         if(!ytId) {
             alert("נא להזין YouTube ID כדי לעלות לשידור");
@@ -382,9 +408,9 @@
             await db.collection('settings').doc('dj_info').set({
                 name: name,
                 youtubeId: ytId,
-                image: img
+                image: base64Image // שומר את ה-Base64 ב-Firestore
             }, { merge: true });
-            showToast("השידור עודכן ועלה לאוויר!");
+            alert("השידור עודכן והתמונה הועלתה בהצלחה!");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
@@ -397,7 +423,7 @@
                 youtubeId: "",
                 name: ""
             });
-            showToast("חזרנו למצב פלייליסט");
+            alert("חזרנו למצב פלייליסט");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
@@ -423,14 +449,10 @@
 
         try {
             await db.collection('settings').doc('parties_info').set(partyData);
-            showToast("המסיבות עודכנו בהצלחה!");
+            alert("המסיבות עודכנו בהצלחה!");
         } catch (e) {
             alert("שגיאה: " + e.message);
         }
-    }
-
-    function showToast(msg) {
-        alert(msg); // במערכת אמיתית נשתמש ב-Toast UI, כאן נשאיר פשוט
     }
 </script>
 
