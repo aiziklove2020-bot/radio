@@ -486,7 +486,7 @@ footer{
         <div class="fallback-header">
           <div class="fallback-label">
             <span class="fallback-dot"></span>
-            פלייליסט גיבוי
+            פלייליסט
           </div>
           <div class="fallback-track" id="fb-track-name">טוען...</div>
         </div>
@@ -508,7 +508,8 @@ footer{
             <div style="font-size:15px;font-weight:700;color:#fff;" id="now-dj">טוען...</div>
             <div style="font-size:12px;color:#555;" id="now-show">—</div>
           </div>
-          <div id="now-photo-small" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;">🎧</div>
+          <div id="now-photo-small" onclick="document.getElementById('photo-upload').click()" style="width:42px;height:42px;border-radius:8px;background:#1a0a0a;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;cursor:pointer;border:1px dashed rgba(255,0,0,0.3);" title="לחץ להעלאת תמונה">🎧</div>
+<input type="file" id="photo-upload" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
         </div>
       </div>
       <div class="player-footer">Live Station Player</div>
@@ -524,8 +525,7 @@ footer{
       <div class="now-meta">
         <div class="now-row"><span class="lbl">שדרן:</span><span class="val" id="now-dj2">טוען...</span></div>
         <div class="now-row"><span class="lbl">תוכנית:</span><span class="val" id="now-show2">—</span></div>
-        <div class="now-row"><span class="lbl">סגנון:</span><span class="val" id="now-genre">—</span></div>
-      </div>
+              </div>
       <div class="now-right">
         <h3>מי בשידור?</h3>
         <div class="waves"><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -650,6 +650,26 @@ function applyCfg(){
   document.getElementById('footer-name').textContent='רדיו '+cfg.n;
   document.title='רדיו '+cfg.n;
 }
+function uploadPhoto(input){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var base64 = e.target.result;
+    // שמור ב-localStorage
+    var onair = gd('rdx_onair',{dj:'',show:'',genre:'',photo:''});
+    onair.photo = base64;
+    sd('rdx_onair', onair);
+    // עדכן תמונות בדף מיד
+    var els = [document.getElementById('now-photo'), document.getElementById('now-photo-small')];
+    for(var i=0;i<els.length;i++){
+      if(els[i]) els[i].innerHTML = '<img src="'+base64+'" style="width:100%;height:100%;object-fit:cover;">';
+    }
+    showToast('📷 התמונה עודכנה!');
+  };
+  reader.readAsDataURL(file);
+}
+
 function sendMsg(){
   var nick=document.getElementById('m-nick').value.trim();
   var txt=document.getElementById('m-txt').value.trim();
@@ -682,7 +702,7 @@ function applyOnAir(dj,show,genre,photo){
   }
 }
 // =============================================
-// פלייליסט גיבוי — ערוך כאן את השירים שלך
+// פלייליסט — ערוך כאן את השירים שלך
 // =============================================
 var FALLBACK_PLAYLIST = [
   { title: "Metallica – The Unforgiven (Remastered)",        url: "https://archive.org/download/the-unforgiven-remasteredmp-3j.cc_20260321/The%20Unforgiven%20%28Remastered%29%28mp3j.cc%29.mp3" },
@@ -804,8 +824,8 @@ function fetchNow(){
     })
     .catch(function(){
       setStreamMode(false);
-      document.getElementById('now-dj').textContent='פלייליסט גיבוי';
-      document.getElementById('now-dj2').textContent='פלייליסט גיבוי';
+      document.getElementById('now-dj').textContent='פלייליסט';
+      document.getElementById('now-dj2').textContent='פלייליסט';
     });
 }
 function reload(){

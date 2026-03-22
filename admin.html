@@ -144,7 +144,16 @@ body{background:var(--bg);color:#f0f0f0;font-family:'Heebo',sans-serif;min-heigh
           </div>
           <div class="f2">
             <div class="af"><label>סגנון</label><input type="text" id="oa-genre" placeholder="מוזיקה, דשים..."/></div>
-            <div class="af"><label>תמונה (URL או אמוג'י)</label><input type="text" id="oa-photo" placeholder="🎧 או https://..."/></div>
+            <div class="af"><label>תמונה</label>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="onair-photo" id="photo-preview" style="width:48px;height:48px;flex-shrink:0;">🎧</div>
+    <div style="flex:1;">
+      <input type="file" id="oa-photo-file" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+      <button type="button" onclick="document.getElementById('oa-photo-file').click()" style="width:100%;background:rgba(255,255,255,0.05);border:1px dashed rgba(231,76,60,0.4);border-radius:8px;padding:10px;color:#e74c3c;font-family:Heebo,sans-serif;font-size:13px;cursor:pointer;">📷 בחר תמונה מהמחשב</button>
+      <button type="button" onclick="clearPhoto()" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px;color:#888;font-family:Heebo,sans-serif;font-size:12px;cursor:pointer;">🗑️ הסר תמונה</button>
+    </div>
+  </div>
+</div>
           </div>
           <button class="btn-save" onclick="saveOnAir()">💾 עדכן עכשיו</button>
           <button class="btn-del" onclick="clearOnAir()">🗑️ נקה</button>
@@ -358,15 +367,43 @@ function loadOnAirForm() {
   document.getElementById('oa-dj').value    = onair.dj    || '';
   document.getElementById('oa-show').value  = onair.show  || '';
   document.getElementById('oa-genre').value = onair.genre || '';
-  document.getElementById('oa-photo').value = onair.photo || '';
+  updatePhotoPreview(onair.photo || '');
   renderOnAirPreview();
+}
+
+function handlePhotoUpload(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    onair.photo = e.target.result;
+    updatePhotoPreview(onair.photo);
+    renderOnAirPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto() {
+  onair.photo = '';
+  updatePhotoPreview('');
+  renderOnAirPreview();
+}
+
+function updatePhotoPreview(photo) {
+  var el = document.getElementById('photo-preview');
+  if (!el) return;
+  if (photo && photo.length > 2) {
+    el.innerHTML = '<img src="' + photo + '" style="width:100%;height:100%;object-fit:cover">';
+  } else {
+    el.textContent = photo || '🎧';
+  }
 }
 
 function saveOnAir() {
   onair.dj    = document.getElementById('oa-dj').value.trim();
   onair.show  = document.getElementById('oa-show').value.trim();
   onair.genre = document.getElementById('oa-genre').value.trim();
-  onair.photo = document.getElementById('oa-photo').value.trim();
+  // photo נשמר ישירות דרך handlePhotoUpload
   sd('rdx_onair', onair);
   renderOnAirPreview();
   toast('✅ מי בשידור עודכן!');
