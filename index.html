@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #e74c3c;
+            --primary: #ff4757;
             --primary-dark: #c0392b;
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -127,14 +127,14 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
         }
         .play-trigger.is-playing { animation: pulse-red 2.5s infinite; background: #fff; color: var(--primary); }
 
         @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
         }
 
         .track-info { text-align: right; flex: 1; }
@@ -145,7 +145,7 @@
             font-size: 9px;
             font-weight: 800;
             color: var(--primary);
-            background: rgba(231, 76, 60, 0.1);
+            background: rgba(255, 71, 87, 0.1);
             padding: 1px 6px;
             border-radius: 4px;
             margin-bottom: 2px;
@@ -174,6 +174,26 @@
         }
         .dj-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
 
+        .scrolling-wrapper {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--primary);
+            padding: 5px 0;
+            font-size: 13px;
+            font-weight: 700;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 20px;
+        }
+        .scrolling-text {
+            display: inline-block;
+            padding-right: 100%;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100%, 0); }
+        }
+
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr; 
@@ -190,27 +210,12 @@
             padding: 20px;
         }
 
-        .schedule-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        .free-text-schedule {
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: rgba(255, 255, 255, 0.9);
         }
-        .schedule-item:last-child { border-bottom: none; }
-        .schedule-time { 
-            color: var(--primary); 
-            font-weight: 800; 
-            min-width: 85px; 
-            font-size: 14px;
-            background: rgba(231, 76, 60, 0.1);
-            padding: 4px 8px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .schedule-info { flex: 1; }
-        .schedule-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
-        .schedule-host { font-size: 13px; opacity: 0.6; }
 
         .party-grid {
             display: grid;
@@ -242,7 +247,6 @@
             .hero-bg { height: 50vh; padding-top: 100px; }
             .now-on-air-card { margin-top: -20px; margin-bottom: 25px; }
         }
-        #youtube-engine { position: absolute; top: -9999px; left: -9999px; visibility: hidden; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -278,8 +282,12 @@
     </div>
 </section>
 
+<div class="scrolling-wrapper">
+    <div class="scrolling-text" id="marquee-text">ברוכים הבאים לרדיו מדברים בדס"מ - הקול של הקהילה!</div>
+</div>
+
 <div class="now-on-air-card">
-    <img id="dj-image-display" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=200" class="dj-thumb">
+    <img id="dj-image-display" src="https://via.placeholder.com/200?text=OFFLINE" class="dj-thumb">
     <div style="flex:1; text-align: right;">
         <div style="color: var(--primary); font-weight: 800; font-size: 11px;">בשידור כרגע</div>
         <h2 id="dj-name-display" style="font-size: 20px; margin-bottom: 2px;">רדיו מדברים בדס"מ</h2>
@@ -297,7 +305,7 @@
     
     <div class="box-container" id="schedule">
         <h2 style="border-right: 3px solid var(--primary); padding-right: 10px; margin-bottom: 15px;">לוח שידורים - <span id="current-day-label"></span></h2>
-        <div id="schedule-content" style="font-size: 14px;">טוען לוח שידורים...</div>
+        <div id="schedule-content" class="free-text-schedule">טוען לוח שידורים...</div>
     </div>
 </div>
 
@@ -306,12 +314,10 @@
 </div>
 <div class="party-grid" id="party-container"></div>
 
-<div id="youtube-engine"></div>
-<audio id="audio-engine" preload="none" crossorigin="anonymous" src="https://ice6.somafm.com/indiepop-128-mp3"></audio>
+<audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
 const firebaseConfig = {
@@ -323,25 +329,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let ytPlayer, isYtReady = false, isPlaying = false, currentMode = 'backup', youtubeId = "";
+let isPlaying = false;
 const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
 const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
 const liveText = document.getElementById('live-status-text'), liveDot = document.getElementById('live-status-dot');
-
-function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player('youtube-engine', {
-        height: '0', width: '0',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
-        events: {
-            'onReady': () => { isYtReady = true; },
-            'onStateChange': (e) => { 
-                isPlaying = (e.data == YT.PlayerState.PLAYING);
-                updateUI();
-            },
-            'onError': () => switchToBackup()
-        }
-    });
-}
 
 function updateUI() {
     btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
@@ -354,129 +345,103 @@ function updateUI() {
     }
 }
 
-function switchToBackup() {
-    currentMode = 'backup';
-    statusText.innerText = "מוזיקה ברצף";
-    document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
-    document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
-    liveText.innerText = "OFFLINE";
-    liveDot.className = "live-dot offline";
-    if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-}
-
 playBtn.addEventListener('click', function() {
     if (isPlaying) {
         audioEngine.pause();
-        if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
         isPlaying = false;
     } else {
-        if (currentMode === 'youtube' && youtubeId) {
-            audioEngine.pause();
-            if (isYtReady) {
-                ytPlayer.loadVideoById(youtubeId);
-                ytPlayer.playVideo();
-            }
-        } else {
-            if (isYtReady && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+        if(audioEngine.src) {
             audioEngine.play();
+            isPlaying = true;
+        } else {
+            alert("השידור לא זמין כרגע");
         }
-        isPlaying = true;
     }
     updateUI();
 });
 
-// Sync DJ Info
+// Sync DJ & Stream Info
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        youtubeId = d.youtubeId ? d.youtubeId.trim() : "";
-        if(youtubeId.length > 5) {
-            currentMode = 'youtube';
-            statusText.innerText = d.name || "בשידור חי";
-            document.getElementById('dj-name-display').innerText = d.name || "רדיו מדברים בדס\"מ";
+        const stream = d.streamUrl || "";
+        const name = d.name || "";
+        
+        document.getElementById('marquee-text').innerText = d.scrollingText || "ברוכים הבאים לרדיו מדברים בדס\"מ";
+        
+        if(name && name !== "") {
+            audioEngine.src = stream;
+            statusText.innerText = name;
+            document.getElementById('dj-name-display').innerText = name;
             document.getElementById('sub-status').innerText = "שידור חי כרגע";
             if(d.image) document.getElementById('dj-image-display').src = d.image;
             liveText.innerText = "LIVE";
             liveDot.className = "live-dot active";
-            if(isYtReady) ytPlayer.cueVideoById(youtubeId);
         } else {
-            switchToBackup();
+            statusText.innerText = "מוזיקה ברצף";
+            document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
+            document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
+            if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
+            liveText.innerText = "OFFLINE";
+            liveDot.className = "live-dot offline";
+            audioEngine.src = stream; // Keep playing automation stream if exists
         }
     }
 });
 
-// Sync Schedule with enhanced sync logic
-const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+// Sync Schedule (Free Text Mode)
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const now = new Date();
+const todayEng = daysEng[now.getDay()];
 document.getElementById('current-day-label').innerText = daysHeb[now.getDay()];
 
 db.collection('settings').doc('schedule').onSnapshot(doc => {
     const container = document.getElementById('schedule-content');
     if(doc.exists) {
-        const rawData = doc.data()[daysEng[now.getDay()]];
+        const data = doc.data();
+        const todayData = data[todayEng];
         
-        // Handle both Array and Object formats from Firestore
-        let s = [];
-        if (Array.isArray(rawData)) {
-            s = rawData;
-        } else if (typeof rawData === 'object' && rawData !== null) {
-            s = Object.values(rawData); // Convert {0: {}, 1: {}} to [{}, {}]
+        // Check if data is free text or the new object structure
+        let freeText = "";
+        if (typeof todayData === 'string') {
+            freeText = todayData;
+        } else if (todayData && todayData.freeText) {
+            freeText = todayData.freeText;
         }
 
-        if (s.length > 0) {
-            // Sort by time field (handles 'time' or 'hour' labels)
-            s.sort((a, b) => {
-                const timeA = a.time || a.hour || "00:00";
-                const timeB = b.time || b.hour || "00:00";
-                return timeA > timeB ? 1 : -1;
-            });
-            
-            container.innerHTML = s.map(item => `
-                <div class="schedule-item">
-                    <div class="schedule-time">${item.time || item.hour || 'שידור'}</div>
-                    <div class="schedule-info">
-                        <div class="schedule-title">${item.title || 'תוכנית ללא שם'}</div>
-                        <div class="schedule-host">${item.host ? 'בהגשת ' + item.host : 'רדיו מדברים בדס"מ'}</div>
-                    </div>
-                </div>
-            `).join('');
+        if (freeText && freeText.trim() !== "") {
+            container.innerHTML = freeText;
         } else {
             container.innerHTML = `<div style="text-align:center; padding: 20px; opacity: 0.5;">אין שידורים מתוכננים להיום.<br>מוזיקה מעולה ברצף 24/7!</div>`;
         }
     } else {
-        container.innerHTML = "טוען לוח שידורים...";
+        container.innerHTML = "אין מידע זמין.";
     }
 });
 
-// Sync Parties with dynamic mapping
+// Sync Parties
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
         const data = doc.data();
         const container = document.getElementById('party-container');
         container.innerHTML = "";
-        
-        // Loop through all properties in case they are not named party1/party2
-        const partyKeys = Object.keys(data).sort(); 
-        
-        partyKeys.forEach(p => {
-            const party = data[p];
-            if(party && (party.title || party.name)) {
+        Object.keys(data).forEach(key => {
+            const p = data[key];
+            if(p && p.title) {
                 container.innerHTML += `
                     <div class="party-card">
-                        <img src="${party.img || party.image || 'https://images.unsplash.com/photo-1514525253361-bee8a4874a73?auto=format&fit=crop&w=400'}" class="party-img">
                         <div class="party-content">
-                            <div style="color:var(--primary); font-weight:bold; font-size:12px;">${party.date || ''}</div>
-                            <h3 style="margin: 5px 0;">${party.title || party.name}</h3>
-                            <p style="opacity:0.6; font-size:12px; height: 36px; overflow: hidden;">${party.desc || party.description || ''}</p>
+                            <div style="color:var(--primary); font-weight:bold; font-size:12px;">${p.date || ''}</div>
+                            <h3 style="margin: 5px 0;">${p.title}</h3>
+                            <div style="font-size:13px; color:var(--primary); margin-bottom:5px;">${p.freeText || ''}</div>
+                            <p style="opacity:0.6; font-size:12px;">${p.desc || ''}</p>
+                            ${p.link ? `<a href="${p.link}" target="_blank" class="submit-btn" style="display:block; text-decoration:none; text-align:center; margin-top:10px;">למידע נוסף וכרטיסים</a>` : ''}
                         </div>
                     </div>`;
             }
         });
-        
-        if (container.innerHTML === "") {
-            container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; opacity:0.5;">אין מסיבות קרובות כרגע.</div>`;
-        }
+        if (container.innerHTML === "") container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; opacity:0.5;">אין מסיבות קרובות כרגע.</div>`;
     }
 });
 
@@ -495,7 +460,7 @@ async function sendGreeting(event) {
 }
 
 audioEngine.addEventListener('playing', () => { isPlaying = true; updateUI(); });
-audioEngine.addEventListener('pause', () => { if(currentMode === 'backup') { isPlaying = false; updateUI(); } });
+audioEngine.addEventListener('pause', () => { isPlaying = false; updateUI(); });
 </script>
 </body>
 </html>
