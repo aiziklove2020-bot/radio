@@ -9,7 +9,11 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-.cstrEmbed a{display:none !important;}
+
+/* הסתרת קישורים חיצוניים של הווידג'ט */
+.cstrEmbed a { display: none !important; }
+.cstrEmbed { margin: 0 auto; display: inline-block; }
+
 body{
   font-family:'Heebo',sans-serif;
   background:#0a0a0a;
@@ -80,6 +84,7 @@ body{
   border:4px solid #1a1a1a;
   box-shadow:0 0 60px rgba(231,76,60,0.2);
   background:#000;
+  transition: opacity 0.5s ease;
 }
 .status-tag{
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
@@ -87,31 +92,31 @@ body{
   font-size:11px;font-weight:900;
   padding:6px 16px;border-radius:20px;
   letter-spacing:1px;box-shadow:0 4px 15px rgba(231,76,60,0.4);
+  white-space: nowrap;
+  z-index: 2;
 }
+.status-tag.offline { background: #555; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 
 .dj-name{font-size:32px;font-weight:900;margin-bottom:8px;letter-spacing:-1px;}
 .song-title{font-size:16px;color:#888;margin-bottom:40px;height:24px;overflow:hidden;}
 
 /* ── PLAYER CONTROLS ── */
-.controls{display:flex;align-items:center;justify-content:center;gap:32px;}
-.play-btn{
-  width:88px;height:88px;border-radius:50%;
-  background:#e74c3c;border:none;color:#fff;font-size:32px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow:0 15px 40px rgba(231,76,60,0.3);
+.controls{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    margin-top: 10px;
+    gap: 15px;
 }
-.play-btn:hover{transform:scale(1.1);background:#ff4d3a;box-shadow:0 20px 50px rgba(231,76,60,0.4);}
 
-.fallback-player{display:none;margin-top:20px;text-align:center;}
-.fallback-player.visible{display:block;}
-.fallback-player audio{width:100%;max-width:300px;filter:invert(1);}
-
-.autoplay-hint{
-  font-size:12px;color:#e74c3c;margin-top:16px;
-  animation:pulse 2s infinite;display:none;
+.backup-player {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
 }
-@keyframes pulse{0%{opacity:0.5;}50%{opacity:1;}100%{opacity:0.5;}}
+.backup-player.visible { display: block; }
+.backup-label { font-size: 12px; color: #e74c3c; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; }
 
 /* ── SECTIONS ── */
 .section{padding:80px 24px;max-width:1100px;margin:0 auto;}
@@ -188,23 +193,31 @@ footer{padding:60px 24px;text-align:center;border-top:1px solid rgba(255,255,255
 <section class="hero">
   <div class="now-card">
     <div class="avatar-wrap">
-      <img id="main-dj-image" src="https://via.placeholder.com/220" class="avatar" alt="DJ">
-      <div class="status-tag">LIVE</div>
+      <img id="main-dj-image" src="IMG_9464.jpg" class="avatar" alt="DJ">
+      <div id="status-tag" class="status-tag">LIVE</div>
     </div>
     
     <h2 class="dj-name" id="dj-name">טוען...</h2>
     <p class="song-title" id="song-title">מתחבר לסטרים...</p>
     
     <div class="controls">
-      <button class="play-btn" id="fb-play-btn" onclick="fbTogglePlay()">
-        <i class="fas fa-play" id="fb-play-icon"></i>
-      </button>
+      <!-- נגן ראשי - Caster.fm -->
+      <div id="main-player-wrap">
+          <div data-type="newStreamPlayer" data-publicToken="60e730b1-7eca-48ab-92da-977474cf4482" data-theme="dark" data-color="e81e4d" data-channelId="" data-rendered="false" class="cstrEmbed">
+            <a href="https://www.caster.fm">Shoutcast Hosting</a> 
+            <a href="https://www.caster.fm">Stream Hosting</a> 
+            <a href="https://www.caster.fm">Radio Server Hosting</a>
+          </div>
+          <script src="//cdn.cloud.caster.fm//widgets/embed.js"></script>
+      </div>
+
+      <!-- נגן גיבוי - Archive.org (פלייליסט) -->
+      <div id="backup-player-wrap" class="backup-player">
+          <div class="backup-label">פלייליסט פעיל</div>
+          <iframe src="https://archive.org/embed/the-unforgiven-remasteredmp-3j.cc_20260321" width="100%" height="30" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+      </div>
     </div>
 
-    <div class="fallback-player" id="fallback-player">
-      <audio id="fb-audio" src="https://morcast.caster.fm:13763/y4k1D" crossorigin="anonymous"></audio>
-      <div class="autoplay-hint" id="fb-autoplay-hint">לחץ פליי לשמיעה</div>
-    </div>
   </div>
 </section>
 
@@ -243,37 +256,55 @@ footer{padding:60px 24px;text-align:center;border-top:1px solid rgba(255,255,255
 </footer>
 
 <script>
-// לוגיקת נגן
-var fbAudio = document.getElementById('fb-audio');
-var fbPlaying = false;
-var fallbackPlayer = document.getElementById('fallback-player');
+// הגדרת משתנים גלובליים לניהול התמונות
+let currentDjImage = 'IMG_9464.jpg'; // תמונת השדרן מתוך Firebase
+const defaultPlaylistImage = 'IMG_9464.jpg'; // תמונת ברירת המחדל לפלייליסט
+let isCurrentlyOnline = false;
 
-function fbTogglePlay() { if(fbPlaying) fbPause(); else fbPlay(); }
-function fbPlay() {
-  fbAudio.play().then(() => {
-    fbPlaying = true;
-    document.getElementById('fb-play-icon').className = 'fas fa-pause';
-  }).catch(e => { document.getElementById('fb-autoplay-hint').style.display = 'block'; });
-}
-function fbPause() {
-  fbAudio.pause();
-  fbPlaying = false;
-  document.getElementById('fb-play-icon').className = 'fas fa-play';
-}
-
+// לוגיקת נתונים וזיהוי סטטוס שידור
 async function fetchNow() {
   try {
     const res = await fetch('/api/nowplaying');
     const data = await res.json();
+    
+    const mainPlayer = document.getElementById('main-player-wrap');
+    const backupPlayer = document.getElementById('backup-player-wrap');
+    const statusTag = document.getElementById('status-tag');
+    const djImgEl = document.getElementById('main-dj-image');
+
     if(data.online) {
+      isCurrentlyOnline = true;
+      // מצב LIVE
       document.getElementById('dj-name').innerText = data.dj || 'שדרן רדיו';
       document.getElementById('song-title').innerText = data.title || '';
-      fallbackPlayer.classList.add('visible');
+      
+      mainPlayer.style.display = 'block';
+      backupPlayer.classList.remove('visible');
+      statusTag.innerText = 'LIVE';
+      statusTag.classList.remove('offline');
+      
+      // עדכון לתמונת השדרן החי
+      djImgEl.src = currentDjImage;
     } else {
-      document.getElementById('dj-name').innerText = 'רדיו לא פעיל';
-      document.getElementById('song-title').innerText = 'נחזור בקרוב...';
+      isCurrentlyOnline = false;
+      // מצב OFFLINE - עוברים לפלייליסט
+      document.getElementById('dj-name').innerText = 'רדיו בגיבוי';
+      document.getElementById('song-title').innerText = 'הפלייליסט שלנו פעיל';
+      
+      mainPlayer.style.display = 'none';
+      backupPlayer.classList.add('visible');
+      statusTag.innerText = 'PLAYLIST';
+      statusTag.classList.add('offline');
+      
+      // עדכון לתמונת הפלייליסט
+      djImgEl.src = defaultPlaylistImage;
     }
-  } catch(e) {}
+  } catch(e) {
+      document.getElementById('backup-player-wrap').classList.add('visible');
+      document.getElementById('status-tag').innerText = 'PLAYLIST';
+      document.getElementById('status-tag').classList.add('offline');
+      document.getElementById('main-dj-image').src = defaultPlaylistImage;
+  }
 }
 
 function reload() {
@@ -305,10 +336,14 @@ setInterval(fetchNow, 30000); setInterval(reload, 8000);
   if (!firebase.apps.length) firebase.initializeApp(config);
   const db = firebase.firestore();
   
-  // סנכרון תמונת שדרן
+  // סנכרון תמונת שדרן מ-Firebase
   db.collection('settings').doc('dj_info').onSnapshot((doc) => {
     if (doc.exists && doc.data().image) {
-      document.getElementById('main-dj-image').src = doc.data().image;
+      currentDjImage = doc.data().image;
+      // אם אנחנו כרגע בשידור חי, נעדכן את התמונה מיידית
+      if(isCurrentlyOnline) {
+          document.getElementById('main-dj-image').src = currentDjImage;
+      }
     }
   });
 
