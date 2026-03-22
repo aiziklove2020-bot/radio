@@ -284,8 +284,8 @@
     <!-- Hidden Engines -->
     <div style="position: absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
         <div id="youtube-engine"></div>
-        <!-- נגן אודיו לנייד עבור פלייליסטים -->
-        <audio id="audio-engine" preload="none" crossorigin="anonymous"></audio>
+        <!-- נגן אודיו מותאם לנייד ללא חסימות -->
+        <audio id="audio-engine" preload="auto" crossorigin="anonymous"></audio>
     </div>
 </section>
 
@@ -360,8 +360,10 @@ const liveDot = document.getElementById('live-status-dot');
 const audioEngine = document.getElementById('audio-engine');
 const djNameDisplay = document.getElementById('dj-name-display');
 
-// קישור לסטרים מוזיקה (MP3) - עדיף להחליף בסטרים רדיו חי או קובץ MP3 ישיר
-const BACKUP_STREAM_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
+// לינק לסטרים ישיר של Archive - קובץ VBR MP3 בדרך כלל עובד הכי טוב
+const BACKUP_STREAM_URL = "https://archive.org/download/backup-engine/backup-engine_vbr.m3u"; 
+// לינק חלופי למקרה שהקודם לא מזוהה כ-Audio (קובץ MP3 בודד לדוגמה שמייצג את הסטרים)
+const FALLBACK_MP3 = "https://archive.org/download/backup-engine/1.mp3";
 
 // --- Firebase Init ---
 const firebaseConfig = {
@@ -377,11 +379,16 @@ const db = firebase.firestore();
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube-engine', {
         height: '1', width: '1', videoId: '',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
+        playerVars: { 
+            'autoplay': 0, 
+            'controls': 0, 
+            'playsinline': 1,
+            'origin': window.location.origin
+        },
         events: {
             'onReady': onYtReady,
             'onStateChange': onYtStateChange,
-            'onError': switchToBackup
+            'onError': () => switchToBackup()
         }
     });
 }
@@ -399,14 +406,22 @@ function onYtReady() {
 }
 
 function onYtStateChange(event) {
-    if (event.data == YT.PlayerState.PLAYING) { isPlaying = true; updateUI(true); }
-    else { isPlaying = false; updateUI(false); }
+    if (event.data == YT.PlayerState.PLAYING) { 
+        isPlaying = true; 
+        updateUI(true); 
+    } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+        isPlaying = false; 
+        updateUI(false); 
+    }
 }
 
 function updateUI(playing) {
     btnIcon.className = playing ? "fa-solid fa-pause" : "fa-solid fa-play";
-    if (playing) playBtn.classList.add('is-playing');
-    else playBtn.classList.remove('is-playing');
+    if (playing) {
+        playBtn.classList.add('is-playing');
+    } else {
+        playBtn.classList.remove('is-playing');
+    }
 }
 
 function updateRadioState(youtubeId) {
@@ -428,12 +443,20 @@ function switchToBackup() {
     liveDot.className = "live-dot offline";
     statusText.innerText = "מוזיקה ברצף";
     djNameDisplay.innerText = "מוזיקה ברצף";
-    if(ytPlayer && isYtReady) ytPlayer.stopVideo();
-    // הכנת הסאונד
-    if(!audioEngine.src) audioEngine.src = BACKUP_STREAM_URL;
+    
+    if(ytPlayer && isYtReady) {
+        try { ytPlayer.stopVideo(); } catch(e){}
+    }
+    
+    // הגדרת המקור לאודיו - ננסה את הקובץ הישיר
+    if(!audioEngine.src || audioEngine.src === "") {
+        audioEngine.src = FALLBACK_MP3; 
+        audioEngine.load();
+    }
 }
 
 playBtn.addEventListener('click', () => {
+    // הפעלה ראשונית של האודיו בנייד חייבת לקרות בתוך Click event
     if (currentMode === 'youtube') {
         if (isPlaying) {
             ytPlayer.pauseVideo();
@@ -447,12 +470,15 @@ playBtn.addEventListener('click', () => {
             isPlaying = false;
             updateUI(false);
         } else {
+            // טעינה וניגון
             audioEngine.play().then(() => {
                 isPlaying = true;
                 updateUI(true);
             }).catch(e => {
-                console.error("Audio playback error:", e);
-                // במקרה של שגיאה בנייד, בדרך כלל צריך לחיצה נוספת
+                console.error("Playback failed:", e);
+                // ניסיון תיקון - טעינה מחדש
+                audioEngine.load();
+                audioEngine.play();
             });
         }
     }
@@ -469,8 +495,14 @@ db.collection('settings').doc('dj_info').onSnapshot(doc => {
                 ytPlayer.cueVideoById(data.youtubeId);
                 updateRadioState(data.youtubeId);
             } else { pendingYtId = data.youtubeId; }
-        } else { updateRadioState(null); }
+        } else { 
+            updateRadioState(null); 
+        }
     }
+}, err => {
+    console.log("Firestore error, switching to backup");
+    switchToBackup();
+    playBtn.disabled = false;
 });
 
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
@@ -547,6 +579,14 @@ async function sendGreeting() {
     } catch (e) { console.error(e); }
     btn.disabled = false; btn.innerText = "שלח הודעה";
 }
+
+// Fallback if YouTube doesn't load at all
+setTimeout(() => {
+    if (!isYtReady) {
+        playBtn.disabled = false;
+        if(currentMode === 'none') switchToBackup();
+    }
+}, 5000);
 </script>
 </body>
 </html>
