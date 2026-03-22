@@ -29,6 +29,7 @@
             color: var(--text);
             padding: 40px 20px;
             line-height: 1.5;
+            direction: rtl;
         }
 
         .container {
@@ -55,12 +56,6 @@
             font-size: 18px;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
         .card {
             background: var(--card);
             border-radius: 20px;
@@ -70,7 +65,11 @@
             margin-bottom: 25px;
         }
 
-        .card-full { grid-column: 1 / -1; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
 
         h2 { 
             font-size: 22px; 
@@ -95,7 +94,7 @@
             color: var(--text-dim);
         }
 
-        input, textarea, select {
+        input, textarea {
             width: 100%;
             padding: 12px 15px;
             background: var(--input-bg);
@@ -105,6 +104,7 @@
             font-family: inherit;
             font-size: 15px;
             transition: 0.3s;
+            text-align: right;
         }
 
         input:focus {
@@ -140,7 +140,6 @@
             color: var(--danger); 
             border: 1px solid var(--danger); 
             font-size: 13px;
-            padding: 8px 15px;
         }
         .btn-danger-outline:hover { background: var(--danger); color: white; }
 
@@ -165,7 +164,6 @@
         .tab-btn.active {
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
         }
 
         .schedule-header {
@@ -175,7 +173,6 @@
             padding: 10px;
             color: var(--text-dim);
             font-size: 13px;
-            text-align: right;
         }
 
         .schedule-row {
@@ -187,9 +184,7 @@
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
             margin-bottom: 10px;
-            transition: 0.2s;
         }
-        .schedule-row:hover { background: rgba(255,255,255,0.06); }
 
         .time-label { font-weight: bold; color: var(--primary); font-size: 13px; }
 
@@ -223,6 +218,7 @@
             background: #262933;
             padding: 15px;
             border-radius: 15px;
+            flex: 1;
         }
 
         .preview-img {
@@ -251,7 +247,7 @@
     </header>
 
     <!-- LIVE CONTROL -->
-    <div class="card card-full">
+    <div class="card">
         <h2><i class="fa-solid fa-tower-broadcast"></i> ניהול שידור חי</h2>
         <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 25px;">
             <span>סטטוס מערכת:</span>
@@ -259,26 +255,32 @@
                 <span id="status-text">טוען...</span>
             </div>
         </div>
+        
+        <div class="form-group">
+            <label>מלל חופשי / הודעה רצה בנגן</label>
+            <textarea id="scrolling-text" placeholder="הכנס הודעה שתופיע בנגן (למשל: דרישת שלום, הודעה על תוכנית קרובה...)" rows="2"></textarea>
+        </div>
+
         <div class="grid">
             <div class="form-group">
                 <label>שם השדרן</label>
                 <input type="text" id="dj-name" placeholder="מי בשידור?">
             </div>
             <div class="form-group">
-                <label>YouTube ID</label>
-                <input type="text" id="yt-id" placeholder="למשל: dQw4w9WgXcQ">
+                <label>URL של הסטרים (Icecast/MP3)</label>
+                <input type="text" id="stream-url" placeholder="לינק לנגן">
             </div>
         </div>
         <div class="grid" style="margin-bottom: 20px;">
             <div class="preview-area">
                 <img id="dj-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=DJ">
                 <input type="file" id="dj-file-input" style="display:none" onchange="handleImageUpload('dj')">
-                <button onclick="document.getElementById('dj-file-input').click()" style="font-size: 11px; background: var(--secondary);">החלף תמונת שדרן</button>
+                <button onclick="document.getElementById('dj-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">החלף תמונת שדרן</button>
             </div>
             <div class="preview-area">
                 <img id="offline-img-preview" class="preview-img" src="https://via.placeholder.com/60?text=OFF">
                 <input type="file" id="offline-file-input" style="display:none" onchange="handleImageUpload('offline')">
-                <button onclick="document.getElementById('offline-file-input').click()" style="font-size: 11px; background: var(--secondary);">תמונת Offline</button>
+                <button onclick="document.getElementById('offline-file-input').click()" style="font-size: 11px; background: var(--secondary); flex:1">תמונת Offline</button>
             </div>
         </div>
         <div class="btn-group">
@@ -288,11 +290,11 @@
     </div>
 
     <!-- WEEKLY SCHEDULE -->
-    <div class="card card-full">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-days"></i> לוח שידורים שבועי</h2>
             <button class="btn-danger-outline" onclick="clearEntireDay()">
-                <i class="fa-solid fa-trash-can"></i> נקה יום <span class="active-day-text">ראשון</span>
+                <i class="fa-solid fa-trash-can"></i> נקה את כל יום <span class="active-day-text">ראשון</span>
             </button>
         </div>
         
@@ -306,15 +308,21 @@
             <button class="tab-btn" onclick="switchDay('saturday')">שבת</button>
         </div>
 
+        <!-- NEW: Free text for schedule -->
+        <div class="form-group">
+            <label>מלל חופשי ליום <span class="active-day-text">ראשון</span> (יופיע מעל לוח השידורים)</label>
+            <textarea id="schedule-free-text" placeholder="למשל: יום שידורים מיוחד לרגל החג, הערות מיוחדות..." rows="2"></textarea>
+        </div>
+
         <div id="schedule-editor">
             <div class="schedule-header">
                 <div>שעה</div>
                 <div>שם התוכנית</div>
                 <div>שדרן/ית</div>
-                <div></div>
+                <div>מחק</div>
             </div>
             <div id="time-slots-container">
-                <!-- Slots will be rendered here -->
+                <!-- Slots rendered via JS -->
             </div>
         </div>
 
@@ -323,30 +331,37 @@
         </button>
     </div>
 
-    <!-- PARTIES -->
+    <!-- EVENTS -->
     <div class="grid">
         <div class="card">
-            <h2><i class="fa-solid fa-star"></i> מסיבה 1</h2>
-            <input type="text" id="p1-title" placeholder="כותרת" class="form-group">
-            <input type="text" id="p1-date" placeholder="תאריך" class="form-group">
-            <input type="text" id="p1-img" placeholder="לינק לתמונה" class="form-group">
-            <textarea id="p1-desc" placeholder="תיאור קצר" rows="2" style="background:var(--input-bg); border:1px solid var(--border); border-radius:12px; color:white; padding:12px; width:100%;"></textarea>
+            <h2><i class="fa-solid fa-star"></i> אירוע 1</h2>
+            <input type="text" id="p1-title" placeholder="כותרת האירוע" class="form-group">
+            <div class="grid" style="gap:10px; grid-template-columns: 1fr 1fr;">
+                <input type="text" id="p1-date" placeholder="תאריך ושעה" class="form-group">
+                <input type="text" id="p1-link" placeholder="לינק לכרטיסים/מידע" class="form-group">
+            </div>
+            <textarea id="p1-free-text" placeholder="מלל חופשי (למשל: דגשים חשובים, מבצעים...)" rows="2" class="form-group"></textarea>
+            <textarea id="p1-desc" placeholder="תיאור מלא של האירוע" rows="3"></textarea>
         </div>
         <div class="card">
-            <h2><i class="fa-solid fa-calendar-check"></i> מסיבה 2</h2>
-            <input type="text" id="p2-title" placeholder="כותרת" class="form-group">
-            <input type="text" id="p2-date" placeholder="תאריך" class="form-group">
-            <input type="text" id="p2-img" placeholder="לינק לתמונה" class="form-group">
-            <textarea id="p2-desc" placeholder="תיאור קצר" rows="2" style="background:var(--input-bg); border:1px solid var(--border); border-radius:12px; color:white; padding:12px; width:100%;"></textarea>
+            <h2><i class="fa-solid fa-calendar-check"></i> אירוע 2</h2>
+            <input type="text" id="p2-title" placeholder="כותרת האירוע" class="form-group">
+            <div class="grid" style="gap:10px; grid-template-columns: 1fr 1fr;">
+                <input type="text" id="p2-date" placeholder="תאריך ושעה" class="form-group">
+                <input type="text" id="p2-link" placeholder="לינק לכרטיסים/מידע" class="form-group">
+            </div>
+            <textarea id="p2-free-text" placeholder="מלל חופשי (למשל: דגשים חשובים, מבצעים...)" rows="2" class="form-group"></textarea>
+            <textarea id="p2-desc" placeholder="תיאור מלא של האירוע" rows="3"></textarea>
         </div>
     </div>
-    <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני מסיבות</button>
+    <button class="btn-save" onclick="updateParties()" style="margin-bottom: 50px; width:100%;"><i class="fa-solid fa-check"></i> שמור נתוני אירועים</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
         authDomain: "radio-163cd.firebaseapp.com",
@@ -379,22 +394,13 @@
                 <div class="time-label">${slot}</div>
                 <input type="text" id="prog-${index}" placeholder="שם התוכנית">
                 <input type="text" id="host-${index}" placeholder="שדרן">
-                <button class="btn-icon-delete" onclick="clearSlot(${index})" title="נקה">
-                    <i class="fa-solid fa-xmark"></i>
+                <button class="btn-icon-delete" onclick="clearSlot(${index})" title="מחק שורה זו">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
             `;
             container.appendChild(div);
         });
         loadAllSchedule();
-    }
-
-    function switchDay(day) {
-        currentDay = day;
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText === dayNames[day]);
-        if(activeBtn) activeBtn.classList.add('active');
-        document.querySelectorAll('.active-day-text').forEach(el => el.innerText = dayNames[day]);
-        loadDayData();
     }
 
     async function loadAllSchedule() {
@@ -407,85 +413,128 @@
     }
 
     function loadDayData() {
-        clearInputs();
+        clearInputs(false);
         const data = fullSchedule[currentDay];
-        if (data && Array.isArray(data)) {
-            data.forEach((slotData, i) => {
-                if (i < timeSlots.length) {
-                    document.getElementById(`prog-${i}`).value = slotData.title || "";
-                    document.getElementById(`host-${i}`).value = slotData.host || "";
-                }
-            });
-        }
-    }
+        // Handle both old format (array only) and new format (object with slots and freeText)
+        let slots = [];
+        let freeText = "";
 
-    function clearInputs() {
-        timeSlots.forEach((_, i) => {
-            document.getElementById(`prog-${i}`).value = "";
-            document.getElementById(`host-${i}`).value = "";
+        if (data) {
+            if (Array.isArray(data)) {
+                slots = data;
+            } else {
+                slots = data.slots || [];
+                freeText = data.freeText || "";
+            }
+        }
+
+        document.getElementById('schedule-free-text').value = freeText;
+
+        slots.forEach((slotData, i) => {
+            if (i < timeSlots.length) {
+                const progEl = document.getElementById(`prog-${i}`);
+                const hostEl = document.getElementById(`host-${i}`);
+                if(progEl) progEl.value = slotData.title || "";
+                if(hostEl) hostEl.value = slotData.host || "";
+            }
         });
     }
 
+    function switchDay(day) {
+        currentDay = day;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText === dayNames[day]);
+        if(activeBtn) activeBtn.classList.add('active');
+        document.querySelectorAll('.active-day-text').forEach(el => el.innerText = dayNames[day]);
+        loadDayData();
+    }
+
+    function clearInputs(confirmAction = true) {
+        if (confirmAction && !confirm(`האם אתה בטוח שברצונך לנקות את כל השורות ביום ${dayNames[currentDay]}?`)) return;
+        timeSlots.forEach((_, i) => {
+            const prog = document.getElementById(`prog-${i}`);
+            const host = document.getElementById(`host-${i}`);
+            if(prog) prog.value = "";
+            if(host) host.value = "";
+        });
+        if(confirmAction) document.getElementById('schedule-free-text').value = "";
+    }
+
     function clearSlot(index) {
-        document.getElementById(`prog-${index}`).value = "";
-        document.getElementById(`host-${index}`).value = "";
+        const prog = document.getElementById(`prog-${index}`);
+        const host = document.getElementById(`host-${index}`);
+        if(prog) prog.value = "";
+        if(host) host.value = "";
     }
 
     function clearEntireDay() {
-        if(confirm(`למחוק את כל השידורים של יום ${dayNames[currentDay]}?`)) clearInputs();
+        clearInputs(true);
     }
 
     async function saveSchedule() {
-        const dayArray = timeSlots.map((_, i) => ({
+        const slotsArray = timeSlots.map((slot, i) => ({
+            time: slot,
             title: document.getElementById(`prog-${i}`).value.trim(),
             host: document.getElementById(`host-${i}`).value.trim()
         }));
 
-        fullSchedule[currentDay] = dayArray;
+        const freeText = document.getElementById('schedule-free-text').value.trim();
+
+        // Save as an object containing both the slots and the free text
+        fullSchedule[currentDay] = {
+            slots: slotsArray,
+            freeText: freeText
+        };
 
         try {
             await db.collection('settings').doc('schedule').set(fullSchedule);
-            alert(`יום ${dayNames[currentDay]} נשמר בהצלחה!`);
-        } catch (e) { alert("שגיאה: " + e.message); }
+            alert(`נתוני יום ${dayNames[currentDay]} (כולל מלל חופשי) עודכנו בלוח השידורים!`);
+        } catch (e) { alert("שגיאה בעדכון: " + e.message); }
     }
 
-    // --- Core Logic ---
+    // Live Info Logic
     db.collection('settings').doc('dj_info').onSnapshot(doc => {
         if(doc.exists) {
             const d = doc.data();
             document.getElementById('dj-name').value = d.name || "";
-            document.getElementById('yt-id').value = d.youtubeId || "";
+            document.getElementById('stream-url').value = d.streamUrl || "";
+            document.getElementById('scrolling-text').value = d.scrollingText || "";
             if(d.image) document.getElementById('dj-img-preview').src = d.image;
             if(d.offlineImage) document.getElementById('offline-img-preview').src = d.offlineImage;
             
             const badge = document.getElementById('current-status'), txt = document.getElementById('status-text');
-            if(d.youtubeId) {
+            if(d.name && d.name !== "") {
                 txt.innerText = "בשידור: " + d.name; badge.className = "status-badge status-live";
             } else {
-                txt.innerText = "OFFLINE (אוטומטי)"; badge.className = "status-badge status-offline";
+                txt.innerText = "OFFLINE"; badge.className = "status-badge status-offline";
             }
         }
     });
 
     async function updateLive() {
-        const name = document.getElementById('dj-name').value, yt = document.getElementById('yt-id').value;
-        if(!yt) return alert("הזן ID של יוטיוב");
-        await db.collection('settings').doc('dj_info').update({
-            name, youtubeId: yt, image: djBase64 || document.getElementById('dj-img-preview').src,
+        const name = document.getElementById('dj-name').value;
+        const sUrl = document.getElementById('stream-url').value;
+        const sText = document.getElementById('scrolling-text').value;
+        await db.collection('settings').doc('dj_info').set({
+            name: name,
+            streamUrl: sUrl,
+            scrollingText: sText,
+            image: djBase64 || document.getElementById('dj-img-preview').src,
             offlineImage: offlineBase64 || document.getElementById('offline-img-preview').src
-        });
-        alert("שידור חי מעודכן!");
+        }, { merge: true });
+        alert("סטטוס שידור ומלל עודכנו!");
     }
 
     async function clearLive() {
-        await db.collection('settings').doc('dj_info').update({
-            youtubeId: "", name: "", image: document.getElementById('offline-img-preview').src
-        });
+        const offImg = document.getElementById('offline-img-preview').src;
+        await db.collection('settings').doc('dj_info').update({ name: "", image: offImg });
         alert("השידור הופסק");
     }
 
     function handleImageUpload(type) {
-        const file = event.target.files[0], reader = new FileReader();
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
@@ -493,7 +542,7 @@
                 cvs.width = 400; cvs.height = 400;
                 cvs.getContext('2d').drawImage(img, 0, 0, 400, 400);
                 const url = cvs.toDataURL('image/jpeg', 0.7);
-                if(type==='dj') { djBase64 = url; document.getElementById('dj-img-preview').src = url; }
+                if(type === 'dj') { djBase64 = url; document.getElementById('dj-img-preview').src = url; }
                 else { offlineBase64 = url; document.getElementById('offline-img-preview').src = url; }
             };
             img.src = e.target.result;
@@ -503,12 +552,45 @@
 
     async function updateParties() {
         const data = {
-            party1: { title: document.getElementById('p1-title').value, date: document.getElementById('p1-date').value, img: document.getElementById('p1-img').value, desc: document.getElementById('p1-desc').value },
-            party2: { title: document.getElementById('p2-title').value, date: document.getElementById('p2-date').value, img: document.getElementById('p2-img').value, desc: document.getElementById('p2-desc').value }
+            party1: { 
+                title: document.getElementById('p1-title').value, 
+                date: document.getElementById('p1-date').value, 
+                link: document.getElementById('p1-link').value, 
+                freeText: document.getElementById('p1-free-text').value,
+                desc: document.getElementById('p1-desc').value 
+            },
+            party2: { 
+                title: document.getElementById('p2-title').value, 
+                date: document.getElementById('p2-date').value, 
+                link: document.getElementById('p2-link').value, 
+                freeText: document.getElementById('p2-free-text').value,
+                desc: document.getElementById('p2-desc').value 
+            }
         };
         await db.collection('settings').doc('parties_info').set(data);
-        alert("מסיבות עודכנו!");
+        alert("נתוני אירועים עודכנו!");
     }
+
+    // Load Events Initial Data
+    db.collection('settings').doc('parties_info').get().then(doc => {
+        if(doc.exists) {
+            const d = doc.data();
+            if(d.party1) {
+                document.getElementById('p1-title').value = d.party1.title || "";
+                document.getElementById('p1-date').value = d.party1.date || "";
+                document.getElementById('p1-link').value = d.party1.link || "";
+                document.getElementById('p1-free-text').value = d.party1.freeText || "";
+                document.getElementById('p1-desc').value = d.party1.desc || "";
+            }
+            if(d.party2) {
+                document.getElementById('p2-title').value = d.party2.title || "";
+                document.getElementById('p2-date').value = d.party2.date || "";
+                document.getElementById('p2-link').value = d.party2.link || "";
+                document.getElementById('p2-free-text').value = d.party2.freeText || "";
+                document.getElementById('p2-desc').value = d.party2.desc || "";
+            }
+        }
+    });
 
     renderSlots();
 </script>
