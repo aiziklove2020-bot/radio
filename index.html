@@ -89,7 +89,7 @@
         }
         .nav-links a { color: #fff; text-decoration: none; font-weight: 500; font-size: 13px; opacity: 0.7; }
 
-        /* Player Controls */
+        /* Player Interface */
         .player-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -102,6 +102,7 @@
             gap: 12px;
             margin-top: 20px;
             min-width: 280px;
+            position: relative;
         }
 
         .play-trigger {
@@ -117,6 +118,7 @@
             align-items: center;
             justify-content: center;
             transition: 0.3s;
+            z-index: 2;
         }
         .play-trigger.is-playing { animation: pulse-red 2s infinite; background: #fff; color: var(--primary); }
 
@@ -139,8 +141,16 @@
             border-radius: 4px;
         }
         .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
-        .live-dot.offline { background: #555; }
         .live-dot.active { animation: blink 1s infinite; }
+
+        .troubleshoot-btn {
+            font-size: 10px;
+            color: #aaa;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 5px;
+            display: none;
+        }
 
         /* DJ Card */
         .now-on-air-card {
@@ -184,18 +194,6 @@
             padding: 20px;
         }
 
-        .schedule-section {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .free-text-schedule { 
-            font-size: 13px; 
-            line-height: 1.4; 
-            white-space: pre-wrap; 
-            color: rgba(255, 255, 255, 0.7); 
-        }
-
         /* Party Rows */
         .party-list {
             display: flex;
@@ -217,70 +215,13 @@
             cursor: pointer;
         }
 
-        .party-row:hover { background: rgba(45, 45, 45, 0.6); border-color: var(--primary); }
-        .party-row-img-wrap { width: 110px; min-width: 110px; height: 100%; }
-        .party-row-img { width: 100%; height: 100%; object-fit: cover; }
-        .party-row-content { padding: 10px 15px; flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: right; overflow: hidden; }
-        .party-row-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 2px; }
-        .party-row-date { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
-        .party-row-desc { font-size: 12px; opacity: 0.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .modal-content {
-            background: #121212;
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            max-width: 380px; 
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            animation: modalIn 0.3s ease-out;
-        }
-
-        @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .modal-close {
-            position: absolute;
-            top: 10px; right: 10px;
-            width: 30px; height: 30px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10; color: #fff;
-        }
-
-        .modal-image { width: 100%; height: auto; max-height: 220px; object-fit: cover; border-bottom: 2px solid var(--primary); }
-        .modal-body { padding: 20px; text-align: right; }
-        .modal-title { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 5px; }
-        .modal-date { font-size: 13px; font-weight: 700; opacity: 0.7; margin-bottom: 12px; display: block; }
-        .modal-desc { line-height: 1.5; font-size: 14px; opacity: 0.85; white-space: pre-wrap; margin-bottom: 20px; }
-        .modal-link {
-            display: block; width: 100%; text-align: center; background: var(--primary); color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px;
-        }
-
         /* Forms */
         input, textarea {
             width:100%; padding:14px; margin-bottom:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:12px; font-size:16px; text-align: right; outline: none; font-family: 'Heebo';
         }
         .submit-btn { width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:900; cursor:pointer; font-size: 16px; }
 
-        @media (max-width: 450px) {
-            .modal-content { margin: 10px; }
-        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -302,10 +243,11 @@
     <div class="player-container">
         <div class="track-info">
             <div class="live-indicator">
-                <div class="live-dot" id="live-status-dot"></div>
-                <span id="live-status-text">מתחבר...</span>
+                <div class="live-dot active"></div>
+                <span>LIVE</span>
             </div>
-            <span id="status-text" style="font-size: 14px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">טוען נגן...</span>
+            <span id="status-text" style="font-size: 14px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">לחץ להאזנה</span>
+            <div id="troubleshoot" class="troubleshoot-btn" onclick="forceReloadStream()">לא שומעים? לחץ כאן לתיקון</div>
         </div>
         <button class="play-trigger" id="master-play-btn"><i class="fa-solid fa-play" id="btn-icon"></i></button>
     </div>
@@ -332,7 +274,7 @@
         <h3 style="margin-bottom: 10px; font-weight: 900; color: var(--primary); font-size: 16px;">
             <i class="fa-regular fa-calendar-days"></i> לוח שידורים: <span id="current-day-label"></span>
         </h3>
-        <div id="schedule-content" class="free-text-schedule">טוען...</div>
+        <div id="schedule-content" class="free-text-schedule" style="font-size: 13px; opacity: 0.7; white-space: pre-wrap;">טוען...</div>
     </div>
 </div>
 
@@ -341,20 +283,8 @@
 </div>
 <div class="party-list" id="party-container"></div>
 
-<div class="modal-overlay" id="party-modal">
-    <div class="modal-content">
-        <div class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></div>
-        <img src="" id="modal-img" class="modal-image">
-        <div class="modal-body">
-            <h2 id="modal-title" class="modal-title"></h2>
-            <span id="modal-date" class="modal-date"></span>
-            <div id="modal-desc" class="modal-desc"></div>
-            <a href="#" id="modal-link" target="_blank" class="modal-link">להרשמה / כרטיסים</a>
-        </div>
-    </div>
-</div>
-
-<audio id="audio-engine" crossorigin="anonymous"></audio>
+<!-- נגן אודיו ללא הגדרת crossorigin בעייתית -->
+<audio id="main-audio"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -369,51 +299,86 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Radio Engine
-const playBtn = document.getElementById('master-play-btn'), btnIcon = document.getElementById('btn-icon');
-const audioEngine = document.getElementById('audio-engine'), statusText = document.getElementById('status-text');
-const liveText = document.getElementById('live-status-text'), liveDot = document.getElementById('live-status-dot');
-let isPlaying = false;
-const DEFAULT_STREAM = "https://stream.zeno.fm/0r0xa792kwzuv"; 
+const audio = document.getElementById('main-audio');
+const playBtn = document.getElementById('master-play-btn');
+const btnIcon = document.getElementById('btn-icon');
+const statusText = document.getElementById('status-text');
+const troubleshoot = document.getElementById('troubleshoot');
 
-async function togglePlay() {
+// שימוש בכתובת HTTPS מאובטחת סטנדרטית
+let streamUrl = "https://liveradio.co.il:8010/radio.mp3?sid=1";
+let isPlaying = false;
+
+function togglePlay() {
     if (isPlaying) {
-        audioEngine.pause(); audioEngine.src = ""; isPlaying = false;
+        audio.pause();
+        audio.src = ""; 
+        isPlaying = false;
+        btnIcon.className = "fa-solid fa-play";
+        statusText.innerText = "השידור הופסק";
+        playBtn.classList.remove('is-playing');
+        troubleshoot.style.display = "none";
     } else {
         statusText.innerText = "מתחבר...";
-        const doc = await db.collection('settings').doc('dj_info').get();
-        audioEngine.src = (doc.exists && doc.data().streamUrl) ? doc.data().streamUrl : DEFAULT_STREAM;
-        try {
-            await audioEngine.play(); isPlaying = true;
-            statusText.innerText = document.getElementById('dj-name-display').innerText;
-        } catch(e) { statusText.innerText = "שגיאה בחיבור"; }
+        
+        // הוספת פרמטר זמן כדי למנוע טעינת קאש ולוודא התחברות לשידור חי
+        audio.src = streamUrl + (streamUrl.includes('?') ? '&' : '?') + "nocache=" + Date.now();
+        audio.load();
+        
+        // ניסיון הפעלה עם טיפול בשגיאות
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                btnIcon.className = "fa-solid fa-pause";
+                statusText.innerText = "שידור חי";
+                playBtn.classList.add('is-playing');
+                troubleshoot.style.display = "none";
+            }).catch(err => {
+                console.error("Playback failed:", err);
+                statusText.innerText = "שגיאת חיבור";
+                troubleshoot.style.display = "block";
+                
+                // ניסיון תיקון אוטומטי לשרת חלופי במקרה של כישלון
+                setTimeout(() => {
+                    if (!isPlaying) forceReloadStream();
+                }, 1000);
+            });
+        }
     }
-    btnIcon.className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
-    playBtn.classList.toggle('is-playing', isPlaying);
 }
+
+function forceReloadStream() {
+    statusText.innerText = "מנסה שרת חלופי...";
+    // כתובת חלופית מאובטחת (Icecast)
+    const altStream = "https://icecast.liveradio.co.il/radio.mp3";
+    audio.src = altStream + "?t=" + Date.now();
+    audio.play().then(() => {
+        isPlaying = true;
+        btnIcon.className = "fa-solid fa-pause";
+        statusText.innerText = "מחובר (שרת חלופי)";
+        playBtn.classList.add('is-playing');
+        troubleshoot.style.display = "none";
+    }).catch(err => {
+        statusText.innerText = "השידור אינו זמין";
+        console.error("Alt stream also failed", err);
+    });
+}
+
 playBtn.addEventListener('click', togglePlay);
 
-// Live DJ Listener
+// סנכרון נתוני DJ ולוח שידורים
 db.collection('settings').doc('dj_info').onSnapshot(doc => {
     if(doc.exists) {
         const d = doc.data();
-        if(d.name && d.name.trim() !== "") {
-            document.getElementById('dj-name-display').innerText = d.name;
-            document.getElementById('sub-status').innerText = "שידור חי כרגע";
-            if(d.image) document.getElementById('dj-image-display').src = d.image;
-            liveText.innerText = "LIVE"; liveDot.className = "live-dot active";
-            if(isPlaying) statusText.innerText = d.name;
-        } else {
-            document.getElementById('dj-name-display').innerText = "שידור אוטומטי";
-            document.getElementById('sub-status').innerText = "מוזיקה ללא הפסקה";
-            if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
-            liveText.innerText = "OFFLINE"; liveDot.className = "live-dot offline";
-            if(isPlaying) statusText.innerText = "שידור אוטומטי";
-        }
+        document.getElementById('dj-name-display').innerText = d.name || "שידור אוטומטי";
+        document.getElementById('sub-status').innerText = d.name ? "שידור חי כרגע" : "מוזיקה ללא הפסקה";
+        if(d.image) document.getElementById('dj-image-display').src = d.image;
+        else if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
     }
 });
 
-// Daily Schedule
 const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 const now = new Date();
@@ -426,56 +391,32 @@ db.collection('settings').doc('schedule').onSnapshot(doc => {
     }
 });
 
-// Party Modal
-let currentParties = {};
-function openParty(id) {
-    const p = currentParties[id];
-    if(!p) return;
-    document.getElementById('modal-img').src = p.image || 'https://images.unsplash.com/photo-1514525253344-a8130a2a4b85?q=80&w=800';
-    document.getElementById('modal-title').innerText = p.title;
-    document.getElementById('modal-date').innerText = p.date || '';
-    document.getElementById('modal-desc').innerText = p.desc || p.freeText || '';
-    const linkBtn = document.getElementById('modal-link');
-    if(p.link) { linkBtn.href = p.link; linkBtn.style.display = "block"; } else { linkBtn.style.display = "none"; }
-    document.getElementById('party-modal').style.display = "flex";
-    document.body.style.overflow = "hidden";
-}
-
-function closeModal() { document.getElementById('party-modal').style.display = "none"; document.body.style.overflow = "auto"; }
-window.onclick = function(e) { if(e.target.id === 'party-modal') closeModal(); }
-
-// Sync Parties
 db.collection('settings').doc('parties_info').onSnapshot(doc => {
     if(doc.exists) {
-        currentParties = doc.data();
+        const parties = doc.data();
         const container = document.getElementById('party-container');
         container.innerHTML = "";
-        const sortedKeys = Object.keys(currentParties).sort((a, b) => parseInt(a) - parseInt(b));
-        sortedKeys.forEach(key => {
-            const p = currentParties[key];
-            if(p && p.title) {
-                const card = document.createElement('div');
-                card.className = "party-row";
-                card.onclick = () => openParty(key);
-                card.innerHTML = `
-                    <div class="party-row-img-wrap"><img src="${p.image || 'https://images.unsplash.com/photo-1514525253344-a8130a2a4b85?q=80&w=300'}" class="party-row-img"></div>
-                    <div class="party-row-content">
-                        <div class="party-row-date">${p.date || 'אירוע קרוב'}</div>
-                        <div class="party-row-title">${p.title}</div>
-                        <div class="party-row-desc">${p.desc || p.freeText || ''}</div>
-                    </div>`;
-                container.appendChild(card);
-            }
+        Object.keys(parties).sort().forEach(key => {
+            const p = parties[key];
+            if(!p.title) return;
+            const card = document.createElement('div');
+            card.className = "party-row";
+            card.innerHTML = `
+                <div style="width:110px;"><img src="${p.image || ''}" style="width:100%; height:110px; object-fit:cover;"></div>
+                <div style="padding:15px; flex:1; text-align:right;">
+                    <div style="color:var(--primary); font-size:11px; font-weight:700;">${p.date || ''}</div>
+                    <div style="font-weight:800;">${p.title}</div>
+                    <div style="font-size:12px; opacity:0.6;">${p.desc || ''}</div>
+                </div>`;
+            container.appendChild(card);
         });
     }
 });
 
-// Greeting Service
 async function sendGreeting(event) {
     const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
     if(!n || !c) return;
     const btn = event.target;
-    btn.disabled = true;
     btn.innerText = "שולח...";
     try {
         await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
@@ -484,8 +425,8 @@ async function sendGreeting(event) {
         });
         document.getElementById('msg-content').value = "";
         btn.innerText = "נשלח!";
-        setTimeout(() => { btn.innerText = "שלח הודעה"; btn.disabled = false; }, 3000);
-    } catch(e) { btn.innerText = "שגיאה"; btn.disabled = false; }
+        setTimeout(() => btn.innerText = "שלח הודעה", 3000);
+    } catch(e) { btn.innerText = "שגיאה"; }
 }
 </script>
 </body>
