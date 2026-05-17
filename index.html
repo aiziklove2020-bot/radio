@@ -2,432 +2,1318 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>רדיו מדברים בדס"מ | לוח שידורים</title>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הפועל באר שבע - אתר האוהדים הרשמי</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Rubik -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Rubik', 'sans-serif'],
+                    },
+                    colors: {
+                        hbsRed: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        },
+                        darkBg: '#09090b',
+                        cardBg: '#18181b',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #ff4757;
-            --primary-dark: #c0392b;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --bg-dark: #080808;
+        /* עיצוב פס גלילה מותאם אישית באדום */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
+        ::-webkit-scrollbar-track {
+            background: #09090b;
         }
-        
-        body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--bg-dark);
-            color: #fff;
-            line-height: 1.4;
-            overflow-x: hidden;
-        }
-
-        /* Hero & Header */
-        .hero-bg {
-            position: relative;
-            height: 40vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(8,8,8,1)), 
-                        url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 15px;
-            padding-top: 80px;
-        }
-
-        header {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 95%;
-            max-width: 800px;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 10px 15px;
-            display: flex;
-            flex-direction: column; 
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .logo-area { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            font-weight: 900; 
-            font-size: 20px;
-            color: #fff;
-            text-decoration: none;
-            margin-bottom: 5px;
-        }
-        .logo-area .brand-red { color: var(--primary); }
-
-        .nav-links { 
-            display: flex; 
-            gap: 15px; 
-            list-style: none; 
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 5px;
-            width: 100%;
-            justify-content: center;
-        }
-        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; font-size: 13px; opacity: 0.7; }
-
-        /* Player Interface */
-        .player-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            padding: 8px 15px 8px 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 20px;
-            min-width: 280px;
-            position: relative;
-        }
-
-        .play-trigger {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            z-index: 2;
-        }
-        .play-trigger.is-playing { animation: pulse-red 2s infinite; background: #fff; color: var(--primary); }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
-        }
-
-        .track-info { text-align: right; flex: 1; }
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 9px;
-            font-weight: 800;
-            color: var(--primary);
-            background: rgba(255, 71, 87, 0.1);
-            padding: 1px 6px;
+        ::-webkit-scrollbar-thumb {
+            background: #dc2626;
             border-radius: 4px;
         }
-        .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
-        .live-dot.active { animation: blink 1s infinite; }
-
-        .troubleshoot-btn {
-            font-size: 10px;
-            color: #aaa;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 5px;
-            display: none;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b91c1c;
+        }
+        
+        /* אפקט אנימציה של פעימת הילה אדומה למשחק פעיל */
+        .pulse-red {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
 
-        /* DJ Card */
-        .now-on-air-card {
-            background: rgba(25, 25, 25, 0.8);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 12px;
-            width: 95%;
-            max-width: 600px;
-            margin: -25px auto 25px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10;
-            position: relative;
+        /* מעבר חלק ואנימציות */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
-        .dj-thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; border: 2px solid var(--primary); background: #111; }
-
-        /* Main Content */
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 900px;
-            margin: 0 auto 30px;
-            padding: 0 15px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        @media (min-width: 768px) {
-            .content-container { flex-direction: row; }
-            .dashim-section { flex: 1.5; }
-            .schedule-section { flex: 1; }
-        }
-
-        .box-container {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        /* Party Rows */
-        .party-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 900px;
-            margin: 0 auto 50px;
-            padding: 0 15px;
-        }
-
-        .party-row {
-            background: rgba(30, 30, 30, 0.4);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            display: flex;
-            overflow: hidden;
-            height: 110px;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-
-        /* Forms */
-        input, textarea {
-            width:100%; padding:14px; margin-bottom:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:12px; font-size:16px; text-align: right; outline: none; font-family: 'Heebo';
-        }
-        .submit-btn { width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:900; cursor:pointer; font-size: 16px; }
-
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
-<body>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen selection:bg-red-600 selection:text-white">
 
-<header>
-    <a href="#" class="logo-area">
-        <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
-        <div><span>רדיו מדברים</span> <span class="brand-red">בדס"מ</span></div>
-    </a>
-    <nav class="nav-links">
-        <a href="#dashim">ד"שים</a>
-        <a href="#schedule">שידורים</a>
-        <a href="#parties">מסיבות</a>
-    </nav>
-</header>
-
-<section class="hero-bg">
-    <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 5px;">הקול של הקהילה</h1>
-    <div class="player-container">
-        <div class="track-info">
-            <div class="live-indicator">
-                <div class="live-dot active"></div>
-                <span>LIVE</span>
-            </div>
-            <span id="status-text" style="font-size: 14px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">לחץ להאזנה</span>
-            <div id="troubleshoot" class="troubleshoot-btn" onclick="forceReloadStream()">לא שומעים? לחץ כאן לתיקון</div>
-        </div>
-        <button class="play-trigger" id="master-play-btn"><i class="fa-solid fa-play" id="btn-icon"></i></button>
-    </div>
-</section>
-
-<div class="now-on-air-card">
-    <img id="dj-image-display" src="https://via.placeholder.com/100" class="dj-thumb">
-    <div style="flex:1; text-align: right;">
-        <div style="color: var(--primary); font-weight: 800; font-size: 10px;">LIVE NOW</div>
-        <h2 id="dj-name-display" style="font-size: 18px;">רדיו מדברים בדס"מ</h2>
-        <p id="sub-status" style="color: rgba(255,255,255,0.4); font-size: 12px;">טוען נתונים...</p>
-    </div>
-</div>
-
-<div class="content-container">
-    <div class="box-container dashim-section" id="dashim">
-        <h3 style="margin-bottom: 15px; font-weight: 900; color: var(--primary); font-size: 20px;">שלח ד"ש בזמן שידור</h3>
-        <input type="text" id="msg-name" placeholder="השם שלך">
-        <textarea id="msg-content" placeholder="ההודעה שלך..." style="height:110px;"></textarea>
-        <button class="submit-btn" onclick="sendGreeting(event)">שלח הודעה</button>
-    </div>
-    
-    <div class="box-container schedule-section" id="schedule">
-        <h3 style="margin-bottom: 10px; font-weight: 900; color: var(--primary); font-size: 16px;">
-            <i class="fa-regular fa-calendar-days"></i> לוח שידורים: <span id="current-day-label"></span>
-        </h3>
-        <div id="schedule-content" class="free-text-schedule" style="font-size: 13px; opacity: 0.7; white-space: pre-wrap;">טוען...</div>
-    </div>
-</div>
-
-<div id="parties" style="padding: 0 15px; max-width: 900px; margin: 10px auto 10px; text-align: right;">
-    <h3 style="font-weight: 900; color: var(--primary);">מסיבות ואירועים</h3>
-</div>
-<div class="party-list" id="party-container"></div>
-
-<!-- נגן אודיו ללא הגדרת crossorigin בעייתית -->
-<audio id="main-audio"></audio>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-    apiKey: "AIzaSyC48QIiMrUbZYb9_0r3i4mkbnWYpRBGmGI",
-    authDomain: "radio-163cd.firebaseapp.com",
-    projectId: "radio-163cd",
-    appId: "1:367173200259:web:9f8e4e73cc354924c830e2"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-const audio = document.getElementById('main-audio');
-const playBtn = document.getElementById('master-play-btn');
-const btnIcon = document.getElementById('btn-icon');
-const statusText = document.getElementById('status-text');
-const troubleshoot = document.getElementById('troubleshoot');
-
-// שימוש בכתובת HTTPS מאובטחת סטנדרטית
-let streamUrl = "https://liveradio.co.il:8010/radio.mp3?sid=1";
-let isPlaying = false;
-
-function togglePlay() {
-    if (isPlaying) {
-        audio.pause();
-        audio.src = ""; 
-        isPlaying = false;
-        btnIcon.className = "fa-solid fa-play";
-        statusText.innerText = "השידור הופסק";
-        playBtn.classList.remove('is-playing');
-        troubleshoot.style.display = "none";
-    } else {
-        statusText.innerText = "מתחבר...";
-        
-        // הוספת פרמטר זמן כדי למנוע טעינת קאש ולוודא התחברות לשידור חי
-        audio.src = streamUrl + (streamUrl.includes('?') ? '&' : '?') + "nocache=" + Date.now();
-        audio.load();
-        
-        // ניסיון הפעלה עם טיפול בשגיאות
-        const playPromise = audio.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isPlaying = true;
-                btnIcon.className = "fa-solid fa-pause";
-                statusText.innerText = "שידור חי";
-                playBtn.classList.add('is-playing');
-                troubleshoot.style.display = "none";
-            }).catch(err => {
-                console.error("Playback failed:", err);
-                statusText.innerText = "שגיאת חיבור";
-                troubleshoot.style.display = "block";
+    <!-- סרגל ניווט עליון עם הלוגו הוקטורי המדויק של הפועל באר שבע -->
+    <header class="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-red-900/40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
                 
-                // ניסיון תיקון אוטומטי לשרת חלופי במקרה של כישלון
-                setTimeout(() => {
-                    if (!isPlaying) forceReloadStream();
-                }, 1000);
+                <!-- לוגו המועדון הרשמי הוקטורי המובנה לביצועים ואמינות של 100% -->
+                <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="scrollToSection('hero')">
+                    <div class="w-14 h-14 bg-black rounded-full p-0.5 border border-red-600/30 flex items-center justify-center transform hover:scale-105 transition-transform duration-300 relative">
+                        <!-- סמל וקטורי ממוזער מדויק עבור הבר העליון -->
+                        <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <!-- כוכב זהב עליון -->
+                            <polygon points="100,5 104,17 116,17 107,24 110,36 100,29 90,36 93,24 84,17 96,17" fill="#eab308" />
+                            <g transform="translate(0, 15)">
+                                <circle cx="100" cy="100" r="95" fill="none" stroke="#dc2626" stroke-width="4" />
+                                <circle cx="100" cy="100" r="91" fill="#ffffff" />
+                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="24" />
+                                
+                                <!-- טקסט עברי וימני על קשת -->
+                                <path id="nav-heb-path" d="M 180 100 A 80 80 0 0 0 100 20" fill="none" />
+                                <text fill="#ffffff" font-size="11" font-weight="900" font-family="'Rubik', sans-serif">
+                                    <textPath href="#nav-heb-path" startOffset="50%" text-anchor="middle">הפועל באר-שבע</textPath>
+                                </text>
+
+                                <!-- טקסט אנגלי ושמאלי על קשת -->
+                                <path id="nav-eng-path" d="M 20 100 A 80 80 0 0 1 100 20" fill="none" />
+                                <text fill="#ffffff" font-size="9" font-weight="900" font-family="'Rubik', sans-serif">
+                                    <textPath href="#nav-eng-path" startOffset="50%" text-anchor="middle">HAPOEL BEER-SHEVA</textPath>
+                                </text>
+
+                                <!-- גדר הפרדה לבנה ואדומה במרכז -->
+                                <rect x="10" y="93" width="180" height="11" fill="#dc2626" />
+                                <line x1="14" y1="98" x2="186" y2="98" stroke="#ffffff" stroke-width="6" stroke-dasharray="2,3" />
+
+                                <!-- מתעמל הפועל בצד שמאל -->
+                                <g transform="translate(-1, 0)">
+                                    <path d="M 52,48 A 15,15 0 1,1 78,64 L 72,59 A 11,11 0 1,0 55,50" fill="#dc2626" />
+                                    <circle cx="63.5" cy="43.5" r="4" fill="#dc2626" />
+                                    <path d="M 63.5,47.5 L 63.5,62.5 M 63.5,49.5 L 48,43 M 63.5,50.5 L 77,54" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
+                                    <path d="M 63.5,62.5 L 48,77 M 63.5,62.5 L 78,77" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round" />
+                                    <polygon points="42,80 80,68 77,64 39,76" fill="#dc2626" />
+                                    <text x="60" y="89" fill="#dc2626" font-family="'Rubik', sans-serif" font-size="11" font-weight="900" text-anchor="middle">הפועל</text>
+                                </g>
+
+                                <!-- מגדל המים מימין -->
+                                <g transform="translate(3, 0)">
+                                    <rect x="121" y="52" width="6" height="42" fill="#dc2626" />
+                                    <rect x="115" y="52" width="2" height="42" fill="#dc2626" />
+                                    <rect x="131" y="52" width="2" height="42" fill="#dc2626" />
+                                    <polygon points="112,32 136,32 132,52 116,52" fill="#dc2626" />
+                                    <line x1="124" y1="32" x2="124" y2="52" stroke="#ffffff" stroke-width="1.5" />
+                                    <line x1="112" y1="39" x2="136" y2="39" stroke="#ffffff" stroke-width="1.5" />
+                                </g>
+
+                                <!-- חצי כדורגל תחתון -->
+                                <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
+                                <polygon points="100,145 125,160 115,188 85,188 75,160" fill="none" stroke="#ffffff" stroke-width="2.5" />
+                                <line x1="100" y1="145" x2="100" y2="104" stroke="#ffffff" stroke-width="2.5" />
+                                <line x1="75" y1="160" x2="45" y2="140" stroke="#ffffff" stroke-width="2.5" />
+                                <line x1="125" y1="160" x2="155" y2="140" stroke="#ffffff" stroke-width="2.5" />
+                                <line x1="85" y1="188" x2="65" y2="198" stroke="#ffffff" stroke-width="2.5" />
+                                <line x1="115" y1="188" x2="135" y2="198" stroke="#ffffff" stroke-width="2.5" />
+                                <polygon points="38,135 60,118 75,135 65,155 45,150" fill="none" stroke="#ffffff" stroke-width="2" />
+                                <polygon points="162,135 140,118 125,135 135,155 155,150" fill="none" stroke="#ffffff" stroke-width="2" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black text-white tracking-wider leading-none">הפועל באר שבע</span>
+                        <span class="text-[10px] text-red-500 font-bold tracking-widest mt-1">THE RED PRIDE</span>
+                    </div>
+                </div>
+
+                <!-- קישורי ניווט למסכים גדולים -->
+                <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-semibold">
+                    <a href="#hero" class="text-gray-300 hover:text-red-500 transition-colors duration-200">דף הבית</a>
+                    <a href="#history" class="text-gray-300 hover:text-red-500 transition-colors duration-200">היסטוריה וביוגרפיה</a>
+                    <a href="#squad" class="text-gray-300 hover:text-red-500 transition-colors duration-200">סגל השחקנים</a>
+                    <a href="#trivia" class="text-gray-300 hover:text-red-500 transition-colors duration-200">חידון האוהדים</a>
+                    <a href="#chants" class="text-gray-300 hover:text-red-500 transition-colors duration-200">שירי יציע</a>
+                    <a href="#stadium" class="text-gray-300 hover:text-red-500 transition-colors duration-200">אצטדיון טרנר</a>
+                </nav>
+
+                <!-- כפתור פעולה מהיר בסרגל -->
+                <div class="hidden md:block">
+                    <a href="#newsletter" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-full shadow-lg shadow-red-600/30 transition-all duration-200 hover:scale-105 active:scale-95 text-xs">
+                        הצטרפות למועדון האוהדים
+                    </a>
+                </div>
+
+                <!-- כפתור תפריט לניידים -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md hover:bg-zinc-900 transition-colors" aria-label="תפריט">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- תפריט נייד נפתח -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black border-t border-red-900/30 px-4 pt-2 pb-6 space-y-3 transition-all duration-300">
+            <a href="#hero" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">דף הבית</a>
+            <a href="#history" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">היסטוריה וביוגרפיה</a>
+            <a href="#squad" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">סגל השחקנים</a>
+            <a href="#trivia" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">חידון האוהדים</a>
+            <a href="#chants" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">שירי יציע</a>
+            <a href="#stadium" class="block text-gray-300 hover:text-red-500 hover:bg-zinc-900 px-3 py-2.5 rounded-lg text-base font-medium transition-colors">אצטדיון טרנר</a>
+            <div class="pt-2">
+                <a href="#newsletter" class="block text-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-all duration-200 text-sm">
+                    הצטרפות למועדון האוהדים
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- מסך הבית המרכזי עם סמל המועדון המקורי וקטורי בגדול -->
+    <section id="hero" class="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-950/50 via-zinc-950 to-zinc-950 pt-10 pb-16">
+        <!-- רקע אדום מעומעם למראה דרמטי -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-800/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- מידע טקסטואלי וקריאה לפעולה -->
+                <div class="lg:col-span-6 text-center lg:text-right space-y-6 fade-in">
+                    <div class="inline-flex items-center space-x-2 space-x-reverse bg-red-600/10 border border-red-500/20 px-4 py-2 rounded-full text-red-500 text-xs font-bold tracking-wide">
+                        <span class="w-2.5 h-2.5 bg-red-600 rounded-full pulse-red ml-2"></span>
+                        פורטל האוהדים האינטראקטיבי הרשמי
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight">
+                        גאוות הנגב, <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-rose-400">הפועל באר שבע!</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                        ברוכים הבאים ללב הפועם של בירת הנגב. מועדון בעל היסטוריה מפוארת של חמש אליפויות מדינה, שלושה גביעים, קהל אוהדים נאמן הממלא את אצטדיון טרנר, והנהגה חזקה בראשות אלונה ברקת.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#history" class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl shadow-xl shadow-red-600/30 transition-all duration-200 hover:scale-105 text-base text-center">
+                            היסטוריית המועדון
+                        </a>
+                        <a href="#squad" class="border border-zinc-800 hover:border-red-600 bg-zinc-900/50 hover:bg-red-600/10 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 text-base text-center">
+                            הכירו את השחקנים
+                        </a>
+                    </div>
+                </div>
+
+                <!-- לוגו הקבוצה המקורי שמשוחזר ב-SVG ומובטח שיוצג תמיד -->
+                <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
+                    <!-- זוהר אדום עוצמתי מאחורי הלוגו -->
+                    <div class="absolute w-80 h-80 bg-red-600/20 rounded-full blur-[100px] -z-10 animate-pulse"></div>
+                    
+                    <div class="relative bg-zinc-900/85 border border-red-900/30 p-8 rounded-[40px] shadow-2xl backdrop-blur-sm hover:scale-105 transition-transform duration-500 flex flex-col items-center max-w-sm mx-auto w-full">
+                        
+                        <!-- שחזור וקטורי מלא ומקצועי של הסמל שהעלית -->
+                        <div class="w-72 h-72 relative flex items-center justify-center filter drop-shadow-[0_15px_30px_rgba(220,38,38,0.25)]">
+                            <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                                <!-- כוכב זהב ענקי בראש הסמל -->
+                                <polygon points="100,5 104,17 116,17 107,24 110,36 100,29 90,36 93,24 84,17 96,17" fill="#eab308" filter="drop-shadow(0px 0px 5px rgba(234, 179, 8, 0.8))" />
+                                <g transform="translate(0, 15)">
+                                    <!-- מעגל חיצוני -->
+                                    <circle cx="100" cy="100" r="95" fill="none" stroke="#dc2626" stroke-width="4" />
+                                    <!-- בסיס לבן פנימי -->
+                                    <circle cx="100" cy="100" r="91" fill="#ffffff" />
+                                    <!-- קשת אדומה עליונה לטקסט -->
+                                    <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="24" />
+                                    
+                                    <!-- נתיבי טקסטים מדויקים - אנגלית מצד שמאל, עברית מצד ימין -->
+                                    <path id="arc-eng" d="M 22,100 A 78,78 0 0,1 100,22" fill="none" />
+                                    <text fill="#ffffff" font-size="8.5" font-weight="900" font-family="'Rubik', sans-serif">
+                                        <textPath href="#arc-eng" startOffset="50%" text-anchor="middle">HAPOEL BEER-SHEVA</textPath>
+                                    </text>
+                                    <path id="arc-heb" d="M 178,100 A 78,78 0 0,0 100,22" fill="none" />
+                                    <text fill="#ffffff" font-size="10.5" font-weight="900" font-family="'Rubik', sans-serif">
+                                        <textPath href="#arc-heb" startOffset="50%" text-anchor="middle">הפועל באר-שבע</textPath>
+                                    </text>
+                                    
+                                    <!-- גדר מגרש אדומה-לבנה במרכז -->
+                                    <rect x="10" y="93" width="180" height="11" fill="#dc2626" />
+                                    <line x1="14" y1="98" x2="186" y2="98" stroke="#ffffff" stroke-width="6" stroke-dasharray="2,3" />
+                                    
+                                    <!-- סמל הפועל (האתלט האדום והמגל) משמאל -->
+                                    <g transform="translate(-2, 0)">
+                                        <path d="M 52,48 A 15,15 0 1,1 78,64 L 72,59 A 11,11 0 1,0 55,50" fill="#dc2626" />
+                                        <circle cx="63.5" cy="43.5" r="4" fill="#dc2626" />
+                                        <path d="M 63.5,47.5 L 63.5,62.5 M 63.5,49.5 L 48,43 M 63.5,50.5 L 77,54" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
+                                        <path d="M 63.5,62.5 L 48,77 M 63.5,62.5 L 78,77" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round" />
+                                        <polygon points="42,80 80,68 77,64 39,76" fill="#dc2626" />
+                                        <text x="60" y="89" fill="#dc2626" font-family="'Rubik', sans-serif" font-size="11" font-weight="900" text-anchor="middle">הפועל</text>
+                                    </g>
+                                    
+                                    <!-- מגדל המים המקורי מימין -->
+                                    <g transform="translate(3, 0)">
+                                        <rect x="121" y="52" width="6" height="42" fill="#dc2626" />
+                                        <rect x="115" y="52" width="2" height="42" fill="#dc2626" />
+                                        <rect x="131" y="52" width="2" height="42" fill="#dc2626" />
+                                        <polygon points="112,32 136,32 132,52 116,52" fill="#dc2626" />
+                                        <line x1="124" y1="32" x2="124" y2="52" stroke="#ffffff" stroke-width="1.5" />
+                                        <line x1="112" y1="39" x2="136" y2="39" stroke="#ffffff" stroke-width="1.5" />
+                                    </g>
+                                    
+                                    <!-- חצי כדורגל אדום-לבן תחתון עם פאנלים מדויקים -->
+                                    <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
+                                    <polygon points="100,145 125,160 115,188 85,188 75,160" fill="none" stroke="#ffffff" stroke-width="2.5" />
+                                    <line x1="100" y1="145" x2="100" y2="104" stroke="#ffffff" stroke-width="2.5" />
+                                    <line x1="75" y1="160" x2="45" y2="140" stroke="#ffffff" stroke-width="2.5" />
+                                    <line x1="125" y1="160" x2="155" y2="140" stroke="#ffffff" stroke-width="2.5" />
+                                    <line x1="85" y1="188" x2="65" y2="198" stroke="#ffffff" stroke-width="2.5" />
+                                    <line x1="115" y1="188" x2="135" y2="198" stroke="#ffffff" stroke-width="2.5" />
+                                    <polygon points="38,135 60,118 75,135 65,155 45,150" fill="none" stroke="#ffffff" stroke-width="2" />
+                                    <polygon points="162,135 140,118 125,135 135,155 155,150" fill="none" stroke="#ffffff" stroke-width="2" />
+                                </g>
+                            </svg>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <h3 class="text-xl font-black text-white">הסמל הרשמי</h3>
+                            <p class="text-[10px] text-red-500 mt-1 font-bold tracking-widest uppercase">HAPOEL BE'ER-SHEVA FC</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- לוח משחקים וספירה לאחור למשחק הקרוב -->
+    <section class="py-8 bg-zinc-950 border-y border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                
+                <!-- מידע על המשחק הבא -->
+                <div class="flex items-center space-x-4 space-x-reverse w-full lg:w-auto justify-center lg:justify-start">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-1 shrink-0 shadow-lg relative overflow-hidden">
+                        <!-- סמל וקטורי ממוזער למשחקים -->
+                        <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="translate(0, 10)">
+                                <circle cx="100" cy="100" r="95" fill="#dc2626" />
+                                <circle cx="100" cy="100" r="85" fill="#ffffff" />
+                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="22" />
+                                <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <span class="bg-red-600/15 text-red-500 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border border-red-500/10">המשחק הבא בטרנר</span>
+                        <h4 class="text-base font-bold text-white mt-1">הפועל באר שבע <span class="text-red-500">מארחת</span> את מכבי תל אביב</h4>
+                        <p class="text-xs text-gray-400 font-light">מחזור ליגה קרוב | אצטדיון טוטו טרנר</p>
+                    </div>
+                </div>
+
+                <!-- מונה ספירה לאחור מעוצב -->
+                <div class="grid grid-cols-4 gap-2 text-center w-full max-w-xs sm:max-w-sm" id="countdown-timer">
+                    <div class="bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-850">
+                        <span class="block text-lg font-black text-red-500" id="days">04</span>
+                        <span class="text-[9px] text-gray-555 uppercase font-bold">ימים</span>
+                    </div>
+                    <div class="bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-850">
+                        <span class="block text-lg font-black text-red-500" id="hours">12</span>
+                        <span class="text-[9px] text-gray-555 uppercase font-bold">שעות</span>
+                    </div>
+                    <div class="bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-850">
+                        <span class="block text-lg font-black text-red-500" id="minutes">45</span>
+                        <span class="text-[9px] text-gray-555 uppercase font-bold">דקות</span>
+                    </div>
+                    <div class="bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-850">
+                        <span class="block text-lg font-black text-red-500" id="seconds">30</span>
+                        <span class="text-[9px] text-gray-555 uppercase font-bold">שניות</span>
+                    </div>
+                </div>
+
+                <!-- כפתורים להזמנת כרטיסים והסעות -->
+                <div class="flex gap-2 w-full lg:w-auto justify-center">
+                    <button onclick="scrollToSection('stadium')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-red-600/20">
+                        <i class="fa-solid fa-ticket ml-1.5"></i> רכישת כרטיסים
+                    </button>
+                    <button onclick="showCustomModal('הסעות אוהדים', 'לוח הסעות האוהדים למשחק הקרוב יתפרסם כ-48 שעות לפני שעת השריקה. ההסעות ייצאו מכל רחבי הארץ בצורה מסודרת ומאורגנת.', 'fa-bus')" class="bg-zinc-900 hover:bg-zinc-850 text-gray-350 border border-zinc-800 py-3 px-4 rounded-xl text-xs font-semibold transition-all">
+                        <i class="fa-solid fa-bus"></i> הסעות אוהדים
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- היכל התארים והכבוד של המועדון -->
+    <section class="py-16 bg-zinc-950 border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-center text-xs font-bold text-red-500 tracking-widest uppercase mb-10">היכל התארים והכבוד של המועדון</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+                
+                <!-- תואר 1 -->
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-850 hover:border-red-900/30 transition-all duration-200">
+                    <div class="w-12 h-12 mx-auto bg-yellow-500/10 text-yellow-500 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-trophy text-2xl"></i>
+                    </div>
+                    <span class="block text-3xl font-black text-white">5</span>
+                    <span class="text-xs text-gray-400 font-semibold">אליפויות מדינה</span>
+                </div>
+
+                <!-- תואר 2 -->
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-850 hover:border-red-900/30 transition-all duration-200">
+                    <div class="w-12 h-12 mx-auto bg-slate-300/10 text-slate-300 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-award text-2xl"></i>
+                    </div>
+                    <span class="block text-3xl font-black text-white">3</span>
+                    <span class="text-xs text-gray-400 font-semibold">גביעי מדינה</span>
+                </div>
+
+                <!-- תואר 3 -->
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-850 hover:border-red-900/30 transition-all duration-200">
+                    <div class="w-12 h-12 mx-auto bg-amber-600/10 text-amber-600 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-crown text-2xl"></i>
+                    </div>
+                    <span class="block text-3xl font-black text-white">4</span>
+                    <span class="text-xs text-gray-400 font-semibold">גביעי אלוף האלופים</span>
+                </div>
+
+                <!-- תואר 4 -->
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-850 hover:border-red-900/30 transition-all duration-200">
+                    <div class="w-12 h-12 mx-auto bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-medal text-2xl"></i>
+                    </div>
+                    <span class="block text-3xl font-black text-white">3</span>
+                    <span class="text-xs text-gray-400 font-semibold">גביעי הטוטו</span>
+                </div>
+
+                <!-- תואר 5 -->
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-850 hover:border-red-900/30 transition-all duration-200 col-span-2 md:col-span-1">
+                    <div class="w-12 h-12 mx-auto bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-earth-europe text-2xl"></i>
+                    </div>
+                    <span class="block text-3xl font-black text-white">32+</span>
+                    <span class="text-xs text-gray-400 font-semibold">הופעות באירופה</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ביוגרפיה והיסטוריה עשירה -->
+    <section id="history" class="py-20 bg-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">הביוגרפיה המפוארת של האדומים</h2>
+                <div class="h-1 w-20 bg-red-600 mx-auto mt-4 rounded"></div>
+                <p class="text-gray-400 mt-4">מסע היסטורי מרגש מחולות המדבר של 1949 ועד לפסגת הכדורגל הישראלי והישגים בלתי נשכחים באירופה.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- סיפור ההיסטוריה השלם -->
+                <div class="lg:col-span-7 bg-zinc-900/40 border border-zinc-850 p-6 sm:p-8 rounded-3xl space-y-6">
+                    <h3 class="text-2xl font-bold text-red-500">מחולות הנגב אל פסגת המדינה</h3>
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        מועדון הכדורגל **הפועל באר שבע** הוקם בשנת 1949 על ידי שחקן העבר אהרון בן יעקב, זמן קצר לאחר סיום מלחמת העצמאות ושחרור הנגב. המועדון סימל את הפרחת השממה ואת החיבור העמוק של תושבי הדרום לחלוציות העברית ולספורט תחרותי. הקבוצה החלה את דרכה בליגות המחוזיות וקיימה את משחקיה הביתיים במשך עשרות שנים באצטדיון "וסרמיל" המיתולוגי.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        שנות ה-70 של המאה הקודמת היו תור הזהב הראשון של הקבוצה. תחת הדרכתו של המאמן האגדי אמציה לבקוביץ', ובכיכובם של סמלים מקומיים כמו מאיר ברד, שלום אביטן, ורפי אליהו, זכתה הקבוצה בשתי אליפויות מדינה רצופות ומרגשות בעונות **1974/1975** ו-**1975/1976**.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        בשנת 2007 רכשה אשת העסקים **אלונה ברקת** את הקבוצה, ובכך החל העידן המודרני של המועדון שהביא לפסגות חדשות. שיא המהפכה המקצועית הגיע עם המעבר לאצטדיון טוטו טרנר בשנת 2015. תחת הדרכתו של המאמן ברק בכר ובהובלת שחקנים אגדיים כמו אליניב ברדה, מאור מליקסון וטוני וואקמה, רשמה הקבוצה רצף היסטורי של שלוש אליפויות רצופות וקמפיינים מדהימים באירופה.
+                    </p>
+                    <div class="bg-red-950/20 border border-red-900/30 p-4 rounded-2xl flex items-center space-x-4 space-x-reverse">
+                        <div class="bg-red-600/10 p-3 rounded-xl text-red-500">
+                            <i class="fa-solid fa-quote-right text-2xl"></i>
+                        </div>
+                        <p class="text-xs text-red-100 italic font-semibold">
+                            "הפועל באר שבע היא מעבר למועדון ספורט. היא הרוח, הזהות והגאווה של הנגב כולו."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ציר זמן היסטורי אינטראקטיבי -->
+                <div class="lg:col-span-5 space-y-4">
+                    <h4 class="text-lg font-bold text-white mb-2">אבני דרך היסטוריות (לחצו למידע מורחב)</h4>
+                    
+                    <!-- שנת 1949 -->
+                    <div class="p-5 bg-zinc-900 rounded-2xl border-r-4 border-red-600 border-y border-l border-zinc-850 flex gap-4 cursor-pointer hover:bg-zinc-850/70 transition-all" onclick="showTimelineDetail('1949')">
+                        <div class="text-center">
+                            <span class="block text-2xl font-black text-red-500">1949</span>
+                            <span class="text-[9px] text-gray-550 uppercase font-bold tracking-wider">הקמה</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">ייסוד המועדון</h5>
+                            <p class="text-xs text-gray-450 mt-1">ראשית הימים בחולות באר שבע וגיבוש המועדון.</p>
+                        </div>
+                    </div>
+
+                    <!-- שנת 1975 -->
+                    <div class="p-5 bg-zinc-900 rounded-2xl border-r-4 border-yellow-500 border-y border-l border-zinc-850 flex gap-4 cursor-pointer hover:bg-zinc-855/70 transition-all" onclick="showTimelineDetail('1975')">
+                        <div class="text-center">
+                            <span class="block text-2xl font-black text-yellow-500">1975</span>
+                            <span class="text-[9px] text-gray-555 uppercase font-bold tracking-wider">תואר</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">אליפות ראשונה והיסטורית</h5>
+                            <p class="text-xs text-gray-450 mt-1">אמציה לבקוביץ' מוביל את המועדון לאליפות מרהיבה.</p>
+                        </div>
+                    </div>
+
+                    <!-- שנת 2007 -->
+                    <div class="p-5 bg-zinc-900 rounded-2xl border-r-4 border-red-600 border-y border-l border-zinc-850 flex gap-4 cursor-pointer hover:bg-zinc-855/70 transition-all" onclick="showTimelineDetail('2007')">
+                        <div class="text-center">
+                            <span class="block text-2xl font-black text-red-500">2007</span>
+                            <span class="text-[9px] text-gray-555 uppercase font-bold tracking-wider">מהפך</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">עידן אלונה ברקת</h5>
+                            <p class="text-xs text-gray-450 mt-1">רכישת המועדון והתחלת מהפכה חברתית ומקצועית בנגב.</p>
+                        </div>
+                    </div>
+
+                    <!-- שנת 2016 -->
+                    <div class="p-5 bg-zinc-900 rounded-2xl border-r-4 border-yellow-500 border-y border-l border-zinc-850 flex gap-4 cursor-pointer hover:bg-zinc-855/70 transition-all" onclick="showTimelineDetail('2016')">
+                        <div class="text-center">
+                            <span class="block text-2xl font-black text-yellow-500">2016</span>
+                            <span class="text-[9px] text-gray-555 uppercase font-bold tracking-wider">אימפריה</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">האליפות השלישית וחניכת טרנר</h5>
+                            <p class="text-xs text-gray-450 mt-1">חזרה לפסגה אחרי 40 שנות המתנה עם אצטדיון חדש לגמרי.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- סגל השחקנים של המועדון -->
+    <section id="squad" class="py-20 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">סגל השחקנים של באר שבע</h2>
+                <div class="h-1 w-20 bg-red-600 mx-auto mt-4 rounded"></div>
+                <p class="text-gray-400 mt-4">הלוחמים שלובשים את החולצה האדומה השנה ומייצגים את הסמל בכל משחק מחדש.</p>
+            </div>
+
+            <!-- פילטר סינון שחקנים לפי עמדה -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="squad-filters">
+                <button onclick="filterSquad('all')" class="squad-filter-btn active bg-red-600 text-white font-bold py-2.5 px-6 rounded-full text-sm transition-all shadow-md shadow-red-600/20">כל הסגל</button>
+                <button onclick="filterSquad('gk')" class="squad-filter-btn bg-zinc-900 text-gray-300 hover:text-white hover:bg-zinc-855 font-semibold py-2.5 px-6 rounded-full text-sm transition-all border border-zinc-800">שוערים</button>
+                <button onclick="filterSquad('def')" class="squad-filter-btn bg-zinc-900 text-gray-300 hover:text-white hover:bg-zinc-855 font-semibold py-2.5 px-6 rounded-full text-sm transition-all border border-zinc-800">הגנה</button>
+                <button onclick="filterSquad('mid')" class="squad-filter-btn bg-zinc-900 text-gray-300 hover:text-white hover:bg-zinc-855 font-semibold py-2.5 px-6 rounded-full text-sm transition-all border border-zinc-800">קישור</button>
+                <button onclick="filterSquad('att')" class="squad-filter-btn bg-zinc-900 text-gray-300 hover:text-white hover:bg-zinc-855 font-semibold py-2.5 px-6 rounded-full text-sm transition-all border border-zinc-800">התקפה</button>
+            </div>
+
+            <!-- גריד השחקנים הרספונסיבי -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="squad-grid">
+                
+                <!-- שחקן 1: מיגל ויטור -->
+                <div class="player-card bg-zinc-900/60 rounded-3xl overflow-hidden border border-zinc-850 hover:border-red-600/40 transition-all duration-300 shadow-xl group" data-position="def">
+                    <div class="relative h-72 bg-gradient-to-t from-zinc-950 to-red-950/20 flex items-end justify-center overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-40 transition-opacity">
+                            <span class="text-9xl font-black text-red-900">4</span>
+                        </div>
+                        <svg class="w-48 h-60 text-gray-400 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
+                            <path d="M 50 20 C 55 20, 58 15, 58 10 C 58 5, 55 0, 50 0 C 45 0, 42 5, 42 10 C 42 15, 45 20, 50 20 Z"/>
+                            <path d="M 50 25 C 38 25, 25 32, 25 45 L 25 90 C 25 90, 32 100, 50 100 C 68 100, 75 90, 75 90 L 75 45 C 75 32, 62 25, 50 25 Z"/>
+                        </svg>
+                        <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3.5 py-1.5 rounded-2xl text-lg shadow-lg">4</div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent text-center">
+                            <span class="bg-red-950 border border-red-500/30 text-red-500 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">בלם / קפטן</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h4 class="text-xl font-bold text-white group-hover:text-red-500 transition-colors">מיגל ויטור</h4>
+                        <p class="text-xs text-gray-400 mt-1">הקפטן והלב השומר על מרכז ההגנה של האדומים.</p>
+                        <div class="mt-4 pt-4 border-t border-zinc-850 flex justify-around text-xs text-gray-400 font-medium">
+                            <div><span class="block font-bold text-white">פורטוגל</span>מדינה</div>
+                            <div class="border-r border-zinc-800 px-4"></div>
+                            <div><span class="block font-bold text-white">36</span>גיל</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- שחקן 2: הלדר לופס -->
+                <div class="player-card bg-zinc-900/60 rounded-3xl overflow-hidden border border-zinc-850 hover:border-red-600/40 transition-all duration-300 shadow-xl group" data-position="def">
+                    <div class="relative h-72 bg-gradient-to-t from-zinc-950 to-red-950/20 flex items-end justify-center overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-40 transition-opacity">
+                            <span class="text-9xl font-black text-red-900">22</span>
+                        </div>
+                        <svg class="w-48 h-60 text-gray-400 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
+                            <path d="M 50 20 C 55 20, 58 15, 58 10 C 58 5, 55 0, 50 0 C 45 0, 42 5, 42 10 C 42 15, 45 20, 50 20 Z"/>
+                            <path d="M 50 25 C 38 25, 25 32, 25 45 L 25 90 C 25 90, 32 100, 50 100 C 68 100, 75 90, 75 90 L 75 45 C 75 32, 62 25, 50 25 Z"/>
+                        </svg>
+                        <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3.5 py-1.5 rounded-2xl text-lg shadow-lg">22</div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent text-center">
+                            <span class="bg-red-950 border border-red-500/30 text-red-500 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">מגן שמאלי</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h4 class="text-xl font-bold text-white group-hover:text-red-500 transition-colors">הלדר לופס</h4>
+                        <p class="text-xs text-gray-400 mt-1">מגן מהיר, אנרגטי ובעל יכולת פריצה מדהימה באגף.</p>
+                        <div class="mt-4 pt-4 border-t border-zinc-850 flex justify-around text-xs text-gray-400 font-medium">
+                            <div><span class="block font-bold text-white">פורטוגל</span>מדינה</div>
+                            <div class="border-r border-zinc-800 px-4"></div>
+                            <div><span class="block font-bold text-white">36</span>גיל</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- שחקן 3: אופיר מרציאנו -->
+                <div class="player-card bg-zinc-900/60 rounded-3xl overflow-hidden border border-zinc-850 hover:border-red-600/40 transition-all duration-300 shadow-xl group" data-position="gk">
+                    <div class="relative h-72 bg-gradient-to-t from-zinc-950 to-yellow-950/20 flex items-end justify-center overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-40 transition-opacity">
+                            <span class="text-9xl font-black text-yellow-900">1</span>
+                        </div>
+                        <svg class="w-48 h-60 text-yellow-600/40 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
+                            <path d="M 50 20 C 55 20, 58 15, 58 10 C 58 5, 55 0, 50 0 C 45 0, 42 5, 42 10 C 42 15, 45 20, 50 20 Z"/>
+                            <path d="M 50 25 C 38 25, 25 32, 25 45 L 25 90 C 25 90, 32 100, 50 100 C 68 100, 75 90, 75 90 L 75 45 C 75 32, 62 25, 50 25 Z"/>
+                        </svg>
+                        <div class="absolute top-4 right-4 bg-yellow-600 text-white font-black px-3.5 py-1.5 rounded-2xl text-lg shadow-lg">1</div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent text-center">
+                            <span class="bg-yellow-950 border border-yellow-500/30 text-yellow-500 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">שוער ראשון</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h4 class="text-xl font-bold text-white group-hover:text-yellow-500 transition-colors">אופיר מרציאנו</h4>
+                        <p class="text-xs text-gray-400 mt-1">שוער נבחרת ישראל לשעבר עם ניסיון אירופי עשיר.</p>
+                        <div class="mt-4 pt-4 border-t border-zinc-850 flex justify-around text-xs text-gray-400 font-medium">
+                            <div><span class="block font-bold text-white">ישראל</span>מדינה</div>
+                            <div class="border-r border-zinc-800 px-4"></div>
+                            <div><span class="block font-bold text-white">36</span>גיל</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- שחקן 4: רותם חטואל -->
+                <div class="player-card bg-zinc-900/60 rounded-3xl overflow-hidden border border-zinc-850 hover:border-red-600/40 transition-all duration-300 shadow-xl group" data-position="att">
+                    <div class="relative h-72 bg-gradient-to-t from-zinc-950 to-red-950/20 flex items-end justify-center overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-40 transition-opacity">
+                            <span class="text-9xl font-black text-red-900">11</span>
+                        </div>
+                        <svg class="w-48 h-60 text-gray-450 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
+                            <path d="M 50 20 C 55 20, 58 15, 58 10 C 58 5, 55 0, 50 0 C 45 0, 42 5, 42 10 C 42 15, 45 20, 50 20 Z"/>
+                            <path d="M 50 25 C 38 25, 25 32, 25 45 L 25 90 C 25 90, 32 100, 50 100 C 68 100, 75 90, 75 90 L 75 45 C 75 32, 62 25, 50 25 Z"/>
+                        </svg>
+                        <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3.5 py-1.5 rounded-2xl text-lg shadow-lg">11</div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent text-center">
+                            <span class="bg-red-950 border border-red-500/30 text-red-500 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">חלוץ</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h4 class="text-xl font-bold text-white group-hover:text-red-500 transition-colors">רותם חטואל</h4>
+                        <p class="text-xs text-gray-400 mt-1">חלוץ מהיר, חד ומטריף היציעים בטרנר.</p>
+                        <div class="mt-4 pt-4 border-t border-zinc-850 flex justify-around text-xs text-gray-400 font-medium">
+                            <div><span class="block font-bold text-white">ישראל</span>מדינה</div>
+                            <div class="border-r border-zinc-800 px-4"></div>
+                            <div><span class="block font-bold text-white">28</span>גיל</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- אזור אינטראקטיבי: חידון האוהדים של הפועל באר שבע -->
+    <section id="trivia" class="py-20 bg-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- מידע על החידון -->
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="bg-red-600/10 border border-red-500/25 text-red-500 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full">בחן את עצמך</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white">האם אתה אוהד שרוף אמיתי?</h2>
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        בנינו במיוחד עבורכם משחק טריוויה אינטראקטיבי כדי לבדוק את רמת הידע שלכם על האליפויות המפוארות, אגדות העבר, והרגעים ההיסטוריים בטרנר ובאירופה.
+                    </p>
+                    <div class="flex items-center space-x-3 space-x-reverse text-sm text-gray-400">
+                        <i class="fa-solid fa-medal text-yellow-500 text-xl"></i>
+                        <span>סיימו את החידון וזכו בתואר אוהד מוסמך!</span>
+                    </div>
+                </div>
+
+                <!-- חלונית החידון האינטראקטיבית -->
+                <div class="lg:col-span-7 w-full">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden" id="trivia-container">
+                        
+                        <!-- כותרת החידון פנימית -->
+                        <div class="flex justify-between items-center pb-4 border-b border-zinc-800 mb-6">
+                            <span class="text-xs font-bold text-red-500 uppercase tracking-widest" id="trivia-question-counter">שאלה 1 מתוך 4</span>
+                            <span class="text-xs font-bold text-gray-400" id="trivia-score">ניקוד: 0</span>
+                        </div>
+
+                        <!-- תוכן השאלה והתשובות -->
+                        <div class="space-y-6" id="trivia-body">
+                            <h3 class="text-lg sm:text-xl font-bold text-white" id="trivia-question">באיזו שנה הוקמה הפועל באר שבע?</h3>
+                            
+                            <!-- כפתורי התשובות -->
+                            <div class="grid grid-cols-1 gap-3" id="trivia-options">
+                                <button onclick="selectAnswer(0)" class="w-full text-right bg-zinc-950 hover:bg-zinc-850 text-gray-250 hover:text-white font-medium py-3.5 px-5 rounded-xl border border-zinc-800 hover:border-red-600/50 transition-all text-sm">
+                                    1. 1949
+                                </button>
+                                <button onclick="selectAnswer(1)" class="w-full text-right bg-zinc-950 hover:bg-zinc-850 text-gray-250 hover:text-white font-medium py-3.5 px-5 rounded-xl border border-zinc-800 hover:border-red-600/50 transition-all text-sm">
+                                    2. 1955
+                                </button>
+                                <button onclick="selectAnswer(2)" class="w-full text-right bg-zinc-950 hover:bg-zinc-850 text-gray-250 hover:text-white font-medium py-3.5 px-5 rounded-xl border border-zinc-800 hover:border-red-600/50 transition-all text-sm">
+                                    3. 1962
+                                </button>
+                                <button onclick="selectAnswer(3)" class="w-full text-right bg-zinc-950 hover:bg-zinc-850 text-gray-250 hover:text-white font-medium py-3.5 px-5 rounded-xl border border-zinc-800 hover:border-red-600/50 transition-all text-sm">
+                                    4. 1970
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- משוב על בחירת תשובה -->
+                        <div class="hidden mt-4 p-4 rounded-xl text-center font-bold text-sm" id="trivia-feedback"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- שירי יציע ומחולל קצב וירטואלי -->
+    <section id="chants" class="py-20 bg-zinc-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-red-950/10 via-zinc-950 to-zinc-950 pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">שירי היציע של הדרום</h2>
+                <div class="h-1 w-20 bg-red-600 mx-auto mt-4 rounded"></div>
+                <p class="text-gray-400 mt-4">בחרו שיר כדי לפתוח את המילים ותופפו את הקצב ישירות מהיציע הווירטואלי!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- פלייליסט השירים -->
+                <div class="lg:col-span-5 space-y-3">
+                    <h3 class="text-lg font-bold text-white mb-4">רשימת השירים</h3>
+                    
+                    <button onclick="playSong(0)" class="song-btn active w-full p-4 bg-zinc-900 rounded-2xl border-l-4 border-red-600 border-y border-r border-zinc-850 flex items-center justify-between text-right hover:bg-zinc-850 transition-all">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-music"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">באר שבע לא תרד</h4>
+                                <span class="text-[10px] text-gray-550 font-medium">הקלאסיקה המפורסמת מכולן</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-play text-xs text-red-500"></i>
+                    </button>
+
+                    <button onclick="playSong(1)" class="song-btn w-full p-4 bg-zinc-900 rounded-2xl border-l-4 border-transparent border-y border-r border-zinc-850 flex items-center justify-between text-right hover:bg-zinc-850 transition-all">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-drum"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">אדום עולה - הלב שלי באדום</h4>
+                                <span class="text-[10px] text-gray-555 font-medium">שיר טירוף לפתיחת משחקים</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-play text-xs text-gray-400"></i>
+                    </button>
+
+                    <button onclick="playSong(2)" class="song-btn w-full p-4 bg-zinc-900 rounded-2xl border-l-4 border-transparent border-y border-r border-zinc-850 flex items-center justify-between text-right hover:bg-zinc-855 transition-all">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-bullhorn"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">שיר האליפות - אדום עולה בנגב</h4>
+                                <span class="text-[10px] text-gray-555 font-medium">שיר חגיגות האליפות של תור הזהב</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-play text-xs text-gray-400"></i>
+                    </button>
+                </div>
+
+                <!-- לוח המילים וסימולטור הקצב -->
+                <div class="lg:col-span-7">
+                    <div class="bg-zinc-900 border border-zinc-850 rounded-3xl p-6 sm:p-8 shadow-xl relative">
+                        
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+                                <span class="text-xs font-bold text-green-400" id="now-playing">מתנגן כעת: באר שבע לא תרד</span>
+                            </div>
+                            
+                            <!-- כפתור סימולטור התופים הדינמי -->
+                            <button onclick="simulateDrumBeat()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-full transition-all flex items-center gap-1.5 shadow-lg shadow-red-600/20">
+                                <i class="fa-solid fa-drum"></i> תן קצב תופים
+                            </button>
+                        </div>
+
+                        <!-- אנימציית אקוולייזר מונפשת בעת תיפוף -->
+                        <div class="h-10 flex items-end justify-center gap-1.5 mb-8" id="visualizer-bars">
+                            <div class="w-2.5 bg-red-600 rounded-t h-4 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-red-500 rounded-t h-8 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-rose-500 rounded-t h-5 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-red-700 rounded-t h-10 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-red-600 rounded-t h-6 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-red-500 rounded-t h-9 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-zinc-800 rounded-t h-3 transition-all duration-150"></div>
+                            <div class="w-2.5 bg-red-600 rounded-t h-7 transition-all duration-150"></div>
+                        </div>
+
+                        <!-- חלונית מילים של שירי היציע -->
+                        <div class="bg-zinc-950/90 rounded-2xl p-6 border border-zinc-850 max-h-[300px] overflow-y-auto text-center font-medium leading-relaxed" id="lyrics-box">
+                            <p class="text-lg text-white font-bold mb-4">באר שבע לא תרד!</p>
+                            <p class="text-gray-300">אדום עולה, אדום עולה</p>
+                            <p class="text-gray-300">הלב שלי תמיד אדום</p>
+                            <p class="text-gray-300">הנגב הוא צבוע באדום ובלבן</p>
+                            <p class="text-gray-300">נצעק חזק ביחד מהיציע לכאן!</p>
+                            <p class="text-red-500 font-bold mt-4">באר שבע לא תרד, באר שבע לא תרד!</p>
+                            <p class="text-gray-300">נלחמים על המגרש, נלחמים על הכבוד</p>
+                            <p class="text-gray-300">עם הקהל הכי מטורף שאפשר רק לחלום!</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- אצטדיון טרנר - הר הגעש האדום -->
+    <section id="stadium" class="py-20 bg-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">אצטדיון טוטו טרנר</h2>
+                <div class="h-1 w-20 bg-red-600 mx-auto mt-4 rounded"></div>
+                <p class="text-gray-400 mt-4">היציע, המבצר והבית הבלתי מעורער של הקבוצה.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- מידע טכני וגריד האצטדיון -->
+                <div class="lg:col-span-6 space-y-4">
+                    <div class="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-2xl overflow-hidden min-h-[350px] flex flex-col justify-between">
+                        
+                        <!-- שרטוט מגרש וירטואלי ברקע -->
+                        <div class="absolute inset-0 opacity-10 flex items-center justify-center pointer-events-none p-4">
+                            <svg viewBox="0 0 100 60" class="w-full h-full text-white">
+                                <rect x="0" y="0" width="100" height="60" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <line x1="50" y1="0" x2="50" y2="60" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="50" cy="30" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <span class="bg-red-600/10 text-red-500 text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-red-500/20">מפרט טכני וחווית צפייה</span>
+                            <h3 class="text-2xl font-bold text-white mt-4">אצטדיון טוטו טרנר ע"ש יעקב טרנר</h3>
+                            <p class="text-sm text-gray-300 mt-2 leading-relaxed">
+                                נחנך בספטמבר 2015 והחליף את אצטדיון וסרמיל המיתולוגי. האצטדיון בנוי בסגנון אירופאי המציע קרבה מקסימלית של היציעים לדשא ואקוסטיקה שיוצרת "הר געש" מעורר פחד אצל היריבות.
+                            </p>
+                        </div>
+
+                        <!-- נתונים מהירים -->
+                        <div class="grid grid-cols-3 gap-4 relative z-10 pt-6 border-t border-zinc-800">
+                            <div class="text-center">
+                                <span class="block text-xl font-bold text-red-500">16,126</span>
+                                <span class="text-[10px] text-gray-500 uppercase font-semibold">מושבים</span>
+                            </div>
+                            <div class="text-center border-x border-zinc-800">
+                                <span class="block text-xl font-bold text-red-500">שער 5</span>
+                                <span class="text-[10px] text-gray-500 uppercase font-semibold">גוש העידוד</span>
+                            </div>
+                            <div class="text-center">
+                                <span class="block text-xl font-bold text-red-500">דירוג 4</span>
+                                <span class="text-[10px] text-gray-500 uppercase font-semibold">דירוג אופ"א</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- שירותים ודרכי הגעה -->
+                <div class="lg:col-span-6 space-y-6">
+                    <h3 class="text-2xl font-bold text-white">מידע שימושי למגיעים למשחק</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">מיקום וגישה</h4>
+                                <p class="text-xs text-gray-400 mt-1">רחוב דוד אלעזר, באר שבע. גישה נוחה לרכבים פרטיים ותחבורה ציבורית עם חניון אוהדים רחב ידיים.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">חנות האוהדים הרשמית</h4>
+                                <p class="text-xs text-gray-400 mt-1">ממוקמת בשער המערבי (יציע הכבוד), מציעה מגוון צעיפים, חולצות משחק ומרצ'נדייז רשמי של הקבוצה.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 space-x-reverse">
+                            <div class="w-10 h-10 bg-red-600/10 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-wheelchair"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">נגישות מותאמת</h4>
+                                <p class="text-xs text-gray-400 mt-1">אצטדיון טרנר נגיש באופן מלא לאנשים עם מוגבלויות וכולל מעליות ומקומות ישיבה מותאמים בשערים המערבי והמזרחי.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- הצטרפות למועדון האוהדים הדיגיטלי -->
+    <section id="newsletter" class="py-20 bg-zinc-950 border-t border-zinc-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-600/10 text-red-500 rounded-full mb-6">
+                <i class="fa-solid fa-envelope-open-text text-3xl"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black text-white">הצטרפו לצבא האדום של הנגב!</h2>
+            <p class="text-gray-400 mt-3 max-w-xl mx-auto text-sm sm:text-base">
+                הירשמו עכשיו כדי לקבל עדכונים בלעדיים על רכש חדש, מועדי מכירת כרטיסים, הטבות בחנות האוהדים ישירות לאימייל שלכם.
+            </p>
+
+            <form onsubmit="handleNewsletterSubmit(event)" class="mt-8 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" id="newsletter-email" required placeholder="כתובת האימייל שלכם" class="flex-1 bg-zinc-900 border border-zinc-800 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl px-5 py-3.5 text-white text-sm outline-none transition-all placeholder:text-gray-500">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-red-600/20 hover:scale-105 active:scale-95 text-sm">
+                    הרשמה
+                </button>
+            </form>
+
+            <div class="hidden mt-4 p-4 rounded-xl text-center text-sm font-bold bg-green-950/40 border border-green-500/30 text-green-400 max-w-lg mx-auto" id="newsletter-status">
+                ברכותינו! נרשמתם בהצלחה לניוזלטר האוהדים הרשמי של הפועל באר שבע.
+            </div>
+
+        </div>
+    </section>
+
+    <!-- סרגל תחתון (פוטר) -->
+    <footer class="bg-black text-gray-400 text-xs py-12 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-right">
+                
+                <!-- מידע על אתר האוהדים -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-center md:justify-start space-x-2 space-x-reverse">
+                        <div class="w-8 h-8 rounded-full bg-black p-0.5 border border-red-600/40 flex items-center justify-center relative overflow-hidden">
+                            <!-- סמל וקטורי ממוזער לפוטר (מובנה לטעינה בטוחה) -->
+                            <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="translate(0, 10)">
+                                    <circle cx="100" cy="100" r="95" fill="#dc2626" />
+                                    <circle cx="100" cy="100" r="85" fill="#ffffff" />
+                                    <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="22" />
+                                    <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="text-base font-black text-white">הפועל באר שבע</span>
+                    </div>
+                    <p class="text-gray-455 max-w-xs mx-auto md:mx-0 font-light">אתר אוהדים עצמאי, המאגד את כל המידע והתוכן החם ביותר עבור תומכי המועדון מכל קצוות הארץ.</p>
+                </div>
+
+                <!-- קישורים מהירים -->
+                <div class="flex justify-center space-x-6 space-x-reverse text-gray-400 font-semibold">
+                    <a href="#hero" class="hover:text-red-500 transition-colors">בית</a>
+                    <a href="#history" class="hover:text-red-500 transition-colors">ביוגרפיה</a>
+                    <a href="#squad" class="hover:text-red-500 transition-colors">סגל</a>
+                    <a href="#trivia" class="hover:text-red-500 transition-colors">טריוויה</a>
+                </div>
+
+                <!-- זכויות יוצרים ורשתות חברתיות -->
+                <div class="space-y-4 md:text-left">
+                    <div class="flex justify-center md:justify-end space-x-4 space-x-reverse text-base text-gray-400">
+                        <a href="#" class="hover:text-red-500 transition-colors" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="hover:text-red-500 transition-colors" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-red-500 transition-colors" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                    <p>&copy; 2026 אתר האוהדים הלא רשמי של הפועל באר שבע. כל הזכויות שמורות לקבוצת האוהדים.</p>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- מודאל הודעות מותאם אישית (מחליף את תיבות ה-Alert הישנות) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-zinc-900 border border-red-950 rounded-3xl p-8 max-w-md w-full mx-4 relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-4">
+                <div class="w-16 h-16 mx-auto bg-red-600/10 text-red-500 rounded-full flex items-center justify-center text-2xl" id="modal-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white" id="modal-title">כותרת</h3>
+                <p class="text-gray-300 text-sm leading-relaxed" id="modal-body">תוכן...</p>
+                <button onclick="closeModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all">
+                    סגור
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- לוגיקת סקריפט ואינטראקטיביות -->
+    <script>
+        // ניהול פתיחת תפריט בניידים
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // סגירת תפריט נייד בלחיצה על קישור
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // פונקציית גלילה חלקה
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ניהול מודאל מותאם אישית
+        function showCustomModal(title, body, iconClass = 'fa-calendar-days') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = body;
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        // סגירת מודל
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // טיימר ספירה לאחור למשחק הקרוב
+        function updateCountdown() {
+            const matchDate = new Date();
+            matchDate.setDate(matchDate.getDate() + 4);
+            matchDate.setHours(20, 30, 0);
+
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const diff = matchDate.getTime() - now;
+
+                if (diff <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('countdown-timer').innerHTML = "<div class='text-red-500 font-black p-4 text-center col-span-4'>המשחק החל! שריקת פתיחה בטרנר!</div>";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        // פילטר סינון שחקני סגל לפי עמדות
+        function filterSquad(position) {
+            const buttons = document.querySelectorAll('#squad-filters button');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-red-600', 'text-white');
+                btn.classList.add('bg-zinc-900', 'text-gray-300', 'border-zinc-800');
+            });
+
+            const clickedBtn = event.currentTarget;
+            clickedBtn.classList.add('active', 'bg-red-600', 'text-white');
+            clickedBtn.classList.remove('bg-zinc-900', 'text-gray-300', 'border-zinc-800');
+
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach(card => {
+                if (position === 'all' || card.getAttribute('data-position') === position) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
             });
         }
-    }
-}
 
-function forceReloadStream() {
-    statusText.innerText = "מנסה שרת חלופי...";
-    // כתובת חלופית מאובטחת (Icecast)
-    const altStream = "https://icecast.liveradio.co.il/radio.mp3";
-    audio.src = altStream + "?t=" + Date.now();
-    audio.play().then(() => {
-        isPlaying = true;
-        btnIcon.className = "fa-solid fa-pause";
-        statusText.innerText = "מחובר (שרת חלופי)";
-        playBtn.classList.add('is-playing');
-        troubleshoot.style.display = "none";
-    }).catch(err => {
-        statusText.innerText = "השידור אינו זמין";
-        console.error("Alt stream also failed", err);
-    });
-}
+        // הצגת פירוט מורחב על תחנות ציר הזמן ההיסטורי במודאל היפה
+        function showTimelineDetail(year) {
+            const details = {
+                '1949': 'מועדון הפועל באר שבע הוקם רשמית בשנת 1949 על ידי אהרון בן יעקב, פחות משנה לאחר שחרור העיר במלחמת העצמאות.',
+                '1975': 'האליפות הראשונה בהיסטוריה של המועדון בהנהגת אמציה לבקוביץ\', וכוכבי העבר שלום אביטן, מאיר ברד ורפי אליהו. הקבוצה שיחזרה את ההישג וזכתה באליפות נוספת גם בעונה שאחרי (1976).',
+                '2007': 'אשת העסקים אלונה ברקת רוכשת את הפועל באר שבע ומחוללת מהפכה חסרת תקדים. השקעה מסיבית במחלקת הנוער, בקהילה ובניהול מקצועי אירופאי.',
+                '2016': 'הפועל באר שבע חוזרת לפסגה עם אליפות שלישית אחרי 40 שנות המתנה, חונכת את אצטדיון טוטו טרנר החדש ורושמת הישגים מרעישים בליגה האירופית מול מועדוני פאר כגון אינטר וסאות\'המפטון.'
+            };
 
-playBtn.addEventListener('click', togglePlay);
+            showCustomModal(`שנת ${year} בהיסטוריה`, details[year], 'fa-clock-rotate-left');
+        }
 
-// סנכרון נתוני DJ ולוח שידורים
-db.collection('settings').doc('dj_info').onSnapshot(doc => {
-    if(doc.exists) {
-        const d = doc.data();
-        document.getElementById('dj-name-display').innerText = d.name || "שידור אוטומטי";
-        document.getElementById('sub-status').innerText = d.name ? "שידור חי כרגע" : "מוזיקה ללא הפסקה";
-        if(d.image) document.getElementById('dj-image-display').src = d.image;
-        else if(d.offlineImage) document.getElementById('dj-image-display').src = d.offlineImage;
-    }
-});
+        // מאגר שאלות הטריוויה המובנה
+        const triviaQuestions = [
+            {
+                q: 'באיזו שנה הוקם המועדון הפועל באר שבע?',
+                options: ['1949', '1955', '1962', '1970'],
+                correct: 0
+            },
+            {
+                q: 'כמה אליפויות מדינה יש להפועל באר שבע?',
+                options: ['3 אליפויות', '4 אליפויות', '5 אליפויות', '6 אליפויות'],
+                correct: 2
+            },
+            {
+                q: 'מיהי נשיאת המועדון הנוכחית שרכשה אותו בשנת 2007?',
+                options: ['שרי אריסון', 'עינב גלילי', 'אלונה ברקת', 'דנה עזריאלי'],
+                correct: 2
+            },
+            {
+                q: 'את מי ניצחה באר שבע פעמיים בשלב הבתים של הליגה האירופית בעונת 2016/17?',
+                options: ['אינטר מילאן', 'אינטר דאבלין', 'אתלטיקו מדריד', 'בנפיקה ליסבון'],
+                correct: 0
+            }
+        ];
 
-const daysEng = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-const daysHeb = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
-const now = new Date();
-document.getElementById('current-day-label').innerText = daysHeb[now.getDay()];
+        let currentQuestionIdx = 0;
+        let score = 0;
 
-db.collection('settings').doc('schedule').onSnapshot(doc => {
-    if(doc.exists) {
-        const todayData = doc.data()[daysEng[now.getDay()]];
-        document.getElementById('schedule-content').innerText = (typeof todayData === 'string' ? todayData : todayData?.freeText) || "מוזיקה ברצף!";
-    }
-});
+        function renderQuestion() {
+            if (currentQuestionIdx >= triviaQuestions.length) {
+                let crownBadge = "אוהד שרוף ומקורב ליציע!";
+                if (score < 2) crownBadge = "אוהד מתחיל. מומלץ לקרוא את הביוגרפיה למעלה!";
+                else if (score < 4) crownBadge = "אוהד חזק! בקרוב מקבל מנוי כבוד.";
 
-db.collection('settings').doc('parties_info').onSnapshot(doc => {
-    if(doc.exists) {
-        const parties = doc.data();
-        const container = document.getElementById('party-container');
-        container.innerHTML = "";
-        Object.keys(parties).sort().forEach(key => {
-            const p = parties[key];
-            if(!p.title) return;
-            const card = document.createElement('div');
-            card.className = "party-row";
-            card.innerHTML = `
-                <div style="width:110px;"><img src="${p.image || ''}" style="width:100%; height:110px; object-fit:cover;"></div>
-                <div style="padding:15px; flex:1; text-align:right;">
-                    <div style="color:var(--primary); font-size:11px; font-weight:700;">${p.date || ''}</div>
-                    <div style="font-weight:800;">${p.title}</div>
-                    <div style="font-size:12px; opacity:0.6;">${p.desc || ''}</div>
-                </div>`;
-            container.appendChild(card);
-        });
-    }
-});
+                document.getElementById('trivia-container').innerHTML = `
+                    <div class="text-center py-8 space-y-6">
+                        <div class="w-20 h-20 mx-auto bg-red-600/10 text-red-500 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-trophy text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-white">החידון הושלם בהצלחה!</h3>
+                        <p class="text-lg text-gray-300">הציונים שלך הם: <span class="font-extrabold text-red-500">${score}/${triviaQuestions.length}</span></p>
+                        <p class="text-xs font-bold text-red-400 bg-red-950/40 py-2.5 px-4 rounded-full max-w-xs mx-auto">${crownBadge}</p>
+                        <button onclick="restartTrivia()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-2xl transition-all">התחל מחדש</button>
+                    </div>
+                `;
+                return;
+            }
 
-async function sendGreeting(event) {
-    const n = document.getElementById('msg-name').value, c = document.getElementById('msg-content').value;
-    if(!n || !c) return;
-    const btn = event.target;
-    btn.innerText = "שולח...";
-    try {
-        await fetch(`https://api.telegram.org/bot8414933459:AAGpn4XZLJWPjN7v4gn2niSyIxMHWVV08kY/sendMessage`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: "-5069698792", text: `🎙️ ד"ש מ: ${n}\n${c}` })
-        });
-        document.getElementById('msg-content').value = "";
-        btn.innerText = "נשלח!";
-        setTimeout(() => btn.innerText = "שלח הודעה", 3000);
-    } catch(e) { btn.innerText = "שגיאה"; }
-}
-</script>
+            const currentQ = triviaQuestions[currentQuestionIdx];
+            document.getElementById('trivia-question-counter').textContent = `שאלה ${currentQuestionIdx + 1} מתוך ${triviaQuestions.length}`;
+            document.getElementById('trivia-score').textContent = `ניקוד: ${score}`;
+            document.getElementById('trivia-question').textContent = currentQ.q;
+            
+            const optionsContainer = document.getElementById('trivia-options');
+            optionsContainer.innerHTML = '';
+            
+            currentQ.options.forEach((opt, idx) => {
+                optionsContainer.innerHTML += `
+                    <button onclick="selectAnswer(${idx})" class="w-full text-right bg-zinc-950 hover:bg-zinc-850 text-gray-250 hover:text-white font-medium py-3.5 px-5 rounded-xl border border-zinc-800 hover:border-red-600/50 transition-all text-sm">
+                        ${idx + 1}. ${opt}
+                    </button>
+                `;
+            });
+
+            const feedbackEl = document.getElementById('trivia-feedback');
+            feedbackEl.classList.add('hidden');
+        }
+
+        function selectAnswer(selectedIdx) {
+            const currentQ = triviaQuestions[currentQuestionIdx];
+            const feedbackEl = document.getElementById('trivia-feedback');
+            feedbackEl.classList.remove('hidden', 'bg-green-950/40', 'text-green-400', 'border-green-500/30', 'bg-red-950/40', 'text-red-400', 'border-red-500/30');
+
+            if (selectedIdx === currentQ.correct) {
+                score++;
+                feedbackEl.textContent = "נכון מאוד! תשובה מצוינת.";
+                feedbackEl.classList.add('bg-green-950/40', 'text-green-400', 'border', 'border-green-500/30');
+            } else {
+                feedbackEl.textContent = `תשובה שגויה. התשובה הנכונה היא: ${currentQ.options[currentQ.correct]}`;
+                feedbackEl.classList.add('bg-red-950/40', 'text-red-400', 'border', 'border-red-500/30');
+            }
+
+            const buttons = document.querySelectorAll('#trivia-options button');
+            buttons.forEach(btn => btn.disabled = true);
+
+            setTimeout(() => {
+                currentQuestionIdx++;
+                renderQuestion();
+            }, 2000);
+        }
+
+        function restartTrivia() {
+            currentQuestionIdx = 0;
+            score = 0;
+            document.getElementById('trivia-container').innerHTML = `
+                <div class="flex justify-between items-center pb-4 border-b border-zinc-800 mb-6">
+                    <span class="text-xs font-bold text-red-500 uppercase tracking-widest" id="trivia-question-counter">שאלה 1 מתוך 4</span>
+                    <span class="text-xs font-bold text-gray-400" id="trivia-score">ניקוד: 0</span>
+                </div>
+                <div class="space-y-6" id="trivia-body">
+                    <h3 class="text-lg sm:text-xl font-bold text-white" id="trivia-question">באיזו שנה הוקמה הפועל באר שבע?</h3>
+                    <div class="grid grid-cols-1 gap-3" id="trivia-options"></div>
+                </div>
+                <div class="hidden mt-4 p-4 rounded-2xl text-center font-bold text-sm" id="trivia-feedback"></div>
+            `;
+            renderQuestion();
+        }
+
+        // מילים לשירים
+        const songsDb = [
+            {
+                title: "באר שבע לא תרד",
+                subtitle: "הקלאסיקה המפורסמת מכולן",
+                lyrics: `
+                    <p class="text-lg text-white font-bold mb-4">באר שבע לא תרד!</p>
+                    <p class="text-gray-300">אדום עולה, אדום עולה</p>
+                    <p class="text-gray-300">הלב שלי תמיד אדום</p>
+                    <p class="text-gray-300">הנגב הוא צבוע באדום ובלבן</p>
+                    <p class="text-gray-300">נצעק חזק ביחד מהיציע לכאן!</p>
+                    <p class="text-red-500 font-bold mt-4">באר שבע לא תרד, באר שבע לא תרד!</p>
+                    <p class="text-gray-300">נלחמים על המגרש, נלחמים על הכבוד</p>
+                    <p class="text-gray-300">עם הקהל הכי מטורף שאפשר רק לחלום!</p>
+                `
+            },
+            {
+                title: "אדום עולה - הלב שלי באדום",
+                subtitle: "שיר טירוף לפתיחת משחקים",
+                lyrics: `
+                    <p class="text-lg text-white font-bold mb-4">הלב שלי באדום!</p>
+                    <p class="text-gray-300">בכל דקה, בכל שנייה מלווים אותך לכל מקום</p>
+                    <p class="text-gray-350">באר שבע, אהבת חיי היחידה בעולם</p>
+                    <p class="text-gray-305">נילחם בשבילך תמיד ונעמוד יחד מול כולם!</p>
+                    <p class="text-red-505 font-bold mt-4">אדום עולה! אדום עולה!</p>
+                    <p class="text-gray-305">כל היציע עכשיו מרעיש ושר בטירוף חושים</p>
+                    <p class="text-gray-305">הרעש בטרנר כבר מתחיל להרעיד את העולמות!</p>
+                `
+            },
+            {
+                title: "שיר האליפות - אדום עולה בנגב",
+                subtitle: "שיר חגיגות האליפות של תור הזהב",
+                lyrics: `
+                    <p class="text-lg text-white font-bold mb-4">צלחת אליפות בדרום!</p>
+                    <p class="text-gray-300">אחרי ארבעים שנה של ציפייה, חזרנו לחיים</p>
+                    <p class="text-gray-300">טרנר כולו מאיר, הניצוצות באוויר</p>
+                    <p class="text-gray-300">הנפנו את הצלחת ורשמנו דף היסטורי בעננים!</p>
+                    <p class="text-red-500 font-bold mt-4">הפועל אלופה, אימפריה אמיתית!</p>
+                    <p class="text-gray-350">באר שבע היא המלכה של המדבר והליגה!</p>
+                `
+            }
+        ];
+
+        function playSong(songIdx) {
+            const buttons = document.querySelectorAll('.song-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'border-red-600');
+                btn.classList.add('border-transparent');
+                btn.querySelector('i.fa-play')?.classList.replace('text-red-500', 'text-gray-400');
+            });
+
+            const clickedBtn = buttons[songIdx];
+            clickedBtn.classList.add('active', 'border-red-600');
+            clickedBtn.classList.remove('border-transparent');
+            clickedBtn.querySelector('i.fa-play')?.classList.replace('text-gray-400', 'text-red-500');
+
+            const song = songsDb[songIdx];
+            document.getElementById('now-playing').textContent = `מתנגן כעת: ${song.title}`;
+            document.getElementById('lyrics-box').innerHTML = song.lyrics;
+
+            animateVisualizer();
+        }
+
+        function animateVisualizer() {
+            const bars = document.querySelectorAll('#visualizer-bars div');
+            bars.forEach(bar => {
+                const randomHeight = Math.floor(Math.random() * 32) + 8;
+                bar.style.height = `${randomHeight}px`;
+            });
+        }
+
+        // סימולטור של קצב תופים
+        function simulateDrumBeat() {
+            const interval = setInterval(animateVisualizer, 100);
+            setTimeout(() => clearInterval(interval), 1500);
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                const playKick = (time) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.frequency.setValueAtTime(110, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+                    
+                    gain.gain.setValueAtTime(1, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
+                    
+                    osc.start(time);
+                    osc.stop(time + 0.3);
+                };
+
+                const now = ctx.currentTime;
+                playKick(now);
+                playKick(now + 0.3);
+                playKick(now + 0.6);
+            } catch (e) {
+                console.log("Web Audio API was not permitted yet");
+            }
+        }
+
+        // הרשמה למועדון האוהדים הדיגיטלי
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('newsletter-email');
+            if (emailInput.value) {
+                document.getElementById('newsletter-status').classList.remove('hidden');
+                emailInput.value = '';
+                setTimeout(() => {
+                    document.getElementById('newsletter-status').classList.add('hidden');
+                }, 4000);
+            }
+        }
+
+        // הפעלה ראשונית
+        window.onload = function() {
+            updateCountdown();
+            renderQuestion();
+        }
+    </script>
 </body>
 </html>
