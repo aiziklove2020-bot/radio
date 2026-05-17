@@ -73,71 +73,15 @@
 </head>
 <body class="bg-darkBg text-gray-100 font-sans min-h-screen selection:bg-red-600 selection:text-white">
 
-    <!-- סרגל ניווט עליון עם הלוגו הוקטורי המדויק של הפועל באר שבע -->
+    <!-- סרגל ניווט עליון עם הלוגו שהעלית -->
     <header class="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-red-900/40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- לוגו המועדון הרשמי הוקטורי המובנה לביצועים ואמינות של 100% -->
+                <!-- לוגו המועדון שהועלה על ידי המשתמש (LogoOfHBS.jpg) -->
                 <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="scrollToSection('hero')">
-                    <div class="w-14 h-14 bg-black rounded-full p-0.5 border border-red-600/30 flex items-center justify-center transform hover:scale-105 transition-transform duration-300 relative">
-                        <!-- סמל וקטורי ממוזער מדויק עבור הבר העליון -->
-                        <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <!-- כוכב זהב עליון -->
-                            <polygon points="100,5 104,17 116,17 107,24 110,36 100,29 90,36 93,24 84,17 96,17" fill="#eab308" />
-                            <g transform="translate(0, 15)">
-                                <circle cx="100" cy="100" r="95" fill="none" stroke="#dc2626" stroke-width="4" />
-                                <circle cx="100" cy="100" r="91" fill="#ffffff" />
-                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="24" />
-                                
-                                <!-- טקסט עברי וימני על קשת -->
-                                <path id="nav-heb-path" d="M 180 100 A 80 80 0 0 0 100 20" fill="none" />
-                                <text fill="#ffffff" font-size="11" font-weight="900" font-family="'Rubik', sans-serif">
-                                    <textPath href="#nav-heb-path" startOffset="50%" text-anchor="middle">הפועל באר-שבע</textPath>
-                                </text>
-
-                                <!-- טקסט אנגלי ושמאלי על קשת -->
-                                <path id="nav-eng-path" d="M 20 100 A 80 80 0 0 1 100 20" fill="none" />
-                                <text fill="#ffffff" font-size="9" font-weight="900" font-family="'Rubik', sans-serif">
-                                    <textPath href="#nav-eng-path" startOffset="50%" text-anchor="middle">HAPOEL BEER-SHEVA</textPath>
-                                </text>
-
-                                <!-- גדר הפרדה לבנה ואדומה במרכז -->
-                                <rect x="10" y="93" width="180" height="11" fill="#dc2626" />
-                                <line x1="14" y1="98" x2="186" y2="98" stroke="#ffffff" stroke-width="6" stroke-dasharray="2,3" />
-
-                                <!-- מתעמל הפועל בצד שמאל -->
-                                <g transform="translate(-1, 0)">
-                                    <path d="M 52,48 A 15,15 0 1,1 78,64 L 72,59 A 11,11 0 1,0 55,50" fill="#dc2626" />
-                                    <circle cx="63.5" cy="43.5" r="4" fill="#dc2626" />
-                                    <path d="M 63.5,47.5 L 63.5,62.5 M 63.5,49.5 L 48,43 M 63.5,50.5 L 77,54" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
-                                    <path d="M 63.5,62.5 L 48,77 M 63.5,62.5 L 78,77" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round" />
-                                    <polygon points="42,80 80,68 77,64 39,76" fill="#dc2626" />
-                                    <text x="60" y="89" fill="#dc2626" font-family="'Rubik', sans-serif" font-size="11" font-weight="900" text-anchor="middle">הפועל</text>
-                                </g>
-
-                                <!-- מגדל המים מימין -->
-                                <g transform="translate(3, 0)">
-                                    <rect x="121" y="52" width="6" height="42" fill="#dc2626" />
-                                    <rect x="115" y="52" width="2" height="42" fill="#dc2626" />
-                                    <rect x="131" y="52" width="2" height="42" fill="#dc2626" />
-                                    <polygon points="112,32 136,32 132,52 116,52" fill="#dc2626" />
-                                    <line x1="124" y1="32" x2="124" y2="52" stroke="#ffffff" stroke-width="1.5" />
-                                    <line x1="112" y1="39" x2="136" y2="39" stroke="#ffffff" stroke-width="1.5" />
-                                </g>
-
-                                <!-- חצי כדורגל תחתון -->
-                                <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
-                                <polygon points="100,145 125,160 115,188 85,188 75,160" fill="none" stroke="#ffffff" stroke-width="2.5" />
-                                <line x1="100" y1="145" x2="100" y2="104" stroke="#ffffff" stroke-width="2.5" />
-                                <line x1="75" y1="160" x2="45" y2="140" stroke="#ffffff" stroke-width="2.5" />
-                                <line x1="125" y1="160" x2="155" y2="140" stroke="#ffffff" stroke-width="2.5" />
-                                <line x1="85" y1="188" x2="65" y2="198" stroke="#ffffff" stroke-width="2.5" />
-                                <line x1="115" y1="188" x2="135" y2="198" stroke="#ffffff" stroke-width="2.5" />
-                                <polygon points="38,135 60,118 75,135 65,155 45,150" fill="none" stroke="#ffffff" stroke-width="2" />
-                                <polygon points="162,135 140,118 125,135 135,155 155,150" fill="none" stroke="#ffffff" stroke-width="2" />
-                            </g>
-                        </svg>
+                    <div class="w-14 h-14 bg-black rounded-full p-0.5 border border-red-600/30 flex items-center justify-center transform hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                        <img src="LogoOfHBS.jpg" class="w-full h-full object-contain rounded-full" alt="סמל הפועל באר שבע">
                     </div>
                     <div class="flex flex-col">
                         <span class="text-xl font-black text-white tracking-wider leading-none">הפועל באר שבע</span>
@@ -188,7 +132,7 @@
         </div>
     </header>
 
-    <!-- מסך הבית המרכזי עם סמל המועדון המקורי וקטורי בגדול -->
+    <!-- מסך הבית המרכזי עם סמל המועדון המקורי שהעלית בגדול -->
     <section id="hero" class="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-950/50 via-zinc-950 to-zinc-950 pt-10 pb-16">
         <!-- רקע אדום מעומעם למראה דרמטי -->
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -220,72 +164,18 @@
                     </div>
                 </div>
 
-                <!-- לוגו הקבוצה המקורי שמשוחזר ב-SVG ומובטח שיוצג תמיד -->
+                <!-- לוגו הקבוצה האמיתי והמדויק שהועלה (LogoOfHBS.jpg) -->
                 <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
                     <!-- זוהר אדום עוצמתי מאחורי הלוגו -->
                     <div class="absolute w-80 h-80 bg-red-600/20 rounded-full blur-[100px] -z-10 animate-pulse"></div>
                     
                     <div class="relative bg-zinc-900/85 border border-red-900/30 p-8 rounded-[40px] shadow-2xl backdrop-blur-sm hover:scale-105 transition-transform duration-500 flex flex-col items-center max-w-sm mx-auto w-full">
                         
-                        <!-- שחזור וקטורי מלא ומקצועי של הסמל שהעלית -->
+                        <!-- הצגת קובץ התמונה שהועלה LogoOfHBS.jpg -->
                         <div class="w-72 h-72 relative flex items-center justify-center filter drop-shadow-[0_15px_30px_rgba(220,38,38,0.25)]">
-                            <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                                <!-- כוכב זהב ענקי בראש הסמל -->
-                                <polygon points="100,5 104,17 116,17 107,24 110,36 100,29 90,36 93,24 84,17 96,17" fill="#eab308" filter="drop-shadow(0px 0px 5px rgba(234, 179, 8, 0.8))" />
-                                <g transform="translate(0, 15)">
-                                    <!-- מעגל חיצוני -->
-                                    <circle cx="100" cy="100" r="95" fill="none" stroke="#dc2626" stroke-width="4" />
-                                    <!-- בסיס לבן פנימי -->
-                                    <circle cx="100" cy="100" r="91" fill="#ffffff" />
-                                    <!-- קשת אדומה עליונה לטקסט -->
-                                    <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="24" />
-                                    
-                                    <!-- נתיבי טקסטים מדויקים - אנגלית מצד שמאל, עברית מצד ימין -->
-                                    <path id="arc-eng" d="M 22,100 A 78,78 0 0,1 100,22" fill="none" />
-                                    <text fill="#ffffff" font-size="8.5" font-weight="900" font-family="'Rubik', sans-serif">
-                                        <textPath href="#arc-eng" startOffset="50%" text-anchor="middle">HAPOEL BEER-SHEVA</textPath>
-                                    </text>
-                                    <path id="arc-heb" d="M 178,100 A 78,78 0 0,0 100,22" fill="none" />
-                                    <text fill="#ffffff" font-size="10.5" font-weight="900" font-family="'Rubik', sans-serif">
-                                        <textPath href="#arc-heb" startOffset="50%" text-anchor="middle">הפועל באר-שבע</textPath>
-                                    </text>
-                                    
-                                    <!-- גדר מגרש אדומה-לבנה במרכז -->
-                                    <rect x="10" y="93" width="180" height="11" fill="#dc2626" />
-                                    <line x1="14" y1="98" x2="186" y2="98" stroke="#ffffff" stroke-width="6" stroke-dasharray="2,3" />
-                                    
-                                    <!-- סמל הפועל (האתלט האדום והמגל) משמאל -->
-                                    <g transform="translate(-2, 0)">
-                                        <path d="M 52,48 A 15,15 0 1,1 78,64 L 72,59 A 11,11 0 1,0 55,50" fill="#dc2626" />
-                                        <circle cx="63.5" cy="43.5" r="4" fill="#dc2626" />
-                                        <path d="M 63.5,47.5 L 63.5,62.5 M 63.5,49.5 L 48,43 M 63.5,50.5 L 77,54" stroke="#dc2626" stroke-width="5" stroke-linecap="round" />
-                                        <path d="M 63.5,62.5 L 48,77 M 63.5,62.5 L 78,77" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round" />
-                                        <polygon points="42,80 80,68 77,64 39,76" fill="#dc2626" />
-                                        <text x="60" y="89" fill="#dc2626" font-family="'Rubik', sans-serif" font-size="11" font-weight="900" text-anchor="middle">הפועל</text>
-                                    </g>
-                                    
-                                    <!-- מגדל המים המקורי מימין -->
-                                    <g transform="translate(3, 0)">
-                                        <rect x="121" y="52" width="6" height="42" fill="#dc2626" />
-                                        <rect x="115" y="52" width="2" height="42" fill="#dc2626" />
-                                        <rect x="131" y="52" width="2" height="42" fill="#dc2626" />
-                                        <polygon points="112,32 136,32 132,52 116,52" fill="#dc2626" />
-                                        <line x1="124" y1="32" x2="124" y2="52" stroke="#ffffff" stroke-width="1.5" />
-                                        <line x1="112" y1="39" x2="136" y2="39" stroke="#ffffff" stroke-width="1.5" />
-                                    </g>
-                                    
-                                    <!-- חצי כדורגל אדום-לבן תחתון עם פאנלים מדויקים -->
-                                    <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
-                                    <polygon points="100,145 125,160 115,188 85,188 75,160" fill="none" stroke="#ffffff" stroke-width="2.5" />
-                                    <line x1="100" y1="145" x2="100" y2="104" stroke="#ffffff" stroke-width="2.5" />
-                                    <line x1="75" y1="160" x2="45" y2="140" stroke="#ffffff" stroke-width="2.5" />
-                                    <line x1="125" y1="160" x2="155" y2="140" stroke="#ffffff" stroke-width="2.5" />
-                                    <line x1="85" y1="188" x2="65" y2="198" stroke="#ffffff" stroke-width="2.5" />
-                                    <line x1="115" y1="188" x2="135" y2="198" stroke="#ffffff" stroke-width="2.5" />
-                                    <polygon points="38,135 60,118 75,135 65,155 45,150" fill="none" stroke="#ffffff" stroke-width="2" />
-                                    <polygon points="162,135 140,118 125,135 135,155 155,150" fill="none" stroke="#ffffff" stroke-width="2" />
-                                </g>
-                            </svg>
+                            <img src="LogoOfHBS.jpg" 
+                                 class="w-full h-full object-contain rounded-full" 
+                                 alt="סמל הפועל באר שבע">
                         </div>
                         
                         <div class="mt-6 text-center">
@@ -304,18 +194,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
                 
-                <!-- מידע על המשחק הבא -->
+                <!-- מידע על המשחק הבא עם התמונה שהעלית -->
                 <div class="flex items-center space-x-4 space-x-reverse w-full lg:w-auto justify-center lg:justify-start">
                     <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-1 shrink-0 shadow-lg relative overflow-hidden">
-                        <!-- סמל וקטורי ממוזער למשחקים -->
-                        <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <g transform="translate(0, 10)">
-                                <circle cx="100" cy="100" r="95" fill="#dc2626" />
-                                <circle cx="100" cy="100" r="85" fill="#ffffff" />
-                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="22" />
-                                <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
-                            </g>
-                        </svg>
+                        <img src="LogoOfHBS.jpg" 
+                             class="w-full h-full object-contain rounded-full" 
+                             alt="סמל הפועל באר שבע">
                     </div>
                     <div class="text-right">
                         <span class="bg-red-600/15 text-red-500 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border border-red-500/10">המשחק הבא בטרנר</span>
@@ -349,7 +233,7 @@
                     <button onclick="scrollToSection('stadium')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-red-600/20">
                         <i class="fa-solid fa-ticket ml-1.5"></i> רכישת כרטיסים
                     </button>
-                    <button onclick="showCustomModal('הסעות אוהדים', 'לוח הסעות האוהדים למשחק הקרוב יתפרסם כ-48 שעות לפני שעת השריקה. ההסעות ייצאו מכל רחבי הארץ בצורה מסודרת ומאורגנת.', 'fa-bus')" class="bg-zinc-900 hover:bg-zinc-850 text-gray-350 border border-zinc-800 py-3 px-4 rounded-xl text-xs font-semibold transition-all">
+                    <button onclick="showCustomModal('הסעות אוהדים', 'לוח הסעות האוהדים למשחק הקרוב יתפרסם כ-48 שעות לפני שעת השריקה. ההסעות ייצאו מכל רחבי הארץ בצורה מסודרת ומאורגנת.', 'fa-bus')" class="bg-zinc-900 hover:bg-zinc-850 text-gray-300 border border-zinc-800 py-3 px-4 rounded-xl text-xs font-semibold transition-all">
                         <i class="fa-solid fa-bus"></i> הסעות אוהדים
                     </button>
                 </div>
@@ -459,7 +343,7 @@
                         </div>
                         <div>
                             <h5 class="font-bold text-white">ייסוד המועדון</h5>
-                            <p class="text-xs text-gray-450 mt-1">ראשית הימים בחולות באר שבע וגיבוש המועדון.</p>
+                            <p class="text-xs text-gray-455 mt-1">ראשית הימים בחולות באר שבע וגיבוש המועדון.</p>
                         </div>
                     </div>
 
@@ -471,7 +355,7 @@
                         </div>
                         <div>
                             <h5 class="font-bold text-white">אליפות ראשונה והיסטורית</h5>
-                            <p class="text-xs text-gray-450 mt-1">אמציה לבקוביץ' מוביל את המועדון לאליפות מרהיבה.</p>
+                            <p class="text-xs text-gray-455 mt-1">אמציה לבקוביץ' מוביל את המועדון לאליפות מרהיבה.</p>
                         </div>
                     </div>
 
@@ -483,7 +367,7 @@
                         </div>
                         <div>
                             <h5 class="font-bold text-white">עידן אלונה ברקת</h5>
-                            <p class="text-xs text-gray-450 mt-1">רכישת המועדון והתחלת מהפכה חברתית ומקצועית בנגב.</p>
+                            <p class="text-xs text-gray-455 mt-1">רכישת המועדון והתחלת מהפכה חברתית ומקצועית בנגב.</p>
                         </div>
                     </div>
 
@@ -495,7 +379,7 @@
                         </div>
                         <div>
                             <h5 class="font-bold text-white">האליפות השלישית וחניכת טרנר</h5>
-                            <p class="text-xs text-gray-450 mt-1">חזרה לפסגה אחרי 40 שנות המתנה עם אצטדיון חדש לגמרי.</p>
+                            <p class="text-xs text-gray-455 mt-1">חזרה לפסגה אחרי 40 שנות המתנה עם אצטדיון חדש לגמרי.</p>
                         </div>
                     </div>
 
@@ -533,7 +417,7 @@
                         <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-40 transition-opacity">
                             <span class="text-9xl font-black text-red-900">4</span>
                         </div>
-                        <svg class="w-48 h-60 text-gray-400 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
+                        <svg class="w-48 h-60 text-gray-450 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="currentColor">
                             <path d="M 50 20 C 55 20, 58 15, 58 10 C 58 5, 55 0, 50 0 C 45 0, 42 5, 42 10 C 42 15, 45 20, 50 20 Z"/>
                             <path d="M 50 25 C 38 25, 25 32, 25 45 L 25 90 C 25 90, 32 100, 50 100 C 68 100, 75 90, 75 90 L 75 45 C 75 32, 62 25, 50 25 Z"/>
                         </svg>
@@ -900,7 +784,7 @@
             </div>
             
             <h2 class="text-3xl font-black text-white">הצטרפו לצבא האדום של הנגב!</h2>
-            <p class="text-gray-400 mt-3 max-w-xl mx-auto text-sm sm:text-base">
+            <p class="text-gray-450 mt-3 max-w-xl mx-auto text-sm sm:text-base">
                 הירשמו עכשיו כדי לקבל עדכונים בלעדיים על רכש חדש, מועדי מכירת כרטיסים, הטבות בחנות האוהדים ישירות לאימייל שלכם.
             </p>
 
@@ -927,15 +811,7 @@
                 <div class="space-y-3">
                     <div class="flex items-center justify-center md:justify-start space-x-2 space-x-reverse">
                         <div class="w-8 h-8 rounded-full bg-black p-0.5 border border-red-600/40 flex items-center justify-center relative overflow-hidden">
-                            <!-- סמל וקטורי ממוזער לפוטר (מובנה לטעינה בטוחה) -->
-                            <svg viewBox="0 0 200 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                                <g transform="translate(0, 10)">
-                                    <circle cx="100" cy="100" r="95" fill="#dc2626" />
-                                    <circle cx="100" cy="100" r="85" fill="#ffffff" />
-                                    <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#dc2626" stroke-width="22" />
-                                    <path d="M 8 104 A 92 92 0 0 0 192 104 Z" fill="#dc2626" />
-                                </g>
-                            </svg>
+                            <img src="LogoOfHBS.jpg" class="w-full h-full object-contain rounded-full" alt="סמל הפועל באר שבע">
                         </div>
                         <span class="text-base font-black text-white">הפועל באר שבע</span>
                     </div>
@@ -1211,7 +1087,7 @@
                 subtitle: "שיר טירוף לפתיחת משחקים",
                 lyrics: `
                     <p class="text-lg text-white font-bold mb-4">הלב שלי באדום!</p>
-                    <p class="text-gray-300">בכל דקה, בכל שנייה מלווים אותך לכל מקום</p>
+                    <p class="text-gray-350">בכל דקה, בכל שנייה מלווים אותך לכל מקום</p>
                     <p class="text-gray-350">באר שבע, אהבת חיי היחידה בעולם</p>
                     <p class="text-gray-305">נילחם בשבילך תמיד ונעמוד יחד מול כולם!</p>
                     <p class="text-red-505 font-bold mt-4">אדום עולה! אדום עולה!</p>
@@ -1228,7 +1104,7 @@
                     <p class="text-gray-300">טרנר כולו מאיר, הניצוצות באוויר</p>
                     <p class="text-gray-300">הנפנו את הצלחת ורשמנו דף היסטורי בעננים!</p>
                     <p class="text-red-500 font-bold mt-4">הפועל אלופה, אימפריה אמיתית!</p>
-                    <p class="text-gray-350">באר שבע היא המלכה של המדבר והליגה!</p>
+                    <p class="text-gray-355">באר שבע היא המלכה של המדבר והליגה!</p>
                 `
             }
         ];
